@@ -25,6 +25,10 @@ public class Scheduler{
 		
 		Scheduler scheduler = new Scheduler();
 		Elevator elevator = new Elevator("Elevator", scheduler);
+<<<<<<< Updated upstream
+=======
+		Floor floor = new Floor("Floor", scheduler);
+>>>>>>> Stashed changes
 		
 	}
 

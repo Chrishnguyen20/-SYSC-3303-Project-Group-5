@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class Elevator extends Thread{
+public class Elevator implements Runnable{
 	private int currentFloor;
 	private ArrayList<Integer> queue;
 	private Scheduler scheduler;
