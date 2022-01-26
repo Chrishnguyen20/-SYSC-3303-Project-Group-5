@@ -25,7 +25,8 @@ public class Scheduler{
 		
 		Scheduler scheduler = new Scheduler();
 		Elevator elevator = new Elevator("Elevator", scheduler);
-		
+		FloorRequest req = new FloorRequest(1, "10h00", "u");
+		System.out.println(req.toString());
 	}
 
 }
