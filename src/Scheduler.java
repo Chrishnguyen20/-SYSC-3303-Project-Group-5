@@ -25,11 +25,9 @@ public class Scheduler{
 		
 		Scheduler scheduler = new Scheduler();
 		Elevator elevator = new Elevator("Elevator", scheduler);
-<<<<<<< Updated upstream
-=======
 		Floor floor = new Floor("Floor", scheduler);
->>>>>>> Stashed changes
-		
+		FloorRequest req = new FloorRequest(1, "10h00", "u");
+		System.out.println(req.toString());
 	}
 
 }
