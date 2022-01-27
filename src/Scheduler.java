@@ -1,12 +1,48 @@
 import java.util.ArrayList;
 
+/*
+ * @param	newFloorRequest  	- a boolean indication whether the system is accepting
+ * 								  new floor requests.
+ */
+
+
 public class Scheduler{
 	
 	private ArrayList<String> queue;
 	
+	private ArrayList<FloorRequest> fr;
+	
+	
+	private boolean newFloorRequest;
+	private boolean pendingFloorRequest;
+	
 	public Scheduler() {
-		queue = new ArrayList<>();
+		this.queue = new ArrayList<>();
+		this.fr = new ArrayList<>();
+
+		this.newFloorRequest     = true;
+		this.pendingFloorRequest = false;
 	}
+	
+	public synchronized void floorRequest(FloorRequest request) {
+		while(!this.newFloorRequest) {
+			try {
+				wait();
+			}catch( InterruptedException e) {
+				System.err.println(e);
+			}
+		}
+		
+		this.fr.add(request);
+			
+		System.out.println(request.toString());
+		//TODO: process the event in some way
+		this.pendingFloorRequest = true;
+		
+		notifyAll();
+		
+	}
+	
 	
 	public synchronized void recieveUpdate(String info) {
 		queue.add(info);
@@ -25,9 +61,10 @@ public class Scheduler{
 		
 		Scheduler scheduler = new Scheduler();
 		Elevator elevator = new Elevator("Elevator", scheduler);
-		Floor floor = new Floor("Floor", scheduler);
-		FloorRequest req = new FloorRequest(1, "10h00", "u");
-		System.out.println(req.toString());
+		Thread floor = new Thread(new Floor("Floor", scheduler), "Floor Thread");
+
+	
+		floor.start();
 	}
 
 }
