@@ -24,6 +24,10 @@ public class Scheduler{
 		this.pendingFloorRequest = false;
 	}
 	
+	/*
+	 * @purpose       - adds a new floor request to the queue for the scheduler to process
+	 * @param request - a new floor request object
+	 */
 	public synchronized void floorRequest(FloorRequest request) {
 		while(!this.newFloorRequest) {
 			try {
