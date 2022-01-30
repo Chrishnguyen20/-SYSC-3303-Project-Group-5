@@ -16,7 +16,6 @@ public class Scheduler{
 	
 	private boolean newFloorRequest;
 	private boolean pendingFloorRequest;
-	private boolean isOperational;
 	
 	public Scheduler() {
 		this.queue = new ArrayList<>();
@@ -24,7 +23,6 @@ public class Scheduler{
 
 		this.newFloorRequest     = true;
 		this.pendingFloorRequest = false;
-		this.isOperational 		 = true;
 	}
 	
 	
@@ -47,5 +45,6 @@ public class Scheduler{
 		//TODO: process the event in some way
 		this.pendingFloorRequest = true;
 		notifyAll();
+	}
 
 }
