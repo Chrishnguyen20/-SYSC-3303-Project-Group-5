@@ -38,9 +38,7 @@ public class Scheduler{
 		System.out.println(request.toString());
 		//TODO: process the event in some way
 		this.pendingFloorRequest = true;
-		
 		notifyAll();
-		
 	}
 	
 	
