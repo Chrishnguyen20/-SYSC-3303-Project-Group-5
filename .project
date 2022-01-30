@@ -14,11 +14,4 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>src/digrams.drawio</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Downloads/SYSC3303/digrams.drawio</locationURI>
-		</link>
-	</linkedResources>
 </projectDescription>
