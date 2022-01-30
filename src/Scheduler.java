@@ -12,7 +12,6 @@ public class Scheduler{
 	
 	private ArrayList<FloorRequest> fr;
 	
-	
 	private boolean newFloorRequest;
 	private boolean pendingFloorRequest;
 	
