@@ -1,28 +1,58 @@
 import java.util.ArrayList;
 
 public class Elevator implements Runnable{
+	
 	private int currentFloor;
-	private ArrayList<Integer> queue;
+	private static int nextCarNum = 0;
+	private int carNum;
+	private boolean isIdle; 
+	private String direction;
 	private Scheduler scheduler;
 	
-	public Elevator (String name, Scheduler scheduler) {
-		currentFloor = 0;
-		queue = new ArrayList<>();
+	public Elevator (Scheduler scheduler, int floornum, String direction) {
+		this.currentFloor = floornum;
+		this.carNum = nextCarNum++;
 		this.scheduler = scheduler;
+		this.isIdle = true;
+		this.direction = direction;
 	}
 	
+	public void startCar() {
+		this.isIdle = false;
+	}
+	
+	public void stopCar() {
+		this.isIdle = true;
+	}
+	
+	public boolean isIdle() {
+		return this.isIdle;
+	}
+	
+	public void setDirection(String dir) {
+		this.direction = dir;
+	}
+	
+	public String getDiretion() {
+		return this.direction;
+	}
+	
+	public int getCarNum() {
+		return this.carNum;
+	}
+	
+	public int getCurrentFloor() {
+		return this.currentFloor;	
+	}
+
 	public void move() {
-		if (currentFloor < queue.get(0)) {
-			currentFloor += 1;
-		} else if (currentFloor > queue.get(0)) {
-			currentFloor -= 1;
-		} else {
-			queue.remove(0);
-		}
+ 
 	}
 	
 	public void run() {
-		
+		while(!this.isIdle()) {
+			move();			
+		}
 	}
 	
 	
