@@ -47,5 +47,6 @@ public class Scheduler{
 		//TODO: process the event in some way
 		this.pendingFloorRequest = true;
 		notifyAll();
+	}
 
 }
