@@ -6,7 +6,7 @@ import java.io.IOException;
 public class Floor implements Runnable{
 	private Scheduler scheduler;
 	
-	public Floor(String name, Scheduler scheduler) {
+	public Floor(Scheduler scheduler) {
 		this.scheduler = scheduler;
 	}
 

@@ -11,9 +11,12 @@ public class Scheduler{
 	private ArrayList<String> queue;
 	
 	private ArrayList<FloorRequest> fr;
+
+	private ArrayList<Elevator> elevators;
 	
 	private boolean newFloorRequest;
 	private boolean pendingFloorRequest;
+	private boolean isOperational;
 	
 	public Scheduler() {
 		this.queue = new ArrayList<>();
@@ -21,7 +24,9 @@ public class Scheduler{
 
 		this.newFloorRequest     = true;
 		this.pendingFloorRequest = false;
+		this.isOperational 		 = true;
 	}
+	
 	
 	/*
 	 * @purpose       - adds a new floor request to the queue for the scheduler to process
@@ -44,17 +49,5 @@ public class Scheduler{
 		notifyAll();
 	}
 	
-	
-	public synchronized void recieveUpdate(String info) {
-		queue.add(info);
-	}
-	
-	public synchronized String updateElevator() {
-		try {
-			String element = queue.remove(0);
-			return element;
-		} catch (NullPointerException e) {
-			return null;
-		}
-	}
+
 }
