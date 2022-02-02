@@ -1,5 +1,6 @@
 /**
- * @purpose         - Simple "Request" base class. It is used to dervice different
+ * @author Billal Ghadie
+ * @purpose         - Simple "Request" base class. It is used to derive different
  * 			          types of requests. 
  * @param floorNum  - The floor number associated with the request
  * @param timeStamp - The time the request was sent, form of HH:MM:SS.sss
