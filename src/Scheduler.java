@@ -11,9 +11,7 @@ public class Scheduler{
 	private ArrayList<String> queue;
 	
 	private ArrayList<FloorRequest> fr;
-	private ArrayList<Elevator> elevators;
-
-	
+	private ArrayList<Elevator> elevators;	
 	private boolean newFloorRequest;
 	private boolean pendingFloorRequest;
 	
@@ -45,6 +43,11 @@ public class Scheduler{
 		//TODO: process the event in some way
 		this.pendingFloorRequest = true;
 		notifyAll();
+	}
+	
+	public void elevatorUpdate(int carNum, int currFloor) {
+		elevators.get(carNum).setCurrentFloor(currFloor);
+		
 	}
 
 }
