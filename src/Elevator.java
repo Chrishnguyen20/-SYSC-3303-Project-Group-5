@@ -32,6 +32,10 @@ public class Elevator implements Runnable{
 		return this.isIdle;
 	}
 	
+	public void setIdle() {
+		this.isIdle = true;
+	}
+	
 	public void setDirection(String dir) {
 		this.direction = dir;
 	}
