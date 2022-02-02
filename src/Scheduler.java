@@ -8,18 +8,18 @@ import java.util.ArrayList;
 
 public class Scheduler{
 	
-	private ArrayList<String> queue;
+	// TO-DO
 	
 	private ArrayList<FloorRequest> fr;
-	private ArrayList<Elevator> elevators;	
+	private ArrayList<Elevator> elevators;
+
 	private boolean newFloorRequest;
 	private boolean pendingFloorRequest;
 	
 	public Scheduler() {
-		this.queue = new ArrayList<>();
 		this.fr = new ArrayList<>();
 
-		this.newFloorRequest     = true;
+		this.newFloorRequest = true;
 		this.pendingFloorRequest = false;
 	}
 	
@@ -45,9 +45,33 @@ public class Scheduler{
 		notifyAll();
 	}
 	
-	public void elevatorUpdate(int carNum, int currFloor) {
-		elevators.get(carNum).setCurrentFloor(currFloor);
+	public synchronized void elevatorRequest(Elevator elevator) {
+		while(fr.isEmpty()) {
+			try {
+				wait();
+			}catch( InterruptedException e) {
+				System.err.println(e);
+			}
+		}
 		
+		elevator.setDestFloor(fr.get(0).getFloorNum());
+		fr.remove(0);
+			
+		System.out.println(elevator.toString());
+		notifyAll();
 	}
-
+	
+	public synchronized void elevatorUpdate(int carNum, int curFloor) {
+		int dest = elevators.get(carNum).getDestFloor();
+		if (curFloor > dest) {
+			curFloor--;
+		}
+		else if (curFloor < dest) {
+			curFloor++;
+		}
+		elevators.get(carNum).setCurrentFloor(curFloor);
+		if (curFloor == dest) {
+			elevators.get(carNum).setIdle();
+		}
+	}
 }
