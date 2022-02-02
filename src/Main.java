@@ -16,8 +16,7 @@ public class Main {
 	public static void main(String args[]) {
 		
 		Scheduler scheduler = new Scheduler();
-		
-		Thread elevator = new Thread(new Elevator(scheduler, 1, "up"));
+    Thread elevator = new Thread(new Elevator(scheduler, 1));
 		Thread floor = new Thread(new Floor(scheduler), "Floor Thread");
 	
 		floor.start();

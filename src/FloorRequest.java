@@ -9,16 +9,20 @@
 
 public class FloorRequest extends Request{
 	private String direction; 
+	private int carBut;
 	
-	public FloorRequest(int n, String t, String d) {
+	public FloorRequest(int n, String t, String d, int c) {
 		super(n, t);
 		this.direction = d;
+		this.carBut = c;
 	}
 		
 	public String getDirection() { return this.direction; }
 	
+	public int carBut() { return this.carBut; }
+	
 	public String toString() {
-		return "Floor: " + this.getFloorNum() + " @ " + this.getTimeStamp() + " going: " + this.direction;
+		return "Floor: " + this.getFloorNum() + " @ " + this.getTimeStamp() + " going: " + this.direction + " to this floor " + this.carBut;
 	}
 	
 }
