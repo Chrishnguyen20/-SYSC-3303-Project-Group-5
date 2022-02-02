@@ -8,19 +8,22 @@ import java.util.ArrayList;
 
 public class Scheduler{
 	
-	private ArrayList<String> queue;
+	// TO-DO
 	
 	private ArrayList<FloorRequest> fr;
-	private ArrayList<Elevator> elevators;	
+	private ArrayList<Elevator> elevators;
+	
+	private ArrayList<Elevator> activeElevators;
+	private ArrayList<Elevator> idleElevators;
+
 	private boolean newFloorRequest;
-	private boolean pendingFloorRequest;
+	//private boolean pendingFloorRequest;
 	
 	public Scheduler() {
-		this.queue = new ArrayList<>();
 		this.fr = new ArrayList<>();
 
 		this.newFloorRequest     = true;
-		this.pendingFloorRequest = false;
+		//this.pendingFloorRequest = false;
 	}
 	
 	
@@ -41,13 +44,27 @@ public class Scheduler{
 			
 		System.out.println(request.toString());
 		//TODO: process the event in some way
-		this.pendingFloorRequest = true;
+		//this.pendingFloorRequest = true;
 		notifyAll();
 	}
 	
-	public void elevatorUpdate(int carNum, int currFloor) {
-		elevators.get(carNum).setCurrentFloor(currFloor);
+	public synchronized void elevatorRequest(Elevator elevator) {
+		while(fr.isEmpty()) {
+			try {
+				wait();
+			}catch( InterruptedException e) {
+				System.err.println(e);
+			}
+		}
 		
+		elevator.setDestFloor(fr.get(0).getFloorNum());
+		
+			
+		System.out.println(elevator.toString());
+		notifyAll();
 	}
-
+	
+	public synchronized void elevatorUpdate(int carNum, int currFloor) {
+		elevators.get(carNum).setCurrentFloor(currFloor);
+	}
 }
