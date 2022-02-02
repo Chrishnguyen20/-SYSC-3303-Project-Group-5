@@ -39,7 +39,7 @@ public class Floor implements Runnable{
 					System.out.println("Read data error!");
 				}else {
 					//create a new floor request and pass the data to the scheduler. 
-					this.scheduler.floorRequest(new FloorRequest(Integer.parseInt(arr[1]), arr[0].toLowerCase(), arr[2]));
+					this.scheduler.floorRequest(new FloorRequest(Integer.parseInt(arr[1]), arr[0].toLowerCase(), arr[2], Integer.parseInt(arr[3])));
 				}
 				
 	            try {
