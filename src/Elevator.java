@@ -17,7 +17,7 @@ public class Elevator implements Runnable{
 		this.scheduler = scheduler;
 		this.isIdle = true;
 		this.direction = direction;
-		this.time = 0;
+		this.time = (float) 9.175;
 	}
 	
 	public void startCar() {
@@ -49,14 +49,20 @@ public class Elevator implements Runnable{
 	}
 	
 	public void setCurrentFloor(int curr) {
-		currentFloor = curr;
+		this.currentFloor = curr;
 	}
 	
 	public float getTime() {
 		return this.time;
 	}
 	
+	public int getDestFloor() {
+		return this.destFloor;
+	}
 	
+	public void setDestFloor(int d) {
+		this.destFloor = d;
+	}
 
 	public void move() {
 		if(currentFloor >= 1 && currentFloor <= 7) {
