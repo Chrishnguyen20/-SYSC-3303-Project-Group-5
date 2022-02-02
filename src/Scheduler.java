@@ -14,13 +14,13 @@ public class Scheduler{
 	private ArrayList<Elevator> elevators;
 
 	private boolean newFloorRequest;
-	//private boolean pendingFloorRequest;
+	private boolean pendingFloorRequest;
 	
 	public Scheduler() {
 		this.fr = new ArrayList<>();
 
 		this.newFloorRequest = true;
-		//this.pendingFloorRequest = false;
+		this.pendingFloorRequest = false;
 	}
 	
 	
@@ -41,7 +41,7 @@ public class Scheduler{
 			
 		System.out.println(request.toString());
 		//TODO: process the event in some way
-		//this.pendingFloorRequest = true;
+		this.pendingFloorRequest = true;
 		notifyAll();
 	}
 	
