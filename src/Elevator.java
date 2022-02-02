@@ -70,28 +70,27 @@ public class Elevator implements Runnable{
 	public void move() {
 		if(this.currentFloor >= 1 && this.currentFloor <= 7) {
 			if(this.currentFloor == 1 && this.direction == "down") {
-				System.out.println("Invalid Direction");
+				this.direction = "up";
 			}
 			if(this.currentFloor == 7 && this.direction == "up") {
-				System.out.println("Invalid Direction");
+				this.direction = "down";
 			}
 			else if(this.direction == "up") {
-				currentFloor += 1;
+				this.currentFloor += 1;
 			}
 			else if(this.direction == "down") {
-				currentFloor -= 1;
+				this.currentFloor -= 1;
 			}
 		}
 	}
 	
 	public void run() {
 		while(true) {
+			scheduler.elevatorRequest(this);
 			while(!this.isIdle) {
 				move();
-				scheduler.elevatorUpdate(carNum, currentFloor);
-				
-			}
-			
+				scheduler.elevatorUpdate(carNum, currentFloor);	
+			}	
 		}
 		
 	}

@@ -62,15 +62,10 @@ public class Scheduler{
 	}
 	
 	public synchronized void elevatorUpdate(int carNum, int curFloor) {
+	
 		int dest = elevators.get(carNum).getDestFloor();
-		if (curFloor > dest) {
-			curFloor--;
-		}
-		else if (curFloor < dest) {
-			curFloor++;
-		}
 		elevators.get(carNum).setCurrentFloor(curFloor);
-		if (curFloor == dest) {
+		if (fr.isEmpty()) {
 			elevators.get(carNum).setIdle();
 		}
 	}
