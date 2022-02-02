@@ -45,15 +45,7 @@ public class Scheduler{
 		notifyAll();
 	}
 	
-	public synchronized void elevatorUpdate(int carNum, int currFloor, boolean idle) {
-		while(!idle) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+	public void elevatorUpdate(int carNum, int currFloor) {
 		elevators.get(carNum).setCurrentFloor(currFloor);
 		
 	}
