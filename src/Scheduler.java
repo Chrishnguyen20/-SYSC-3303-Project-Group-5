@@ -46,7 +46,7 @@ public class Scheduler{
 	}
 	
 	public synchronized void elevatorUpdate(int carNum, int currFloor, boolean idle) {
-		while(idle) {
+		while(!idle) {
 			try {
 				wait();
 			} catch (InterruptedException e) {
