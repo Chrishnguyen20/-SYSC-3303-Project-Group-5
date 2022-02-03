@@ -49,8 +49,11 @@ public class ElevatorRequest{
 			}
 		}
 		
+		this.carFloorNum = pos;
 		
-		
+		if (pos == this.destFloor) {
+			arrived = true;
+		}
 	}
 	
 	public synchronized void requestServed() {

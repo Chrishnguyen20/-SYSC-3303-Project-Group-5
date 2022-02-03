@@ -30,11 +30,6 @@ public class Elevator implements Runnable{
 		return this.isIdle;
 	}
 	
-	public void setIdle() {
-		this.isIdle = true;
-	}
-	
-	
 	public String getDiretion() {
 		if(this.destFloor > this.currentFloor) {
 			return "up";
@@ -42,7 +37,6 @@ public class Elevator implements Runnable{
 			return "down";
 		}
 	}
-	
 	
 	public int getCarNum() {
 		return this.carNum;
