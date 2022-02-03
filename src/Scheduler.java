@@ -54,7 +54,7 @@ public class Scheduler{
 			}
 		}
 		
-		elevator.setDestFloor(fr.get(0).getFloorNum());
+		elevator.setDestFloor(fr.get(0).getCarBut());
 		fr.remove(0);
 			
 		System.out.println(elevator.toString());

@@ -19,7 +19,7 @@ public class FloorRequest extends Request{
 		
 	public String getDirection() { return this.direction; }
 	
-	public int carBut() { return this.carBut; }
+	public int getCarBut() { return this.carBut; }
 	
 	public String toString() {
 		return "Floor: " + this.getFloorNum() + " @ " + this.getTimeStamp() + " going: " + this.direction + " to this floor " + this.carBut;
