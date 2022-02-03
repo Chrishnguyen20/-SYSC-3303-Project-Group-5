@@ -1,5 +1,11 @@
 import java.util.ArrayList;
-
+/**
+ * @author Leo Xu
+ * @purpose          - The Elevator class obtains elevator requests from the scheduler
+ * 					   and will move until it gets to the destination floor
+ * @param floorunm   -Represents the current floor that the elevator is on 
+ * @param er		 -Represents the elevator requests that are passed through 
+ */
 public class Elevator implements Runnable{
 	
 	private int currentFloor;
@@ -31,9 +37,10 @@ public class Elevator implements Runnable{
 	}
 	
 	public String getDiretion() {
-		if(this.destFloor > this.currentFloor) {
+		if(getDestFloor() > this.currentFloor) {
 			return "up";
-		}else{
+		}
+		else{
 			return "down";
 		}
 	}
@@ -57,7 +64,6 @@ public class Elevator implements Runnable{
 	public int getDestFloor() {
 		return this.elevatorRequest.getDestFloor();
 	}
-	
 
 	public void move() {
 		if(this.currentFloor >= 1 && this.currentFloor <= 7) {
@@ -79,17 +85,20 @@ public class Elevator implements Runnable{
 	public void run() {
 		while(true) {
 			if(this.elevatorRequest.hasRequest()) {
+				System.out.println("Direction: "+getDiretion());
+				System.out.println("Destination Floor: "+getDestFloor());
 				move();
+				
 	            // Simulate movement between floors
 	            try {
-	                Thread.sleep((int)this.time*1000);
+	                Thread.sleep((int)this.time*1);
 	            } catch (InterruptedException e) {}
-	            this.elevatorRequest.updatedPosition(getCurrentFloor());
+	            this.elevatorRequest.updatedPosition(this.currentFloor);
 	            
 	            if(this.elevatorRequest.hasArrived()) {
 		            // Simulate doors opening
 		            try {
-		                Thread.sleep((int)this.time*1000);
+		                Thread.sleep((int)this.time*1);
 		            } catch (InterruptedException e) {}
 		            this.elevatorRequest.requestServed();
 	            }
