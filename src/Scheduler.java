@@ -14,19 +14,24 @@ public class Scheduler implements Runnable{
 
 	private ElevatorRequest elevatorRequest;
 	
-	public Scheduler(FloorRequest fr) {
+	public Scheduler(FloorRequest fr, ElevatorRequest er) {
 		this.floorRequest = fr;
+		this.elevatorRequest = er;
 	}
 
 	
 	public void run() {
 		while(true) {
-			while(this.floorRequest.hasRequest()) {
+			//System.out.println(this.floorRequest.hasRequest());
+			if(this.floorRequest.hasRequest()) {
+				System.out.println("Has Floor Request");
 				elevatorRequest.notifyElevatorRequest(floorRequest.getCarBut());
-				
+				System.out.println("Notified Elevator");
 				elevatorRequest.requestServed();
-				
+				System.out.println("Cleared Buffer");
 				floorRequest.remove();
+				System.out.print("Buffer: ");
+				System.out.println(this.floorRequest.hasRequest());
 			
 			}
 		}

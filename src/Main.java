@@ -15,11 +15,15 @@ public class Main {
 	 */
 	public static void main(String args[]) {
 //		
-//		Scheduler scheduler = new Scheduler();
-//		Thread elevator = new Thread(new Elevator(scheduler, 1));
-//		Thread floor = new Thread(new Floor(scheduler), "Floor Thread");
+		ElevatorRequest er = new ElevatorRequest();
+		FloorRequest fr = new FloorRequest();
+		
+		Thread scheduler = new Thread(new Scheduler(fr,er), "Scheduler Thread");
+		Thread elevator = new Thread(new Elevator(er,1), "Elevator Thread");
+		Thread floor = new Thread(new Floor(fr), "Floor Thread");
 //		
-//		floor.start();
-//		//elevator.start();
+		scheduler.start();
+		floor.start();
+		elevator.start();
 	}
 }

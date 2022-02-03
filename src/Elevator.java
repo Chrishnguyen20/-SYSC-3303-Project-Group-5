@@ -42,7 +42,7 @@ public class Elevator implements Runnable{
 	
 	
 	public String getDiretion() {
-		if(this.destFloor > this.currentFloor) {
+		if(getDestFloor() > this.currentFloor) {
 			return "up";
 		}else{
 			return "down";
@@ -91,17 +91,20 @@ public class Elevator implements Runnable{
 	public void run() {
 		while(true) {
 			if(this.elevatorRequest.hasRequest()) {
+				System.out.println("Direction: "+getDiretion());
+				System.out.println("Destination Floor: "+getDestFloor());
 				move();
+				
 	            // Simulate movement between floors
 	            try {
-	                Thread.sleep((int)this.time*1000);
+	                Thread.sleep((int)this.time*1);
 	            } catch (InterruptedException e) {}
-	            this.elevatorRequest.updatedPosition(getCurrentFloor());
+	            this.elevatorRequest.updatedPosition(this.currentFloor);
 	            
 	            if(this.elevatorRequest.hasArrived()) {
 		            // Simulate doors opening
 		            try {
-		                Thread.sleep((int)this.time*1000);
+		                Thread.sleep((int)this.time*1);
 		            } catch (InterruptedException e) {}
 		            this.elevatorRequest.requestServed();
 	            }

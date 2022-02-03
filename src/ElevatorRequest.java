@@ -9,10 +9,10 @@
 
 public class ElevatorRequest{
 	private int destFloor;
-	private int carFloorNum;
 	private boolean arrived;
 	private boolean acceptingElevatorRequests;
 	private boolean bufferFull;
+	
 
 
 	public ElevatorRequest() {
@@ -35,26 +35,33 @@ public class ElevatorRequest{
 		
 		this.acceptingElevatorRequests = false;
 		
+		this.bufferFull = true;
+		
  		
 		notifyAll();
 		
 	}
 	
 	public synchronized void updatedPosition(int pos) {
-		while(carFloorNum != destFloor) {
+		while(!this.bufferFull) {
 			try {
 				wait();
 			}catch (InterruptedException e) {
 				System.err.println(e);
 			}
 		}
-		this.bufferFull = true;	
+		if(pos == destFloor) {
+			this.arrived = true;
+			this.bufferFull = false;
+		}
+		System.out.println("Current Pos of Elevator: "+ pos);
 		
-		
+		notifyAll();
 	}
 	
 	public synchronized void requestServed() {
-		while(!this.bufferFull) {
+		
+		while(!this.arrived) {
 			try {
 				wait();
 			}catch (InterruptedException e) {
@@ -63,18 +70,14 @@ public class ElevatorRequest{
 		}
 
 		this.acceptingElevatorRequests = true;
-		
-		this.bufferFull = false;	
-		
+				
 		notifyAll();
 	}
 	
 
 		
 	public int getDestFloor() { return this.destFloor; }
-	
-	public int getCarFloor() { return this.carFloorNum; }
-	
+		
 	public boolean hasRequest() {return this.bufferFull;}
 	
 	public boolean hasArrived() {return this.arrived;}
