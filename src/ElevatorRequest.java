@@ -41,14 +41,14 @@ public class ElevatorRequest{
 	}
 	
 	public synchronized void updatedPosition(int pos) {
-		while(!this.bufferFull) {
+		while(carFloorNum != destFloor) {
 			try {
 				wait();
 			}catch (InterruptedException e) {
 				System.err.println(e);
 			}
 		}
-		
+		this.bufferFull = true;	
 		
 		
 	}

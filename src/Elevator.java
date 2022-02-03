@@ -1,5 +1,11 @@
 import java.util.ArrayList;
-
+/**
+ * @author Leo Xu
+ * @purpose          - The Elevator class obtains elevator requests from the scheduler
+ * 					   and will move until it gets to the destination floor
+ * @param floorunm   -Represents the current floor that the elevator is on 
+ * @param er		 -Represents the elevator requests that are passed through 
+ */
 public class Elevator implements Runnable{
 	
 	private int currentFloor;
