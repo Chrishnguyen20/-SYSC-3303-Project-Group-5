@@ -7,18 +7,72 @@
  *       			   for and 'd' for down.
  */
 
-public class FloorRequest extends Request{
+public class FloorRequest{
 	private String direction; 
+	private String time;
+	private int floorNum;
+	private int carBut;
 	
-	public FloorRequest(int n, String t, String d) {
-		super(n, t);
+	
+	
+	private boolean acceptingFloorRequests;
+	private boolean bufferFull;
+	
+	
+	public FloorRequest() {
+		this.acceptingFloorRequests = true;
+		this.bufferFull = false;
+	}
+	
+	
+	public synchronized void add(int n, String t, String d, int c) {
+		while(!this.acceptingFloorRequests) {
+			try {
+				wait();
+			}catch (InterruptedException e) {
+				System.err.println(e);
+			}
+		}
+		
+		this.floorNum = n;
 		this.direction = d;
+		this.time = t;
+		this.carBut = c;
+		
+		this.acceptingFloorRequests = false;
+		
+		this.bufferFull = true;
+		
+		notifyAll();
+		
+	}
+	
+	public synchronized void remove() {
+		while(!this.bufferFull) {
+			try {
+				wait();
+			}catch (InterruptedException e) {
+				System.err.println(e);
+			}
+		}
+
+		this.acceptingFloorRequests = true;
+		
+		this.bufferFull = false;		
+		
+		
+		notifyAll();
+
 	}
 		
 	public String getDirection() { return this.direction; }
 	
+	public int getCarBut() { return this.carBut; }
+	
+	public boolean hasRequest() {return this.bufferFull;}
+	
 	public String toString() {
-		return "Floor: " + this.getFloorNum() + " @ " + this.getTimeStamp() + " going: " + this.direction;
+		return "Floor: " + this.floorNum + " @ " + this.time + " going: " + this.direction + " to this floor " + this.carBut;
 	}
 	
 }

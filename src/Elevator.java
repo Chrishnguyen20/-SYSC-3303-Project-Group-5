@@ -6,17 +6,15 @@ public class Elevator implements Runnable{
 	private static int nextCarNum = 0;
 	private int carNum;
 	private boolean isIdle; 
-	private String direction;
-	private Scheduler scheduler;
 	private float time;
 	private int destFloor;
+	private ElevatorRequest elevatorRequest;
 	
-	public Elevator (Scheduler scheduler, int floornum, String direction) {
+	public Elevator (ElevatorRequest er, int floornum) {
 		this.currentFloor = floornum;
+		this.elevatorRequest = er;
 		this.carNum = nextCarNum++;
-		this.scheduler = scheduler;
 		this.isIdle = true;
-		this.direction = direction;
 		this.time = (float) 9.175;
 	}
 	
@@ -36,13 +34,15 @@ public class Elevator implements Runnable{
 		this.isIdle = true;
 	}
 	
-	public void setDirection(String dir) {
-		this.direction = dir;
-	}
 	
 	public String getDiretion() {
-		return this.direction;
+		if(this.destFloor > this.currentFloor) {
+			return "up";
+		}else{
+			return "down";
+		}
 	}
+	
 	
 	public int getCarNum() {
 		return this.carNum;
@@ -61,34 +61,45 @@ public class Elevator implements Runnable{
 	}
 	
 	public int getDestFloor() {
-		return this.destFloor;
+		return this.elevatorRequest.getDestFloor();
 	}
 	
-	public void setDestFloor(int d) {
-		this.destFloor = d;
-	}
 
 	public void move() {
-		if(currentFloor >= 1 && currentFloor <= 7) {
-			if(currentFloor == 1 && direction == "down") {
-				System.out.println("Invalid Direction");
+		if(this.currentFloor >= 1 && this.currentFloor <= 7) {
+			if(this.currentFloor == 1 && getDiretion() == "down") {
+				this.currentFloor += 1;
 			}
-			if(currentFloor == 7 && direction == "up") {
-				System.out.println("Invalid Direction");
+			if(this.currentFloor == 7 && getDiretion() == "up") {
+				this.currentFloor -= 1;
 			}
-			else if(direction == "up") {
-				currentFloor += 1;
+			else if(getDiretion() == "up") {
+				this.currentFloor += 1;
 			}
-			else if(direction == "down") {
-				currentFloor -= 1;
+			else if(getDiretion() == "down") {
+				this.currentFloor -= 1;
 			}
 		}
 	}
 	
 	public void run() {
-		while(!this.isIdle()) {
-			move();
-			scheduler.elevatorUpdate(carNum, currentFloor);
+		while(true) {
+			if(this.elevatorRequest.hasRequest()) {
+				move();
+	            // Simulate movement between floors
+	            try {
+	                Thread.sleep((int)this.time*1000);
+	            } catch (InterruptedException e) {}
+	            this.elevatorRequest.updatedPosition(getCurrentFloor());
+	            
+	            if(this.elevatorRequest.hasArrived()) {
+		            // Simulate doors opening
+		            try {
+		                Thread.sleep((int)this.time*1000);
+		            } catch (InterruptedException e) {}
+		            this.elevatorRequest.requestServed();
+	            }
+			}	
 		}
 	}
 }
