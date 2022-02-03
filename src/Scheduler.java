@@ -6,7 +6,7 @@ import java.util.ArrayList;
  */
 
 
-public class Scheduler{
+public class Scheduler implements Runnable{
 	
 	// TO-DO
 	
@@ -14,30 +14,19 @@ public class Scheduler{
 	private ArrayList<Elevator> elevators;
 	private ArrayList<Elevator> idleElevators;
 
-	private boolean newFloorRequest;
+//	private boolean newFloorRequest;
 	
 	public Scheduler() {
 		this.fr = new ArrayList<>();
 
-		this.newFloorRequest = true;
+//		this.newFloorRequest = true;
 	}
-	
-	public void initElevators(int count) {
-	}
-	
 	
 	/*
 	 * @purpose       - adds a new floor request to the queue for the scheduler to process
 	 * @param request - a new floor request object
 	 */
 	public synchronized void floorRequest(FloorRequest request) {
-//		while(!this.newFloorRequest) {
-//			try {
-//				wait();
-//			}catch( InterruptedException e) {
-//				System.err.println(e);
-//			}
-//		}
 		
 		this.fr.add(request);
 			
@@ -70,5 +59,9 @@ public class Scheduler{
 			elevators.get(carNum).setIdle();
 			notifyAll();
 		}
+	}
+	
+	public void run() {
+		
 	}
 }
