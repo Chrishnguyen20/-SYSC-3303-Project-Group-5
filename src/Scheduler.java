@@ -23,6 +23,9 @@ public class Scheduler{
 		this.pendingFloorRequest = false;
 	}
 	
+	public void initElevator(int num) {
+		//for(int i = 0; i < )
+	}
 	
 	/*
 	 * @purpose       - adds a new floor request to the queue for the scheduler to process
@@ -62,10 +65,10 @@ public class Scheduler{
 	}
 	
 	public synchronized void elevatorUpdate(int carNum, int curFloor) {
-	
+		
 		int dest = elevators.get(carNum).getDestFloor();
 		elevators.get(carNum).setCurrentFloor(curFloor);
-		if (fr.isEmpty()) {
+		if (curFloor == dest) {
 			elevators.get(carNum).setIdle();
 		}
 	}

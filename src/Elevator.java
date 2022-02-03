@@ -65,6 +65,7 @@ public class Elevator implements Runnable{
 	
 	public void setDestFloor(int d) {
 		this.destFloor = d;
+		startCar();
 	}
 
 	public void move() {
