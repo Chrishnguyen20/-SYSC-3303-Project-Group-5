@@ -11,8 +11,8 @@ public class Floor implements Runnable{
 
 	private FloorRequest floorRequest;
 	
-	public Floor(FloorRequest fr) {
-		this.floorRequest = fr;
+	public Floor(FloorRequest floorRequest) {
+		this.floorRequest = floorRequest;
 	}
 
 	
@@ -41,9 +41,9 @@ public class Floor implements Runnable{
 					//create a new floor request and pass the data to the scheduler. 
 					
 					floorRequest.add(Integer.parseInt(arr[1]), arr[0].toLowerCase(), arr[2], Integer.parseInt(arr[3]));
-					System.out.println("Added Floor Request");
-					System.out.print("Buffer: ");
-					System.out.println(this.floorRequest.hasRequest());
+					//System.out.println("Added Floor Request");
+					//System.out.print("Buffer: ");
+					//System.out.println(this.floorRequest.hasRequest());
 				}
 				
 	            try {

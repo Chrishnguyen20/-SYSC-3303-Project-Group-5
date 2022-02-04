@@ -9,10 +9,10 @@
 
 public class ElevatorRequest{
 	private int destFloor;
+	private int floorNum;
 	private boolean arrived;
 	private boolean acceptingElevatorRequests;
 	private boolean bufferFull;
-	
 
 
 	public ElevatorRequest() {
@@ -22,7 +22,7 @@ public class ElevatorRequest{
 	}
 	
 	
-	public synchronized void notifyElevatorRequest(int d) {
+	public synchronized void notifyElevatorRequest(int f, int d) {
 		while(!this.acceptingElevatorRequests) {
 			try {
 				wait();
@@ -31,17 +31,21 @@ public class ElevatorRequest{
 			}
 		}
 		
+		this.floorNum = f;
+		
 		this.destFloor = d;
 		
 		this.acceptingElevatorRequests = false;
 		
 		this.bufferFull = true;
- 		
+		
+		this.arrived = false;
+		
 		notifyAll();
 		
 	}
 	
-	public synchronized void updatedPosition(int pos) {
+	public synchronized void updatedPosition(int pos, boolean receivedPassengers) {
 		while(!this.bufferFull) {
 			try {
 				wait();
@@ -49,18 +53,14 @@ public class ElevatorRequest{
 				System.err.println(e);
 			}
 		}
-		if(pos == destFloor) {
+		
+		System.out.println("Current Pos of Elevator: "+ pos);
+		
+		if(receivedPassengers && pos == this.destFloor) {
 			this.arrived = true;
 			this.bufferFull = false;
 		}
-		System.out.println("Current Pos of Elevator: "+ pos);
 		
-//		this.carFloorNum = pos;
-		
-//		if (pos == this.destFloor) {
-//			arrived = true;
-//		}
-
 		notifyAll();
 	}
 	
@@ -80,15 +80,15 @@ public class ElevatorRequest{
 	}
 	
 
-		
+	public int getFloorNum() { return this.floorNum; }
+	
 	public int getDestFloor() { return this.destFloor; }
 		
-	public boolean hasRequest() {return this.bufferFull;}
-	
 	public boolean hasArrived() {return this.arrived;}
+	
+	public synchronized  boolean hasRequest() {return this.bufferFull;}
 	
 	public String toString() {
 		return "Making elevator request to: " + this.destFloor;
 	}
-	
 }

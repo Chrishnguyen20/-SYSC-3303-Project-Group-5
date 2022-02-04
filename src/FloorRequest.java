@@ -45,8 +45,8 @@ public class FloorRequest{
 		
 		System.out.println(toString());
 		notifyAll();
-		System.out.print("Buffer: ");
-		System.out.println(hasRequest());
+//		System.out.print("Buffer: ");
+//		System.out.println(hasRequest());
 		
 	}
 	
@@ -62,7 +62,7 @@ public class FloorRequest{
 		this.acceptingFloorRequests = true;
 		
 		this.bufferFull = false;		
-		System.out.println("Finsihed");
+		System.out.println("Finished");
 		
 		notifyAll();
 	
@@ -72,6 +72,8 @@ public class FloorRequest{
 	public String getDirection() { return this.direction; }
 	
 	public int getCarBut() { return this.carBut; }
+	
+	public int getFloorNum() { return this.floorNum; }
 	
 	public synchronized boolean hasRequest() {return this.bufferFull;}
 	
