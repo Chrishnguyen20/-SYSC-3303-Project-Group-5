@@ -1,10 +1,13 @@
 import java.util.ArrayList;
-/**
- * @author Leo Xu
- * @purpose          - The Elevator class obtains elevator requests from the scheduler
- * 					   and will move until it gets to the destination floor
- * @param floorunm   - Represents the current floor that the elevator is on 
- * @param er		 - Represents the elevator requests that are passed through 
+/**     
+ * @purpose                  - The Elevator class obtains elevator requests from the scheduler
+ * 					           and will move until it gets to the destination floor
+ * @param currentFloor       - Represents the current floor that the elevator is on 
+ * @param nextCarNum         - Static variable used to assign id's to the elevator
+ * @param carNum		     - The elevator id number
+ * @param time			     - Amount of time the elevator should sleep for to simulate movement, doors opening, and passengers boarding/disembarking
+ * @param receivedPassengers - Whether passengers have boarded the elevator 
+ * @param elevatorRequest    - the shared memory between the elevator and scheduler.
  */
 public class Elevator implements Runnable{
 	
