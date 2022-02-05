@@ -1,6 +1,5 @@
-import java.util.ArrayList;
+
 /**
- * @author Leo Xu
  * @purpose          - The Elevator class obtains elevator requests from the scheduler
  * 					   and will move until it gets to the destination floor
  * @param floorunm   - Represents the current floor that the elevator is on 

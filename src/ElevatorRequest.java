@@ -21,7 +21,7 @@ public class ElevatorRequest{
 	}
 	
 	
-	public synchronized void notifyElevatorRequest(int f, int d) {
+	public synchronized void notifyElevatorRequest(int newFloorNum, int newDestFloor) {
 		while(!this.acceptingElevatorRequests) {
 			try {
 				wait();
@@ -30,9 +30,9 @@ public class ElevatorRequest{
 			}
 		}
 		
-		this.floorNum = f;
+		this.floorNum = newFloorNum;
 		
-		this.destFloor = d;
+		this.destFloor = newDestFloor;
 		
 		this.acceptingElevatorRequests = false;
 		

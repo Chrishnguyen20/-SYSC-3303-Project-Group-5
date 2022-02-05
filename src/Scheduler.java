@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 
 /*
  * @param	newFloorRequest  	- a boolean indication whether the system is accepting
@@ -27,6 +26,4 @@ public class Scheduler implements Runnable{
 			}
 		}
 	}
-	
-	
 }
