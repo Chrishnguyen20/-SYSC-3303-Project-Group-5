@@ -3,7 +3,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 /*
- * @author Billal Ghadie
  * @purpose 		- The floor class reads floor requests from a file and passes 
  * 					  them to the scheduler. 
  */
@@ -39,11 +38,7 @@ public class Floor implements Runnable{
 					System.out.println("Read data error!");
 				}else {
 					//create a new floor request and pass the data to the scheduler. 
-					
 					floorRequest.add(Integer.parseInt(arr[1]), arr[0].toLowerCase(), arr[2], Integer.parseInt(arr[3]));
-					//System.out.println("Added Floor Request");
-					//System.out.print("Buffer: ");
-					//System.out.println(this.floorRequest.hasRequest());
 				}
 				
 	            try {
