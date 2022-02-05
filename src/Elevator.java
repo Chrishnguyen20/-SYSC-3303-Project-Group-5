@@ -3,15 +3,14 @@ import java.util.ArrayList;
  * @author Leo Xu
  * @purpose          - The Elevator class obtains elevator requests from the scheduler
  * 					   and will move until it gets to the destination floor
- * @param floorunm   -Represents the current floor that the elevator is on 
- * @param er		 -Represents the elevator requests that are passed through 
+ * @param floorunm   - Represents the current floor that the elevator is on 
+ * @param er		 - Represents the elevator requests that are passed through 
  */
 public class Elevator implements Runnable{
 	
 	private int currentFloor;
 	private static int nextCarNum = 0;
 	private int carNum;
-	//private boolean isIdle; 
 	private float time;
 	private boolean receivedPassengers;
 	private ElevatorRequest elevatorRequest;
@@ -21,21 +20,8 @@ public class Elevator implements Runnable{
 		this.elevatorRequest = elevatorRequest;
 		this.carNum = nextCarNum++;
 		this.receivedPassengers = false;
-		//this.isIdle = true;
 		this.time = (float) 9.175;
 	}
-	
-//	public void startCar() {
-//		this.isIdle = false;
-//	}
-//	
-//	public void stopCar() {
-//		this.isIdle = true;
-//	}
-//	
-//	public boolean isIdle() {
-//		return this.isIdle;
-//	}
 	
 	
 	public String getDiretion() {
@@ -103,9 +89,6 @@ public class Elevator implements Runnable{
 	public void run() {
 		while(true) {
 			if(this.elevatorRequest.hasRequest()) {
-				//System.out.println("Elevator Current Floor: " + currentFloor);
-				//System.out.println("Direction: "+getDiretion());
-				//System.out.println("Destination Floor: "+getDestFloor());
 				move();
 				
 	            // Simulate movement between floors
@@ -126,7 +109,7 @@ public class Elevator implements Runnable{
 	            	
 	            	this.receivedPassengers = true;
 	            	
-	            	System.out.println("Received Passengers: "+ receivedPassengers);
+	            	System.out.println("Passengers boarded!");
 	            }
 	            
 	            this.elevatorRequest.updatedPosition(this.currentFloor, this.receivedPassengers);
