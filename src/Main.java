@@ -1,8 +1,8 @@
 
 /**
- * @author minhj
  *
  * Main method that initializes and starts the threads
+ * 
  */
 public class Main {
 

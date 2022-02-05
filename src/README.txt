@@ -1,7 +1,8 @@
 Authors: 
 Billal Ghadie - 100888260
 Minh Nguyen - 101154921
-
+Christopher Nguyen - 101167689
+Leo Xu - 101149896
 
 Source files:
 - Elevator.java
