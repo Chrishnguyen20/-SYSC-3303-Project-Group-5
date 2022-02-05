@@ -1,8 +1,8 @@
 import java.util.ArrayList;
 
 /*
- * @param	newFloorRequest  	- a boolean indication whether the system is accepting
- * 								  new floor requests.
+ * @param	floorRequest    	- the floor request that acts as the shared memory between the floor and scheduler
+ * @param   elevatorRequest     - the elevator request that acts as the shared memory between the elevator and scheduler
  */
 
 
