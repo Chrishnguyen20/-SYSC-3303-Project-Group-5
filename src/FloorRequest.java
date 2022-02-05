@@ -26,18 +26,16 @@ public class FloorRequest{
 		this.acceptingFloorRequests = true;
 		this.bufferFull = false;
 	}
-	
-	
-	
+
 	/*
 	 * @purpose  adds the floor request
-	 * @param n - the floor number
-	 * @param t - the time of the request
-	 * @param d - the direction of travel
-	 * @param c - the destination floor number
+	 * @param newFloorNum - the floor number
+	 * @param newTime - the time of the request
+	 * @param newDirection - the direction of travel
+	 * @param newCarBut - the destination floor number
 	 * 
 	 */
-	public synchronized void add(int n, String t, String d, int c) {
+	public synchronized void add(int newFloorNum, String newTime, String newDirection, int newCarBut) {
 		while(!this.acceptingFloorRequests) {
 			try {
 				wait();
@@ -46,10 +44,10 @@ public class FloorRequest{
 			}
 		}
 		
-		this.floorNum = n;
-		this.direction = d;
-		this.time = t;
-		this.carBut = c;
+		this.floorNum = newFloorNum;
+		this.time = newTime;
+		this.direction = newDirection;
+		this.carBut = newCarBut;
 		
 		this.acceptingFloorRequests = false;
 		
@@ -94,5 +92,4 @@ public class FloorRequest{
 	public String toString() {
 		return "Queuing request for floor " + this.floorNum + " at " + this.time + " going " + this.direction + " to floor " + this.carBut;
 	}
-	
 }

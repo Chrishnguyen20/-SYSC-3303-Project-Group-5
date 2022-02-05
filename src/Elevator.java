@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+
 /**     
  * @purpose                  - The Elevator class obtains elevator requests from the scheduler
  * 					           and will move until it gets to the destination floor
