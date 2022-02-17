@@ -4,9 +4,6 @@ Minh Nguyen - 101154921
 Christopher Nguyen - 101167689
 Leo Xu - 101149896
 
-TEST
-Testing if the new repo works
-
 Source files:
 - Elevator.java
 - ElevatorRequest.java
