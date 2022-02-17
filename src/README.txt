@@ -25,3 +25,12 @@ Breakdown or responsibilities:
 - Minh:   worked on Scheduler, ElevatorRequest, and FloorRequest classes
 - Leo:    worked on Elevator and ElevatorRequest classes
 - Chris:  design documentations
+
+Distance between floor is 4 meters.
+Average time it takes per floor: 9.5 seconds
+Average time from floor 1-7: 19.825 seconds
+Speed per floor = 4/9.5 = 0.42105 m/s
+Speed from floor 1-7 = 28/19.825 = 1.412358 m/s
+Rate of acceleration: 
+Average loading/unloading time per floor: 9.51428 seconds
+Average loading/unloading time from floor 1-7: 9.175 seconds
