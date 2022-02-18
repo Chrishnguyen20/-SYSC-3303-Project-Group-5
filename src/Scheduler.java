@@ -11,12 +11,57 @@
  * 		... 
  * 
  */
-
 public class Scheduler implements Runnable{
 	
 	private FloorRequest floorRequest;
 
 	private ElevatorRequest elevatorRequest;
+	
+	public enum schedulerState{
+		Initial{
+			public schedulerState nextState() {
+				return CreatedRequest;
+			}
+			public boolean Approved() {
+				return true;
+			}
+		},
+		CreatedRequest{
+			public schedulerState nextState() {
+				return NotifyElevator;
+			}
+			public boolean Approved() {
+				return true;
+			}
+		},
+		NotifyElevator{
+			public schedulerState nextState() {
+				return CreatedRequest;
+			}
+			public boolean Approved() {
+				return true;
+			}
+		},
+		Request{
+			public schedulerState nextState() {
+				return Removed;
+			}
+			public boolean Approved() {
+				return true;
+			}
+		},
+		Removed{
+			public schedulerState nextState() {
+				return this;
+			}
+			public boolean Approved() {
+				return true;
+			}
+		};	
+		
+		public abstract schedulerState nextState(); 
+	    public abstract boolean Approved();
+	}
 	
 	public Scheduler(FloorRequest floorRequest, ElevatorRequest elevatorRequest) {
 		this.floorRequest = floorRequest;
@@ -24,12 +69,19 @@ public class Scheduler implements Runnable{
 	}
 
 	
+	
+	
 	public void run() {
 		while(true) {
+			schedulerState state = schedulerState.Initial;
 			if(this.floorRequest.hasRequest()) {
+				state = state.nextState();
 				elevatorRequest.notifyElevatorRequest(floorRequest.getFloorNum(), floorRequest.getCarBut());
+				state = state.nextState();
 				elevatorRequest.requestServed();
+				state = state.nextState();
 				floorRequest.remove();
+				state = state.nextState();
 			}
 		}
 	}
