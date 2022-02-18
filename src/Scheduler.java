@@ -20,13 +20,13 @@ public class Scheduler implements Runnable{
 	public enum schedulerState{
 		Initial{
 			public schedulerState nextState() {
-				return CreatedRequest;
+				return CreateRequest;
 			}
 			public boolean Approved() {
 				return true;
 			}
 		},
-		CreatedRequest{
+		CreateRequest{
 			public schedulerState nextState() {
 				return NotifyElevator;
 			}
@@ -36,7 +36,7 @@ public class Scheduler implements Runnable{
 		},
 		NotifyElevator{
 			public schedulerState nextState() {
-				return CreatedRequest;
+				return Request;
 			}
 			public boolean Approved() {
 				return true;
@@ -76,6 +76,7 @@ public class Scheduler implements Runnable{
 			schedulerState state = schedulerState.Initial;
 			if(this.floorRequest.hasRequest()) {
 				state = state.nextState();
+				//assertEquals(schedulerState.CreateRequest, state);
 				elevatorRequest.notifyElevatorRequest(floorRequest.getFloorNum(), floorRequest.getCarBut());
 				state = state.nextState();
 				elevatorRequest.requestServed();
