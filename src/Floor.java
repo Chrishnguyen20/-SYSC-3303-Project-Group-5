@@ -35,7 +35,7 @@ public class Floor implements Runnable{
 				
 				//check if the data is in the correct format
 				if(arr.length != 4) {
-					System.out.println("Read data error!");
+					TraceFile.toTrace("Read data error!\n");
 				}else {
 					//create a new floor request and pass the data to the scheduler. 
 					floorRequest.add(Integer.parseInt(arr[1]), arr[0].toLowerCase(), arr[2], Integer.parseInt(arr[3]));
