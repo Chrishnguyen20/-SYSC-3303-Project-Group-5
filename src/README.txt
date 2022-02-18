@@ -1,6 +1,8 @@
 Authors: 
 Billal Ghadie - 100888260
-
+Minh Nguyen - 101154921
+Christopher Nguyen - 101167689
+Leo Xu - 101149896
 
 Source files:
 - Elevator.java
@@ -23,3 +25,13 @@ Breakdown or responsibilities:
 - Minh:   worked on Scheduler, ElevatorRequest, and FloorRequest classes
 - Leo:    worked on Elevator and ElevatorRequest classes
 - Chris:  design documentations
+
+Distance between floor is 4 meters.
+Average time it takes per floor: 9.5 seconds
+Average time from floor 1-7: 19.825 seconds
+Speed per floor: 4/9.5 = 0.42105 m/s
+Speed from floor 1-7: 28/19.825 = 1.412358 m/s
+Rate of acceleration per floor: 0.42105/9.5 = 0.04432 m/s^2  
+Rate of acceleration floor 1-7: 1.412358/19.825 = 0.07124 m/s^2 
+Average loading/unloading time per floor: 9.51428 seconds
+Average loading/unloading time from floor 1-7: 9.175 seconds

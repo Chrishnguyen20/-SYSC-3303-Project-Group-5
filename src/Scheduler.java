@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 
 /*
  * @param	floorRequest    	- the floor request that acts as the shared memory between the floor and scheduler
@@ -34,7 +33,7 @@ public class Scheduler implements Runnable{
 			}
 		}
 	}
-	
+
 	/*
 	 * While true:
 	 * 	Is it in the "has floor request state"
@@ -50,4 +49,5 @@ public class Scheduler implements Runnable{
 	 * 			//reset state
 	 * 
 	 */
+
 }

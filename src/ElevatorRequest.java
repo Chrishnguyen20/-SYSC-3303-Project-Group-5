@@ -23,14 +23,13 @@ public class ElevatorRequest{
 		this.arrived = false;
 	}
 	
-	
 	/*
 	 * @purpose  notifies the elevator of an elevator request
-	 * @param f - the floor number of the request
-	 * @param d - the destination floor of the request
+	 * @param newFloorNum - the floor number of the request
+	 * @param newDestFloor - the destination floor of the request
 	 * 
 	 */
-	public synchronized void notifyElevatorRequest(int f, int d) {
+	public synchronized void notifyElevatorRequest(int newFloorNum, int newDestFloor) {
 		while(!this.acceptingElevatorRequests) {
 			try {
 				wait();
@@ -39,9 +38,9 @@ public class ElevatorRequest{
 			}
 		}
 		
-		this.floorNum = f;
+		this.floorNum = newFloorNum;
 		
-		this.destFloor = d;
+		this.destFloor = newDestFloor;
 		
 		this.acceptingElevatorRequests = false;
 		

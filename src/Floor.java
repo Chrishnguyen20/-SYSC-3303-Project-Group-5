@@ -57,12 +57,5 @@ public class Floor implements Runnable{
 			//an I/O error occurred 
 			e.printStackTrace();
 		}
-		
-		
-		
-		
 	}
-	
-	
-
 }
