@@ -112,7 +112,7 @@ public class Elevator implements Runnable{
 	            	
 	            	this.receivedPassengers = true;
 	            	
-	            	System.out.println("Passengers boarded!");
+	            	TraceFile.toTrace("Passengers boarded!");
 	            }
 	            
 	            this.elevatorRequest.updatedPosition(this.currentFloor, this.receivedPassengers);
