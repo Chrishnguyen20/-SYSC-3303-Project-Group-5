@@ -15,6 +15,7 @@ public class FloorRequest{
 	private String time;
 	private int floorNum;
 	private int carBut;
+	private int requestsServed;
 	
 	
 	
@@ -25,6 +26,7 @@ public class FloorRequest{
 	public FloorRequest() {
 		this.acceptingFloorRequests = true;
 		this.bufferFull = false;
+		this.requestsServed = 0;
 	}
 
 	/*
@@ -53,7 +55,7 @@ public class FloorRequest{
 		
 		this.bufferFull = true;
 		
-		System.out.println(toString());
+		TraceFile.toTrace(toString() + "\n");
 		notifyAll();
 		
 	}
@@ -74,8 +76,12 @@ public class FloorRequest{
 		this.acceptingFloorRequests = true;
 		
 		this.bufferFull = false;		
-		System.out.println("Passengers arrived at destination floor!");
-		
+		TraceFile.toTrace("Passengers arrived at destination floor!\n");
+		this.requestsServed++;
+		if(this.requestsServed == 3) {
+			TraceFile.toTrace("EOD");
+			TraceFile.closeTrace();
+		}
 		notifyAll();
 	
 
