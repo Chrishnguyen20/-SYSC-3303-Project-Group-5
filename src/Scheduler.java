@@ -18,49 +18,41 @@ public class Scheduler implements Runnable{
 	private ElevatorRequest elevatorRequest;
 	
 	public enum schedulerState{
-		Initial{
-			public schedulerState nextState() {
-				return CreateRequest;
-			}
-			public boolean Approved() {
-				return true;
-			}
-		},
-		CreateRequest{
+		WaitRequest{
 			public schedulerState nextState() {
 				return NotifyElevator;
 			}
-			public boolean Approved() {
-				return true;
+			public int Current() {
+				return 1;
 			}
 		},
 		NotifyElevator{
 			public schedulerState nextState() {
-				return Request;
+				return Served;
 			}
-			public boolean Approved() {
-				return true;
+			public int Current() {
+				return 2;
 			}
 		},
-		Request{
+		Served{
 			public schedulerState nextState() {
 				return Removed;
 			}
-			public boolean Approved() {
-				return true;
+			public int Current() {
+				return 3;
 			}
 		},
 		Removed{
 			public schedulerState nextState() {
-				return this;
+				return WaitRequest;
 			}
-			public boolean Approved() {
-				return true;
+			public int Current() {
+				return 4;
 			}
 		};	
 		
 		public abstract schedulerState nextState(); 
-	    public abstract boolean Approved();
+	    public abstract int Current();
 	}
 	
 	public Scheduler(FloorRequest floorRequest, ElevatorRequest elevatorRequest) {
@@ -72,18 +64,44 @@ public class Scheduler implements Runnable{
 	
 	
 	public void run() {
+		schedulerState state = schedulerState.WaitRequest;
 		while(true) {
-			schedulerState state = schedulerState.Initial;
 			if(this.floorRequest.hasRequest()) {
-				state = state.nextState();
+				switch(state.Current()){
+					case 1:
+						state = state.nextState();
+						System.out.println("has request");
+						break;	
+					case 2:
+						elevatorRequest.notifyElevatorRequest(floorRequest.getFloorNum(), floorRequest.getCarBut());
+						state = state.nextState();
+						System.out.println("notified elevator");
+						break;
+					case 3:
+						elevatorRequest.requestServed();
+						state = state.nextState();
+						System.out.println("request served");
+						break;
+					case 4:
+						floorRequest.remove();
+						state = state.nextState();
+						System.out.println("request removed");
+						break;
+				}
+			}
+			/*
+			//schedulerState state = schedulerState.WaitRequest;
+			if(this.floorRequest.hasRequest()) {
+				//state = state.nextState();
 				//assertEquals(schedulerState.CreateRequest, state);
 				elevatorRequest.notifyElevatorRequest(floorRequest.getFloorNum(), floorRequest.getCarBut());
-				state = state.nextState();
+				//state = state.nextState();
 				elevatorRequest.requestServed();
-				state = state.nextState();
+				//state = state.nextState();
 				floorRequest.remove();
-				state = state.nextState();
+				//state = state.nextState();
 			}
+			*/
 		}
 	}
 
