@@ -30,6 +30,7 @@ public class ElevatorRequest{
 	 * 
 	 */
 	public synchronized void notifyElevatorRequest(int newFloorNum, int newDestFloor) {
+		
 		while(!this.acceptingElevatorRequests) {
 			try {
 				wait();
@@ -59,6 +60,7 @@ public class ElevatorRequest{
 	 * 
 	 */
 	public synchronized void updatedPosition(int pos, int receivedPassengers) {
+		
 		while(!this.bufferFull) {
 			try {
 				wait();
@@ -102,7 +104,7 @@ public class ElevatorRequest{
 		
 	public boolean hasArrived() { return this.arrived; }
 	
-	public synchronized  boolean hasRequest() {return this.bufferFull;}
+	public synchronized boolean hasRequest() {return this.bufferFull;}
 	
 	public String toString() {
 		return "Making elevator request to: " + this.destFloor;
