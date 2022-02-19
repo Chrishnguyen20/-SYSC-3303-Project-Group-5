@@ -9,12 +9,13 @@
  * @param receivedPassengers - Whether passengers have boarded the elevator 
  * @param elevatorRequest    - the shared memory between the elevator and scheduler.
  */
-public class Elevator implements Runnable{
+public class Elevator implements Runnable {
+	
+	private static final float time = 9.175f;
 	
 	private int currentFloor;
 	private static int nextCarNum = 0;
 	private int carNum;
-	private float time;
 	private int receivedPassengers;
 	private ElevatorRequest elevatorRequest;
 	private ElevatorState state;
@@ -24,7 +25,6 @@ public class Elevator implements Runnable{
 		this.elevatorRequest = elevatorRequest;
 		this.carNum = nextCarNum++;
 		this.receivedPassengers = 0;
-		this.time = (float) 9.175;
 		this.state = ElevatorState.Initial;
 	}
 	
@@ -34,9 +34,9 @@ public class Elevator implements Runnable{
 	
 	public int getCurrentFloor() { return this.currentFloor; }
 	
-	public void setCurrentFloor(int curr) { this.currentFloor = curr; }
+	public void setCurrentFloor(int cur) { this.currentFloor = cur; }
 	
-	public float getTime() { return this.time; }
+	public float getTime() { return Elevator.time; }
 	
 	public int getReceivedPassengers() { return receivedPassengers; }
 	
@@ -47,11 +47,7 @@ public class Elevator implements Runnable{
 	
 	
 	public String getDiretion() {
-		if(getObjectiveFloor() > this.currentFloor) {
-			return "up";
-		}else{
-			return "down";
-		}
+		return getObjectiveFloor() > this.currentFloor ? "up" : "down";
 	}
 	
 	public int getDestFloor() {
@@ -72,7 +68,7 @@ public class Elevator implements Runnable{
 	private void openDoors() {
 		// Simulate doors opening
         try {
-            Thread.sleep((int)this.time*1);
+            Thread.sleep((int) getTime() * 1);
         } catch (InterruptedException e) {
         	System.err.println(e);
         }
@@ -81,7 +77,7 @@ public class Elevator implements Runnable{
 	private void simulateFloorMovement() {
 		// Simulate movement between floors
         try {
-            Thread.sleep((int)this.time*1);
+            Thread.sleep((int) getTime() * 1);
         } catch (InterruptedException e) {
         	System.err.println(e);
         }
@@ -91,21 +87,16 @@ public class Elevator implements Runnable{
 		if (this.currentFloor == getObjectiveFloor()) {
 			return;
 		}
-		
-		if(this.currentFloor >= 1 && this.currentFloor <= 7) {
-			if(this.currentFloor == 1 && getDiretion() == "down") {
+
+		if (this.currentFloor >= 1 && this.currentFloor <= 7) {
+			if (this.currentFloor == 1 && getDiretion() == "down") {
 				this.currentFloor += 1;
-			}
-			else if(this.currentFloor == 7 && getDiretion() == "up") {
+			} 
+			else if (this.currentFloor == 7 && getDiretion() == "up") {
 				this.currentFloor -= 1;
 			}
-			
-			if(getDiretion() == "up") {
-				this.currentFloor += 1;
-			}
-			else if(getDiretion() == "down") {
-				this.currentFloor -= 1;
-			}
+
+			this.currentFloor = getDiretion() == "up" ? currentFloor + 1 : currentFloor - 1;
 		}
 	}
 	
@@ -116,13 +107,9 @@ public class Elevator implements Runnable{
 			switch (currentState) {
 			case "NoElevatorRequest":
 				// Elevator is waiting for ElevatorRequest
-				this.elevatorRequest.updatedPosition(this.currentFloor, this.receivedPassengers);
+				TraceFile.toTrace("Elevator is currently idle and waiting for an ElevatorRequest!\n");
 				
-				state = state.nextState(this);
-				
-				TraceFile.toTrace("Elevator is currently idle waiting for ElevatorRequest!\n");
-				
-				continue;
+				break;
 			case "PassengersBoarding":
 				// Simulate passengers boarding
 				openDoors();
@@ -134,9 +121,9 @@ public class Elevator implements Runnable{
             	
 				break;
 			case "MoveToDestination":
+				// Simulate movement between floors
 				move();
 				
-	            // Simulate movement between floors
 				simulateFloorMovement();
 				
 				TraceFile.toTrace("Current Pos of Elevator: "+ currentFloor + "\n");
