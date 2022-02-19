@@ -3,6 +3,7 @@ Current Pos of Elevator: 1
 Current Pos of Elevator: 1
 Current Pos of Elevator: 1
 Passengers boarded on floor: 1
+Passengers currently in elevator: 1
 Current Pos of Elevator: 1
 Current Pos of Elevator: 2
 Current Pos of Elevator: 3
@@ -12,6 +13,7 @@ Current Pos of Elevator: 3
 Current Pos of Elevator: 3
 Current Pos of Elevator: 2
 Passengers boarded on floor: 2
+Passengers currently in elevator: 1
 Current Pos of Elevator: 2
 Current Pos of Elevator: 3
 Current Pos of Elevator: 4
@@ -22,6 +24,7 @@ Current Pos of Elevator: 4
 Current Pos of Elevator: 5
 Current Pos of Elevator: 6
 Passengers boarded on floor: 6
+Passengers currently in elevator: 1
 Current Pos of Elevator: 6
 Current Pos of Elevator: 5
 Passengers arrived at destination floor!

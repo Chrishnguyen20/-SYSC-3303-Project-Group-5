@@ -58,7 +58,7 @@ public class ElevatorRequest{
 	 * @param receivedPassengers - whether the elevator picked up the passengers for the request
 	 * 
 	 */
-	public synchronized void updatedPosition(int pos, boolean receivedPassengers) {
+	public synchronized void updatedPosition(int pos, int receivedPassengers) {
 		while(!this.bufferFull) {
 			try {
 				wait();
@@ -68,7 +68,7 @@ public class ElevatorRequest{
 		}
 		
 		TraceFile.toTrace("Current Pos of Elevator: "+ pos + "\n");
-		if(receivedPassengers && pos == this.destFloor) {
+		if(receivedPassengers > 0 && pos == this.destFloor) {
 			this.arrived = true;
 			this.bufferFull = false;
 		}

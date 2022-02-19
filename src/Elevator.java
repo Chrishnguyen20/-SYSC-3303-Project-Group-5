@@ -1,3 +1,4 @@
+import java.util.Random;
 
 /**     
  * @purpose                  - The Elevator class obtains elevator requests from the scheduler
@@ -15,7 +16,7 @@ public class Elevator implements Runnable{
 	private static int nextCarNum = 0;
 	private int carNum;
 	private float time;
-	public boolean receivedPassengers;
+	public int receivedPassengers;
 	public ElevatorRequest elevatorRequest;
 	private ElevatorState state;
 	
@@ -23,7 +24,7 @@ public class Elevator implements Runnable{
 		this.currentFloor = floornum;
 		this.elevatorRequest = elevatorRequest;
 		this.carNum = nextCarNum++;
-		this.receivedPassengers = false;
+		this.receivedPassengers = 0;
 		this.time = (float) 9.175;
 		this.state = ElevatorState.Initial;
 	}
@@ -62,7 +63,7 @@ public class Elevator implements Runnable{
 	}
 	
 	public int getObjectiveFloor() {
-		if (!this.receivedPassengers) {
+		if (this.receivedPassengers == 0) {
 			return getFloorNum(); 
 		}
 		return getDestFloor(); 
@@ -110,51 +111,6 @@ public class Elevator implements Runnable{
 		}
 	}
 	
-	public void run1() {
-		while(true) {
-			if(this.elevatorRequest.hasRequest()) {
-				move();
-				
-	            // Simulate movement between floors
-	            try {
-	                Thread.sleep((int)this.time*1);
-	            } catch (InterruptedException e) {
-	            	System.err.println(e);
-	            }
-	            
-	            if (!this.receivedPassengers && this.currentFloor == getFloorNum()) {
-	            	
-	            	// Simulate passengers boarding
-		            try {
-		                Thread.sleep((int)this.time*1);
-		            } catch (InterruptedException e) {
-		            	System.err.println(e);
-		            }
-	            	
-	            	this.receivedPassengers = true;
-	            	
-	            	TraceFile.toTrace("Passengers boarded!\n");
-	            }
-	            
-	            this.elevatorRequest.updatedPosition(this.currentFloor, this.receivedPassengers);
-	            
-	            if(this.elevatorRequest.hasArrived()) {
-		            // Simulate doors opening
-		            try {
-		                Thread.sleep((int)this.time*1);
-		            } catch (InterruptedException e) {
-		            	System.err.println(e);
-		            }
-		            
-		            this.elevatorRequest.requestServed();
-		            
-		            this.receivedPassengers = false;
-	            }
-			}
-		}
-	}
-	
-	
 	public void run() {
 		while(true) {
 			String currentState = state.getElevatorState();
@@ -168,9 +124,10 @@ public class Elevator implements Runnable{
 				// Simulate passengers boarding
 				openDoors();
             	
-            	this.receivedPassengers = true;
+	            this.receivedPassengers++;
             	
             	TraceFile.toTrace("Passengers boarded on floor: " + currentFloor + "\n");
+            	TraceFile.toTrace("Passengers currently in elevator: " + receivedPassengers + "\n");
 				break;
 			case "MoveToDestination":
 				move();
@@ -185,7 +142,7 @@ public class Elevator implements Runnable{
 	            
 	            this.elevatorRequest.requestServed();
 	            
-	            this.receivedPassengers = false;
+	            this.receivedPassengers--;
 
 				break;
 			}
