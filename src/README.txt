@@ -18,14 +18,19 @@ Source files:
 
 Documentation:
 - Class Diagram:  a UML class representation of the program 
-- Sequence Diagram: a UML representation of a single program loop. That is, the floor sends a floor request to the scheduler, the scheduler relays the information to the elevator, the elevator picks up the passengers, then the elevator takes the passengers to their destination floor.
+- Sequence Diagram: a UML representation of a single program loop. That is, the floor sends a floor request to the scheduler, 
+  the scheduler relays the information to the elevator, the elevator picks up the passengers, then the elevator takes the passengers to their destination floor.
 - State Diagrams: there are two UML state diagrams, one for the scheduler and another for the elevator.
 
 Instructions:
-The program's usage is fairly straightforward, however, requires the use of the Eclipse IDE. Simply unzip the source file, open the project in Eclipse, then press run. All the output is printed to the console for easy reading.
+The program's usage is fairly straightforward, however, requires the use of the Eclipse IDE. 
+Simply unzip the source file, open the project in Eclipse, then press run. 
+All the output is printed to the console for easy reading.
 
 JUnit testing:
-This program comes with a JUnit package for quick and seamless testing. To execute the tests, simple right click the "ElevatorSystemTest.java" file in Eclipse and run the program as a  JUnit test. There are a total of 8 tests which are all documented in the source code via comments.  
+This program comes with a JUnit package for quick and seamless testing. 
+To execute the tests, simple right click the "ElevatorSystemTest.java" file in Eclipse and run the program as a  JUnit test. 
+There are a total of 8 tests which are all documented in the source code via comments.  
 
 Breakdown or responsibilities: 
 - Billal:  the JUnit testing
