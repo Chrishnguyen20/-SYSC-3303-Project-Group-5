@@ -1,4 +1,3 @@
-import java.util.Random;
 
 /**     
  * @purpose                  - The Elevator class obtains elevator requests from the scheduler
@@ -12,12 +11,12 @@ import java.util.Random;
  */
 public class Elevator implements Runnable{
 	
-	public int currentFloor;
+	private int currentFloor;
 	private static int nextCarNum = 0;
 	private int carNum;
 	private float time;
-	public int receivedPassengers;
-	public ElevatorRequest elevatorRequest;
+	private int receivedPassengers;
+	private ElevatorRequest elevatorRequest;
 	private ElevatorState state;
 	
 	public Elevator (ElevatorRequest elevatorRequest, int floornum) {
@@ -30,28 +29,29 @@ public class Elevator implements Runnable{
 	}
 	
 	
+	
+	public int getCarNum() { return this.carNum; }
+	
+	public int getCurrentFloor() { return this.currentFloor; }
+	
+	public void setCurrentFloor(int curr) { this.currentFloor = curr; }
+	
+	public float getTime() { return this.time; }
+	
+	public int getReceivedPassengers() { return receivedPassengers; }
+	
+	public ElevatorRequest getElevatorRequest() { return elevatorRequest; }
+	
+	public String getState() { return state.getElevatorState(); }
+	
+	
+	
 	public String getDiretion() {
 		if(getObjectiveFloor() > this.currentFloor) {
 			return "up";
 		}else{
 			return "down";
 		}
-	}
-	
-	public int getCarNum() {
-		return this.carNum;
-	}
-	
-	public int getCurrentFloor() {
-		return this.currentFloor;	
-	}
-	
-	public void setCurrentFloor(int curr) {
-		this.currentFloor = curr;
-	}
-	
-	public float getTime() {
-		return this.time;
 	}
 	
 	public int getDestFloor() {
@@ -86,8 +86,6 @@ public class Elevator implements Runnable{
         	System.err.println(e);
         }
 	}
-	
-	public String getState() { return state.getElevatorState(); }
 
 	public void move() {
 		if (this.currentFloor == getObjectiveFloor()) {
@@ -117,10 +115,13 @@ public class Elevator implements Runnable{
 			
 			switch (currentState) {
 			case "NoElevatorRequest":
+				// Elevator is waiting for ElevatorRequest
 				this.elevatorRequest.updatedPosition(this.currentFloor, this.receivedPassengers);
+				
 				state = state.nextState(this);
 				
-				TraceFile.toTrace("Elevator is currently idle!\n");
+				TraceFile.toTrace("Elevator is currently idle waiting for ElevatorRequest!\n");
+				
 				continue;
 			case "PassengersBoarding":
 				// Simulate passengers boarding
@@ -130,6 +131,7 @@ public class Elevator implements Runnable{
             	
             	TraceFile.toTrace("Passengers boarded on floor: " + currentFloor + "\n");
             	TraceFile.toTrace("Passengers currently in elevator: " + receivedPassengers + "\n");
+            	
 				break;
 			case "MoveToDestination":
 				move();
@@ -138,6 +140,7 @@ public class Elevator implements Runnable{
 				simulateFloorMovement();
 				
 				TraceFile.toTrace("Current Pos of Elevator: "+ currentFloor + "\n");
+				
 				break;
 			case "HasArrived":
 				// Simulate doors opening
@@ -151,6 +154,7 @@ public class Elevator implements Runnable{
 			}
 			
 			this.elevatorRequest.updatedPosition(this.currentFloor, this.receivedPassengers);
+			
 			state = state.nextState(this);
 		}
 	}
