@@ -79,7 +79,7 @@ public class FloorRequest{
 		TraceFile.toTrace("Passengers arrived at destination floor!\n");
 		this.requestsServed++;
 		if(this.requestsServed == 3) {
-			TraceFile.toTrace("EOD");
+			TraceFile.toTrace("EOF");
 			TraceFile.closeTrace();
 		}
 		notifyAll();

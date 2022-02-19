@@ -11,12 +11,13 @@
  */
 public class Elevator implements Runnable{
 	
-	private int currentFloor;
+	public int currentFloor;
 	private static int nextCarNum = 0;
 	private int carNum;
 	private float time;
-	private boolean receivedPassengers;
-	private ElevatorRequest elevatorRequest;
+	public boolean receivedPassengers;
+	public ElevatorRequest elevatorRequest;
+	private ElevatorState state;
 	
 	public Elevator (ElevatorRequest elevatorRequest, int floornum) {
 		this.currentFloor = floornum;
@@ -24,6 +25,7 @@ public class Elevator implements Runnable{
 		this.carNum = nextCarNum++;
 		this.receivedPassengers = false;
 		this.time = (float) 9.175;
+		this.state = ElevatorState.Initial;
 	}
 	
 	
@@ -66,6 +68,25 @@ public class Elevator implements Runnable{
 		return getDestFloor(); 
 	}
 	
+	private void openDoors() {
+		// Simulate doors opening
+        try {
+            Thread.sleep((int)this.time*1);
+        } catch (InterruptedException e) {
+        	System.err.println(e);
+        }
+	}
+	
+	private void simulateFloorMovement() {
+		// Simulate movement between floors
+        try {
+            Thread.sleep((int)this.time*1);
+        } catch (InterruptedException e) {
+        	System.err.println(e);
+        }
+	}
+	
+	public String getState() { return state.getElevatorState(); }
 
 	public void move() {
 		if (this.currentFloor == getObjectiveFloor()) {
@@ -89,7 +110,7 @@ public class Elevator implements Runnable{
 		}
 	}
 	
-	public void run() {
+	public void run1() {
 		while(true) {
 			if(this.elevatorRequest.hasRequest()) {
 				move();
@@ -130,6 +151,47 @@ public class Elevator implements Runnable{
 		            this.receivedPassengers = false;
 	            }
 			}
+		}
+	}
+	
+	
+	public void run() {
+		while(true) {
+			String currentState = state.getElevatorState();
+			
+			switch (currentState) {
+			case "NoElevatorRequest":
+				this.elevatorRequest.updatedPosition(this.currentFloor, this.receivedPassengers);
+				state = state.nextState(this);
+				continue;
+			case "PassengersBoarding":
+				// Simulate passengers boarding
+				openDoors();
+            	
+            	this.receivedPassengers = true;
+            	
+            	TraceFile.toTrace("Passengers boarded on floor: " + currentFloor + "\n");
+				break;
+			case "MoveToDestination":
+				move();
+				
+	            // Simulate movement between floors
+				simulateFloorMovement();
+				
+				break;
+			case "HasArrived":
+				// Simulate doors opening
+	            openDoors();
+	            
+	            this.elevatorRequest.requestServed();
+	            
+	            this.receivedPassengers = false;
+
+				break;
+			}
+			
+			this.elevatorRequest.updatedPosition(this.currentFloor, this.receivedPassengers);
+			state = state.nextState(this);
 		}
 	}
 }

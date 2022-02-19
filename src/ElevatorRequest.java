@@ -101,7 +101,7 @@ public class ElevatorRequest{
 	
 	public int getDestFloor() { return this.destFloor; }
 		
-	public boolean hasArrived() {return this.arrived;}
+	public boolean hasArrived() { return this.arrived; }
 	
 	public synchronized  boolean hasRequest() {return this.bufferFull;}
 	

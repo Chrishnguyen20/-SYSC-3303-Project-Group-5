@@ -16,6 +16,7 @@ public class TraceFile {
 	
 	public static void toTrace(String s) {
 		try {
+			System.out.println(s);
 			fileWriter.write(s);
 		} catch (IOException e) {
 			e.printStackTrace();
