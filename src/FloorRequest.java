@@ -1,13 +1,13 @@
 /**
- * @purpose          - The shared memory between the floor and scheduler used for communication between
+ * @purpose           - The shared memory between the floor and scheduler used for communication between
  *   				   the two threads.
- * @param direction  - The direction of travel for the request
- * @param floorNum   - The floor number the request is coming from
- * @param carBut     - The destination floor 
- * @param time       - The time of the request
+ * @param direction   - The direction of travel for the request
+ * @param floorNum    - The floor number the request is coming from
+ * @param carBut      - The destination floor 
+ * @param time        - The time of the request
  * @param acceptingFloorRequests - Flag indicating the scheduler is accepting floor requests
- * @param bufferFull - Flag indicating that the scheduler already is handling a floor request
- * 
+ * @param bufferFull  - Flag indicating that the scheduler already is handling a floor request
+ * @param maxRequests - Keeps track of the maximum number of requests;
  */
 
 public class FloorRequest{
@@ -16,7 +16,6 @@ public class FloorRequest{
 	private int floorNum;
 	private int carBut;
 	private int requestsServed;
-	
 	
 	
 	private boolean acceptingFloorRequests;
