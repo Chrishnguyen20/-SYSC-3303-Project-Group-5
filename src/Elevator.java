@@ -119,6 +119,8 @@ public class Elevator implements Runnable{
 			case "NoElevatorRequest":
 				this.elevatorRequest.updatedPosition(this.currentFloor, this.receivedPassengers);
 				state = state.nextState(this);
+				
+				TraceFile.toTrace("Elevator is currently idle!\n");
 				continue;
 			case "PassengersBoarding":
 				// Simulate passengers boarding
@@ -135,6 +137,7 @@ public class Elevator implements Runnable{
 	            // Simulate movement between floors
 				simulateFloorMovement();
 				
+				TraceFile.toTrace("Current Pos of Elevator: "+ currentFloor + "\n");
 				break;
 			case "HasArrived":
 				// Simulate doors opening

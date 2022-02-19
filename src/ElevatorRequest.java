@@ -67,7 +67,6 @@ public class ElevatorRequest{
 			}
 		}
 		
-		TraceFile.toTrace("Current Pos of Elevator: "+ pos + "\n");
 		if(receivedPassengers > 0 && pos == this.destFloor) {
 			this.arrived = true;
 			this.bufferFull = false;
