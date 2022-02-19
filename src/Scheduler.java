@@ -17,6 +17,8 @@ public class Scheduler implements Runnable{
 
 	private ElevatorRequest elevatorRequest;
 	
+	private String states;
+	
 	public enum schedulerState{
 		WaitRequest{
 			public schedulerState nextState() {
@@ -60,7 +62,9 @@ public class Scheduler implements Runnable{
 		this.elevatorRequest = elevatorRequest;
 	}
 
-	
+	public String getCurrentState() {
+		return states;
+	}
 	
 	
 	public void run() {
@@ -70,22 +74,22 @@ public class Scheduler implements Runnable{
 				switch(state.Current()){
 					case 1:
 						state = state.nextState();
-						System.out.println("has request");
+						states = "Has request";
 						break;	
 					case 2:
 						elevatorRequest.notifyElevatorRequest(floorRequest.getFloorNum(), floorRequest.getCarBut());
 						state = state.nextState();
-						System.out.println("notified elevator");
+						states = "Notified elevator";
 						break;
 					case 3:
 						elevatorRequest.requestServed();
 						state = state.nextState();
-						System.out.println("request served");
+						states = "Request served";
 						break;
 					case 4:
 						floorRequest.remove();
 						state = state.nextState();
-						System.out.println("request removed");
+						states = "Request removed";
 						break;
 				}
 			}
