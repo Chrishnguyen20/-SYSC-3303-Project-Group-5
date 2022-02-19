@@ -7,23 +7,30 @@ Leo Xu - 101149896
 Source files:
 - Elevator.java
 - ElevatorRequest.java
+- ElevatorState.java
+- ElevatorSystemTest.java
 - Floor.java
 - FloorRequest.java
 - Main.java
 - Scheduler.java
+- TraceFile.java
 
 
 Documentation:
 - Class Diagram:  a UML class representation of the program 
 - Sequence Diagram: a UML representation of a single program loop. That is, the floor sends a floor request to the scheduler, the scheduler relays the information to the elevator, the elevator picks up the passengers, then the elevator takes the passengers to their destination floor.
+- State Diagrams: there are two UML state diagrams, one for the scheduler and another for the elevator.
 
 Instructions:
 The program's usage is fairly straightforward, however, requires the use of the Eclipse IDE. Simply unzip the source file, open the project in Eclipse, then press run. All the output is printed to the console for easy reading.
 
+JUnit testing:
+This program comes with a JUnit package for quick and seamless testing. To execute the tests, simple right click the "ElevatorSystemTest.java" file in Eclipse and run the program as a  JUnit test. There are a total of 6 tests which are all documented in the source code via comments.  
+
 Breakdown or responsibilities: 
-- Billal: worked on the Floor and FloorRequest classes
-- Minh:   worked on Scheduler, ElevatorRequest, and FloorRequest classes
-- Leo:    worked on Elevator and ElevatorRequest classes
+- Billal:  the JUnit testing
+- Minh:   Elevator state machine
+- Leo:    Scheduler state machine
 - Chris:  design documentations
 
 Distance between floor is 4 meters.

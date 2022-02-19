@@ -10,12 +10,13 @@ public class Scheduler implements Runnable {
 
 	private ElevatorRequest elevatorRequest;
 
-	private String states;
+	private String states = "Initial";
 
 	public Scheduler(FloorRequest floorRequest, ElevatorRequest elevatorRequest) {
 		this.floorRequest = floorRequest;
 		this.elevatorRequest = elevatorRequest;
 	}
+
 	
 	public enum schedulerState {
 		WaitRequest {

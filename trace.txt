@@ -1,5 +1,5 @@
 Queuing request for floor 1 at 21:22:54.314 going up to floor 3
-Elevator is currently idle!
+Elevator is currently idle waiting for ElevatorRequest!
 Current Pos of Elevator: 1
 Passengers boarded on floor: 1
 Passengers currently in elevator: 1
@@ -7,7 +7,7 @@ Current Pos of Elevator: 2
 Current Pos of Elevator: 3
 Passengers arrived at destination floor!
 Queuing request for floor 2 at 14:05:15.000 going up to floor 4
-Elevator is currently idle!
+Elevator is currently idle waiting for ElevatorRequest!
 Current Pos of Elevator: 2
 Passengers boarded on floor: 2
 Passengers currently in elevator: 1
@@ -15,7 +15,7 @@ Current Pos of Elevator: 3
 Current Pos of Elevator: 4
 Passengers arrived at destination floor!
 Queuing request for floor 6 at 04:55:20.524 going down to floor 5
-Elevator is currently idle!
+Elevator is currently idle waiting for ElevatorRequest!
 Current Pos of Elevator: 5
 Current Pos of Elevator: 6
 Passengers boarded on floor: 6

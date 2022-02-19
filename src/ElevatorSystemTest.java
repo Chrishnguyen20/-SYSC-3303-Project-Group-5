@@ -6,11 +6,20 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class ElevatorSystemTest {
 
+
+	Scheduler scheduler;
+	Elevator elevator;
+	Floor floor;
 	
-	//@purpose checks if a string exists in the trace file
+	/*
+	 * @purpose checks if an event (string) was captured in the trace file
+	 * @param s - a string representing some event
+	 */
 	private boolean existsInTrace(String s) {
 		boolean flag = true;
 		while(flag) {
@@ -31,7 +40,7 @@ class ElevatorSystemTest {
 					if(line.equals(s)) {
 						return true;
 					}else if(line.equals("EOF")) {
-						flag = false;
+						return false;
 					}
 				}
 				reader.close();
@@ -42,70 +51,147 @@ class ElevatorSystemTest {
 		}		
 		return false;
 	}
+	
+	/*
+	 * @purpose checks if a subsystem (sub) is in its final state (s)
+	 * @param sub - the subsystem (string) being tested ('e' for elevator or 's' for scheduler)
+	 * @param s   - the state (string) being tested 
+	 * 
+	 */
+	private boolean finalState(String sub, String s) {
+		boolean flag = true;
+		while(flag) {
+			FileReader fileReader;
+			BufferedReader reader = null;
+			try {
+				//Read the in-file and store it in a readable buffer
+				fileReader = new FileReader("trace.txt");
+				reader = new BufferedReader(fileReader);
+			} catch (FileNotFoundException e) {
+				//a read error occurred 
+				e.printStackTrace();
+			}
+			
+			String line;
+			try {
+				while ((line = reader.readLine()) != null){
+					if(line.equals("EOF")) {
+						flag = false;
+					}
+				}
+				reader.close();
+			} catch (IOException e) {
+				//an I/O error occurred 
+				e.printStackTrace();
+			}
+		}
+		
+		
+		if(sub.equals("e")) {
+			if(this.elevator.getState().equals(s)) {
+				return true;
+			}
+		}else if(sub.equals("s")) {
+			if(this.scheduler.getCurrentState().equals(s)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
-
+	
+	
 	//@purpose test that the program runs successfully
-	@Test
-	void programRunsCorrectly() {
+	@ParameterizedTest
+	@ValueSource(strings = {"EOF", "Queuing request for floor 6 at 04:55:20.524 going down to floor 5", 
+			"Current Pos of Elevator: 1", "Current Pos of Elevator: 6"})
+	
+	void iteration_one_tests(String event) {
 		ElevatorRequest elevatorRequest = new ElevatorRequest();
 		FloorRequest floorRequest = new FloorRequest();
 		
-		Thread scheduler = new Thread(new Scheduler(floorRequest, elevatorRequest), "Scheduler Thread");
-		Thread elevator = new Thread(new Elevator(elevatorRequest,1), "Elevator Thread");
-		Thread floor = new Thread(new Floor(floorRequest), "Floor Thread");
+		this.scheduler = new Scheduler(floorRequest, elevatorRequest);
+		this.elevator = new Elevator(elevatorRequest,1);
+		this.floor = new Floor(floorRequest);
+
+		Thread s = new Thread(this.scheduler, "Scheduler Thread");
+		Thread e = new Thread(this.elevator, "Elevator Thread");
+		Thread f = new Thread(this.floor, "Floor Thread");
 
 		TraceFile.init();
 		
-		scheduler.start();
-		floor.start();
-		elevator.start();
+		s.start();
+		f.start();
+		e.start();
 		
-		assert(existsInTrace("EOF"));
+		assert(existsInTrace(event));
 		
 	}
 	
-	//@purpose The floor class queued the third request
+	
+	//@purpose checks the initial state of the elevator
 	@Test
-	void finalFloorRequestQueues() {
+	void elevatorInitialState() {
+		ElevatorRequest elevatorRequest = new ElevatorRequest();
+		this.elevator = new Elevator(elevatorRequest,1);
+		assert(this.elevator.getState().equals("Initial"));
+		
+	}
+	
+	//@purpose checks the initial state of the scheduler
+	@Test
+	void schedulerInitialState() {
+		ElevatorRequest elevatorRequest = new ElevatorRequest();
+		FloorRequest floorRequest = new FloorRequest();
+		this.scheduler = new Scheduler(floorRequest, elevatorRequest);
+		assert(this.scheduler.getCurrentState().equals("Initial"));
+		
+	}
+	
+	//@purpose checks the final state of the elevator
+	@Test
+	void elevatorHasArrivedState() {
 		ElevatorRequest elevatorRequest = new ElevatorRequest();
 		FloorRequest floorRequest = new FloorRequest();
 		
-		Thread scheduler = new Thread(new Scheduler(floorRequest, elevatorRequest), "Scheduler Thread");
-		Thread elevator = new Thread(new Elevator(elevatorRequest,1), "Elevator Thread");
-		Thread floor = new Thread(new Floor(floorRequest), "Floor Thread");
+		this.scheduler = new Scheduler(floorRequest, elevatorRequest);
+		this.elevator = new Elevator(elevatorRequest,1);
+		this.floor = new Floor(floorRequest);
+
+		Thread s = new Thread(this.scheduler, "Scheduler Thread");
+		Thread e = new Thread(this.elevator, "Elevator Thread");
+		Thread f = new Thread(this.floor, "Floor Thread");
 
 		TraceFile.init();
-		
-		scheduler.start();
-		floor.start();
-		elevator.start();
-		
-		assert(existsInTrace("Queuing request for floor 6 at 04:55:20.524 going down to floor 5"));
+
+		s.start();
+		f.start();
+		e.start();
+		assert(finalState("e", "HasArrived"));
 		
 	}
 	
-	//@purpose test The elevator makes it to floor 1 and floor 6
+	//@purpose checks the final state of the scheduler
 	@Test
-	void elevatorArrivesAtFloorOne() {
+	void schedulerDone() {
 		ElevatorRequest elevatorRequest = new ElevatorRequest();
 		FloorRequest floorRequest = new FloorRequest();
 		
-		Thread scheduler = new Thread(new Scheduler(floorRequest, elevatorRequest), "Scheduler Thread");
-		Thread elevator = new Thread(new Elevator(elevatorRequest,1), "Elevator Thread");
-		Thread floor = new Thread(new Floor(floorRequest), "Floor Thread");
+		this.scheduler = new Scheduler(floorRequest, elevatorRequest);
+		this.elevator = new Elevator(elevatorRequest,1);
+		this.floor = new Floor(floorRequest);
+
+		Thread s = new Thread(this.scheduler, "Scheduler Thread");
+		Thread e = new Thread(this.elevator, "Elevator Thread");
+		Thread f = new Thread(this.floor, "Floor Thread");
 
 		TraceFile.init();
-		
-		scheduler.start();
-		floor.start();
-		elevator.start();
-		
-		boolean case1 = existsInTrace("Current Pos of Elevator: 1");
-		boolean case2 = existsInTrace("Current Pos of Elevator: 6");
-		
-		assert(case1 && case2);
+
+		s.start();
+		f.start();
+		e.start();
+		assert(finalState("s", "Request removed"));
 		
 	}
-	
-
 }
+	
