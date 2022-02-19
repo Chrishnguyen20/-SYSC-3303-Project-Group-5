@@ -12,6 +12,11 @@ public class Scheduler implements Runnable {
 
 	private String states;
 
+	public Scheduler(FloorRequest floorRequest, ElevatorRequest elevatorRequest) {
+		this.floorRequest = floorRequest;
+		this.elevatorRequest = elevatorRequest;
+	}
+	
 	public enum schedulerState {
 		WaitRequest {
 			public schedulerState nextState() {
@@ -54,16 +59,11 @@ public class Scheduler implements Runnable {
 
 		public abstract int Current();
 	}
-
-	public Scheduler(FloorRequest floorRequest, ElevatorRequest elevatorRequest) {
-		this.floorRequest = floorRequest;
-		this.elevatorRequest = elevatorRequest;
-	}
-
+	
 	public String getCurrentState() {
 		return states;
 	}
-
+	
 	public void run() {
 		schedulerState state = schedulerState.WaitRequest;
 		while (true) {
