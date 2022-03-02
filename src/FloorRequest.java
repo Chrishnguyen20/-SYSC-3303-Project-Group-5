@@ -1,3 +1,5 @@
+import java.time.LocalTime;
+
 /**
  * @purpose           - The shared memory between the floor and scheduler used for communication between
  *   				   the two threads.
@@ -54,7 +56,9 @@ public class FloorRequest{
 		
 		this.bufferFull = true;
 		
-		TraceFile.toTrace(toString() + "\n");
+    	LocalTime d = LocalTime.now();
+		TraceFile.toTrace("Floor Subsystem: " + toString() + ". Time stamp: " + d.toString() + "\n");
+		
 		notifyAll();
 		
 	}
@@ -74,8 +78,12 @@ public class FloorRequest{
 
 		this.acceptingFloorRequests = true;
 		
-		this.bufferFull = false;		
-		TraceFile.toTrace("Passengers arrived at destination floor!\n");
+		this.bufferFull = false;	
+		
+    	LocalTime d = LocalTime.now();
+		TraceFile.toTrace("Scheduler Subsystem: Passengers arrived at destination floor! Time Stamp: " + d.toString() + "\n");
+		
+		
 		this.requestsServed++;
 		if(this.requestsServed == 3) {
 			TraceFile.toTrace("EOF");
