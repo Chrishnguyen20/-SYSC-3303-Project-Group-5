@@ -37,7 +37,7 @@ class ElevatorSystemTest {
 			String line;
 			try {
 				while ((line = reader.readLine()) != null){
-					if(line.equals(s)) {
+					if(line.contains(s)) {
 						return true;
 					}else if(line.equals("EOF")) {
 						return false;
@@ -103,8 +103,8 @@ class ElevatorSystemTest {
 	
 	//@purpose test that the program runs successfully
 	@ParameterizedTest
-	@ValueSource(strings = {"EOF", "Queuing request for floor 6 at 04:55:20.524 going down to floor 5", 
-			"Current Pos of Elevator: 1", "Current Pos of Elevator: 6"})
+	@ValueSource(strings = {"EOF", "Floor Subsystem: Queuing request for floor 6 at 04:55:20.524 going down to floor 5", 
+			"Elevator Subsystem: Current Pos of Elevator: 1", "Elevator Subsystem: Current Pos of Elevator: 6"})
 	
 	void iteration_one_tests(String event) {
 		ElevatorRequest elevatorRequest = new ElevatorRequest();

@@ -1,3 +1,5 @@
+import java.time.LocalTime;
+
 
 /**     
  * @purpose                  - The Elevator class obtains elevator requests from the scheduler
@@ -107,7 +109,8 @@ public class Elevator implements Runnable {
 			switch (currentState) {
 			case "NoElevatorRequest":
 				// Elevator is waiting for ElevatorRequest
-				TraceFile.toTrace("Elevator is currently idle and waiting for an ElevatorRequest!\n");
+            	LocalTime s = LocalTime.now();
+				TraceFile.toTrace("Elevator Subsystem: Elevator is currently idle and waiting for an ElevatorRequest! Time stamp: " + s.toString() + "\n");
 				
 				break;
 			case "PassengersBoarding":
@@ -115,9 +118,10 @@ public class Elevator implements Runnable {
 				openDoors();
             	
 	            this.receivedPassengers++;
+            	LocalTime d = LocalTime.now();
             	
-            	TraceFile.toTrace("Passengers boarded on floor: " + currentFloor + "\n");
-            	TraceFile.toTrace("Passengers currently in elevator: " + receivedPassengers + "\n");
+            	TraceFile.toTrace("Elevator Subsystem: Passengers boarded on floor: " + currentFloor + ". Time stamp: " + d.toString() + "\n");
+            	TraceFile.toTrace("Elevator Subsystem: Passengers currently in elevator: " + receivedPassengers + ". Time stamp: " + d.toString() + "\n");
             	
 				break;
 			case "MoveToDestination":
@@ -125,8 +129,8 @@ public class Elevator implements Runnable {
 				move();
 				
 				simulateFloorMovement();
-				
-				TraceFile.toTrace("Current Pos of Elevator: "+ currentFloor + "\n");
+				LocalTime t = LocalTime.now();
+				TraceFile.toTrace("Elevator Subsystem: Current Pos of Elevator: "+ currentFloor + ". Time stamp: " + t.toString() + "\n");
 				
 				break;
 			case "HasArrived":

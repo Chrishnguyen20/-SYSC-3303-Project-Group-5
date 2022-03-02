@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.LocalTime;
 /*
  * @purpose 		- The floor class reads floor requests from a file and passes 
  * 					  them to the scheduler. 
@@ -35,7 +36,8 @@ public class Floor implements Runnable{
 				
 				//check if the data is in the correct format
 				if(arr.length != 4) {
-					TraceFile.toTrace("Read data error!\n");
+					LocalTime d = LocalTime.now();
+					TraceFile.toTrace("Floor Subsystem: Read data error! Time Stamp: " + d.toString() + "\n");
 				}else {
 					//create a new floor request and pass the data to the scheduler. 
 					floorRequest.add(Integer.parseInt(arr[1]), arr[0].toLowerCase(), arr[2], Integer.parseInt(arr[3]));
