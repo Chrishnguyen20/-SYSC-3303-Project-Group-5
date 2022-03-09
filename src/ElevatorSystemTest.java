@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.SocketException;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -12,7 +13,8 @@ import org.junit.jupiter.params.provider.ValueSource;
 class ElevatorSystemTest {
 
 
-	Scheduler scheduler;
+	Scheduler scheduler_client;
+	Scheduler scheduler_server;
 	Elevator elevator;
 	Floor floor;
 	
@@ -26,7 +28,7 @@ class ElevatorSystemTest {
 			FileReader fileReader;
 			BufferedReader reader = null;
 			try {
-				//Read the in-file and store it in a readable buffer
+				//Read the in-file and store it sin a readable buffer
 				fileReader = new FileReader("trace.txt");
 				reader = new BufferedReader(fileReader);
 			} catch (FileNotFoundException e) {
@@ -92,7 +94,7 @@ class ElevatorSystemTest {
 				return true;
 			}
 		}else if(sub.equals("s")) {
-			if(this.scheduler.getCurrentState().equals(s)) {
+			if(this.scheduler_server.getCurrentState().equals(s)) {
 				return true;
 			}
 		}
@@ -108,19 +110,26 @@ class ElevatorSystemTest {
 	
 	void iteration_one_tests(String event) {
 		ElevatorRequest elevatorRequest = new ElevatorRequest();
-		FloorRequest floorRequest = new FloorRequest();
 		
-		this.scheduler = new Scheduler(floorRequest, elevatorRequest);
-		this.elevator = new Elevator(elevatorRequest,1);
-		this.floor = new Floor(floorRequest);
+		this.scheduler_server = new Scheduler(true);
+		this.scheduler_client = new Scheduler(false);
+		try {
+			this.elevator = new Elevator(1, 206);
+		} catch (SocketException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		this.floor = new Floor();
 
-		Thread s = new Thread(this.scheduler, "Scheduler Thread");
+		Thread s1 = new Thread(this.scheduler_server, "Scheduler Thread");
+		Thread s2 = new Thread(this.scheduler_client, "Scheduler Thread");
 		Thread e = new Thread(this.elevator, "Elevator Thread");
 		Thread f = new Thread(this.floor, "Floor Thread");
 
 		TraceFile.init();
 		
-		s.start();
+		s1.start();
+		s2.start();
 		f.start();
 		e.start();
 		
@@ -133,7 +142,12 @@ class ElevatorSystemTest {
 	@Test
 	void elevatorInitialState() {
 		ElevatorRequest elevatorRequest = new ElevatorRequest();
-		this.elevator = new Elevator(elevatorRequest,1);
+		try {
+			this.elevator = new Elevator(1, 206);
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		assert(this.elevator.getState().equals("Initial"));
 		
 	}
@@ -142,9 +156,9 @@ class ElevatorSystemTest {
 	@Test
 	void schedulerInitialState() {
 		ElevatorRequest elevatorRequest = new ElevatorRequest();
-		FloorRequest floorRequest = new FloorRequest();
-		this.scheduler = new Scheduler(floorRequest, elevatorRequest);
-		assert(this.scheduler.getCurrentState().equals("Initial"));
+
+		this.scheduler_server = new Scheduler(true);
+		assert(this.scheduler_server.getCurrentState().equals("Initial"));
 		
 	}
 	
@@ -152,19 +166,26 @@ class ElevatorSystemTest {
 	@Test
 	void elevatorHasArrivedState() {
 		ElevatorRequest elevatorRequest = new ElevatorRequest();
-		FloorRequest floorRequest = new FloorRequest();
 		
-		this.scheduler = new Scheduler(floorRequest, elevatorRequest);
-		this.elevator = new Elevator(elevatorRequest,1);
-		this.floor = new Floor(floorRequest);
+		this.scheduler_server = new Scheduler(true);
+		this.scheduler_client = new Scheduler(false);
+		try {
+			this.elevator = new Elevator(1, 206);
+		} catch (SocketException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		this.floor = new Floor();
 
-		Thread s = new Thread(this.scheduler, "Scheduler Thread");
+		Thread s1 = new Thread(this.scheduler_server, "Scheduler Thread");
+		Thread s2 = new Thread(this.scheduler_client, "Scheduler Thread");
 		Thread e = new Thread(this.elevator, "Elevator Thread");
 		Thread f = new Thread(this.floor, "Floor Thread");
 
 		TraceFile.init();
 
-		s.start();
+		s1.start();
+		s2.start();
 		f.start();
 		e.start();
 		assert(finalState("e", "HasArrived"));
@@ -175,19 +196,26 @@ class ElevatorSystemTest {
 	@Test
 	void schedulerDone() {
 		ElevatorRequest elevatorRequest = new ElevatorRequest();
-		FloorRequest floorRequest = new FloorRequest();
 		
-		this.scheduler = new Scheduler(floorRequest, elevatorRequest);
-		this.elevator = new Elevator(elevatorRequest,1);
-		this.floor = new Floor(floorRequest);
+		this.scheduler_server = new Scheduler(true);
+		this.scheduler_client = new Scheduler(false);
+		try {
+			this.elevator = new Elevator(1, 206);
+		} catch (SocketException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		this.floor = new Floor();
 
-		Thread s = new Thread(this.scheduler, "Scheduler Thread");
+		Thread s1 = new Thread(this.scheduler_server, "Scheduler Thread");
+		Thread s2 = new Thread(this.scheduler_client, "Scheduler Thread");
 		Thread e = new Thread(this.elevator, "Elevator Thread");
 		Thread f = new Thread(this.floor, "Floor Thread");
 
 		TraceFile.init();
 
-		s.start();
+		s1.start();
+		s2.start();
 		f.start();
 		e.start();
 		assert(finalState("s", "Request removed"));

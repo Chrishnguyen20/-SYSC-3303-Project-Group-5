@@ -1,3 +1,4 @@
+import java.net.SocketException;
 
 /**
  *
@@ -8,19 +9,17 @@ public class Main {
 
 	/**
 	 * @param args
+	 * @throws SocketException 
 	 */
-	public static void main(String args[]) {
+	public static void main(String args[]) throws SocketException {
+				
+		Thread scheduler_server = new Thread(new Scheduler(true), "Scheduler Thread");
+		Thread scheduler_client = new Thread(new Scheduler(false), "Scheduler Thread");
+		Thread elevator = new Thread(new Elevator(1, 204), "Elevator Thread");
+		Thread floor = new Thread(new Floor(), "Floor Thread");
 		
-		ElevatorRequest elevatorRequest = new ElevatorRequest();
-		FloorRequest floorRequest = new FloorRequest();
-		
-		Thread scheduler = new Thread(new Scheduler(floorRequest, elevatorRequest), "Scheduler Thread");
-		Thread elevator = new Thread(new Elevator(elevatorRequest,1), "Elevator Thread");
-		Thread floor = new Thread(new Floor(floorRequest), "Floor Thread");
-
-		TraceFile.init();
-		
-		scheduler.start();
+		scheduler_server.start();
+		scheduler_client.start();
 		floor.start();
 		elevator.start();
 	}
