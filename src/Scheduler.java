@@ -181,6 +181,7 @@ public class Scheduler implements Runnable {
 					case 2:
 						writeToElevatorTrace("Scheduler Subsystem: Send data to an active elevator\n");
 						String elevatorData = String.valueOf(Scheduler.floorQueue.peek()[1]) + "," + String.valueOf(Scheduler.floorQueue.peek()[3]);
+						Scheduler.floorQueue.poll();
 						this.sendElevatorPacket = new DatagramPacket(elevatorData.getBytes(), elevatorData.getBytes().length, localAddr, receivedElevatorPacket.getPort());
 						try { 
 							this.receiveSocket.send(sendElevatorPacket);
@@ -206,6 +207,8 @@ public class Scheduler implements Runnable {
 								activeElevators.get(i)[1] = updateData[1];
 							}
 						}
+						//be smart and pick up any passengers on this floor going in the direction 
+						
 						writeToElevatorTrace("Scheduler Subsystem: got update from elevator#" + updateData[0] + "\n");
 						if(updateData[2].replaceAll("\\P{Print}","").equals("HasArrived")) {
 							writeToElevatorTrace("Scheduler Subsystem: service floor " + updateData[1] + "\n");
@@ -214,7 +217,6 @@ public class Scheduler implements Runnable {
 						states = "Request served";
 						break;
 					case 4:
-						Scheduler.floorQueue.poll();
 						state = state.nextState();
 						states = "Request removed";
 						break;

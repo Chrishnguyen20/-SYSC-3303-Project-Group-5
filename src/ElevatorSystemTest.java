@@ -108,9 +108,7 @@ class ElevatorSystemTest {
 	@ValueSource(strings = {"EOF", "Floor Subsystem: Queuing request for floor 6 at 04:55:20.524 going down to floor 5", 
 			"Elevator Subsystem: Current Pos of Elevator: 1", "Elevator Subsystem: Current Pos of Elevator: 6"})
 	
-	void iteration_one_tests(String event) {
-		ElevatorRequest elevatorRequest = new ElevatorRequest();
-		
+	void iteration_one_tests(String event) {		
 		this.scheduler_server = new Scheduler(true);
 		this.scheduler_client = new Scheduler(false);
 		try {
@@ -125,8 +123,6 @@ class ElevatorSystemTest {
 		Thread s2 = new Thread(this.scheduler_client, "Scheduler Thread");
 		Thread e = new Thread(this.elevator, "Elevator Thread");
 		Thread f = new Thread(this.floor, "Floor Thread");
-
-		TraceFile.init();
 		
 		s1.start();
 		s2.start();
@@ -141,7 +137,6 @@ class ElevatorSystemTest {
 	//@purpose checks the initial state of the elevator
 	@Test
 	void elevatorInitialState() {
-		ElevatorRequest elevatorRequest = new ElevatorRequest();
 		try {
 			this.elevator = new Elevator(1, 206);
 		} catch (SocketException e) {
@@ -155,8 +150,6 @@ class ElevatorSystemTest {
 	//@purpose checks the initial state of the scheduler
 	@Test
 	void schedulerInitialState() {
-		ElevatorRequest elevatorRequest = new ElevatorRequest();
-
 		this.scheduler_server = new Scheduler(true);
 		assert(this.scheduler_server.getCurrentState().equals("Initial"));
 		
@@ -164,9 +157,7 @@ class ElevatorSystemTest {
 	
 	//@purpose checks the final state of the elevator
 	@Test
-	void elevatorHasArrivedState() {
-		ElevatorRequest elevatorRequest = new ElevatorRequest();
-		
+	void elevatorHasArrivedState() {		
 		this.scheduler_server = new Scheduler(true);
 		this.scheduler_client = new Scheduler(false);
 		try {
@@ -182,7 +173,6 @@ class ElevatorSystemTest {
 		Thread e = new Thread(this.elevator, "Elevator Thread");
 		Thread f = new Thread(this.floor, "Floor Thread");
 
-		TraceFile.init();
 
 		s1.start();
 		s2.start();
@@ -194,9 +184,7 @@ class ElevatorSystemTest {
 	
 	//@purpose checks the final state of the scheduler
 	@Test
-	void schedulerDone() {
-		ElevatorRequest elevatorRequest = new ElevatorRequest();
-		
+	void schedulerDone() {		
 		this.scheduler_server = new Scheduler(true);
 		this.scheduler_client = new Scheduler(false);
 		try {
@@ -211,8 +199,6 @@ class ElevatorSystemTest {
 		Thread s2 = new Thread(this.scheduler_client, "Scheduler Thread");
 		Thread e = new Thread(this.elevator, "Elevator Thread");
 		Thread f = new Thread(this.floor, "Floor Thread");
-
-		TraceFile.init();
 
 		s1.start();
 		s2.start();
