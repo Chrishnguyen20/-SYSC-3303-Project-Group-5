@@ -202,7 +202,6 @@ public class Scheduler implements Runnable {
 		int minimumRequests = Integer.parseInt(this.activeElevators.get(randNum)[5]);
 		for (int i = 0; i < this.activeElevators.size(); ++i) {
 			String[] elevator = this.activeElevators.get(i);
-			System.out.println("Scheduler getAvailableElevator: "+i+", "+elevator[1]);
 			if (Integer.parseInt(elevator[5]) == 0) {
 				elevator[5] = "1";
 				return i;
@@ -239,8 +238,6 @@ public class Scheduler implements Runnable {
 					e.printStackTrace();
 				}
 				
-				System.out.println("Scheduler isClient Port: "+receivedFloorPacket.getPort());
-				
 				String[] floorReq = new String(receivedFloorPacket.getData(), StandardCharsets.UTF_8).split(",");
 				for(int i = 0; i < floorReq.length; i++) {
 					floorReq[i] = floorReq[i].trim();
@@ -258,7 +255,6 @@ public class Scheduler implements Runnable {
 				}
 			}else {
 				if (!Scheduler.requestList.isEmpty()) {
-					System.out.println("Scheduler loop activeElevators.size(): "+activeElevators.size()+", "+Scheduler.requestList.size());
 					switch (state.Current()) {
 					case 1:
 						while(activeElevators.size() < this.elevatorCount) {
@@ -270,8 +266,6 @@ public class Scheduler implements Runnable {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
-
-							System.out.println("Scheduler floorQueue.isEmpty Port: "+receivedElevatorPacket.getPort());
 							
 							String[] data = new String(this.receivedElevatorPacket.getData()).split(",");
 							
@@ -300,8 +294,6 @@ public class Scheduler implements Runnable {
 							
 							this.sendElevatorPacket = new DatagramPacket(elevatorData.getBytes(), elevatorData.getBytes().length, localAddr, port);
 							
-							System.out.println("Scheduler sendElevatorPacket Port: "+port);
-							
 							try { 
 								this.receiveSocket.send(sendElevatorPacket);
 							} catch (IOException e) {
@@ -324,8 +316,6 @@ public class Scheduler implements Runnable {
 							e.printStackTrace();
 						}
 						
-						System.out.println("Scheduler update Port: "+receivedElevatorPacket.getPort());
-						
 						String[] updateData = new String(receivedElevatorPacket.getData()).split(",");
 						
 						//boolean newElevator = true;
@@ -347,7 +337,6 @@ public class Scheduler implements Runnable {
 						
 						
 						writeToElevatorTrace("Scheduler Subsystem: got update from elevator#" + updateData[0] + "\n");
-						System.out.println("Scheduler arrived: "+updateData[7]);
 						if(updateData[7].replaceAll("\\P{Print}","").equals("hasArrived")) {
 							writeToElevatorTrace("Scheduler Subsystem: service floor " + updateData[1] + "\n");
 							state = state.nextState();

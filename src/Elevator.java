@@ -275,18 +275,10 @@ public class Elevator implements Runnable {
 				writeToTrace("Elevator#" + this.carNum + " is currently idle and waiting for an ElevatorRequest! Time stamp: " + s.toString() + "\n");
 				
 				String initData = getUpdateString(false);
-//						String.valueOf(this.carNum) 
-//						+ "," + String.valueOf(this.currentFloor) 
-//						+ "," + String.valueOf(this.passengerFloor)
-//						+ "," + String.valueOf(this.destFloor)
-//						+ "," + String.valueOf(this.destFloors.size())
-//						+ "," + state.getElevatorState();
 				
 				this.sendPacket = new DatagramPacket(initData.getBytes(), initData.length(), this.localAddr, 202);
 				this.receivePacket = new DatagramPacket(new byte[21], 21);
 				boolean receivedWork = false;
-				
-				System.out.println("Elevator: "+carNum+", Port: "+portID);
 				
 				while(!receivedWork) {
 					try {
@@ -305,7 +297,6 @@ public class Elevator implements Runnable {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					System.out.println("Elevator: "+carNum+", Port: "+portID+", receivedWork: "+receivedWork);
 				}
 				this.hasRequest = true;
 				String[] jobData = new String(this.receivePacket.getData()).split(",");
