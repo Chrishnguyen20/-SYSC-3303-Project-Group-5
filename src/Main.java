@@ -25,6 +25,6 @@ public class Main {
 		scheduler_client.start();
 		floor.start();
 		elevator1.start();
-		//elevator2.start();
+		elevator2.start();
 	}
 }

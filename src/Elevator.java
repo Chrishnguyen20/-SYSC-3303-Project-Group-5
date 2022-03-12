@@ -24,7 +24,7 @@ import java.util.Collections;
  */
 public class Elevator implements Runnable {
 	
-	private static final float time = 0.1f;//9.175f;
+	private static final float time = 9.175f;
 	
 	private int currentFloor;
 	private static int nextCarNum = 0;
@@ -132,9 +132,21 @@ public class Elevator implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-
 	}
+	
+	/*
+
+	Function: move
+	This determines if the elevator should move up or down based on it's position and destination 
+	and then moves the elevator in that direction
+
+	 @param 
+	No parameters
+
+	 @return NULL
+	This method is void and has no return value
+
+	*/
 	
 	public void move() {
 		if (this.currentFloor >= 1 && this.currentFloor <= 7) {
@@ -184,7 +196,7 @@ public class Elevator implements Runnable {
 	Function: isPassengerOnPath
 	This determines if the given passenger is on the elevators path to it's destination
 
-	 @param Passenger* passenger
+	 @param Passenger* int start, int dest
 	the passenger which will be determined if is on the elevators path to it's destination
 
 	 @return bool
@@ -221,7 +233,7 @@ public class Elevator implements Runnable {
 
 	this also determines the value of the current destination and final destination
 
-	 @param Passenger* passenger
+	 @param int start, int dest
 	the passenger which will be determined if is on the elevators path to it's destination
 
 	 @return bool
@@ -258,14 +270,14 @@ public class Elevator implements Runnable {
 	
 	private String getUpdateString(boolean hasArrived) {
 		String updateData = 
-				String.valueOf(this.carNum) 					//0
-				+ "," + String.valueOf(this.portID) 			//1
-				+ "," + String.valueOf(this.currentFloor) 		//2
-				+ "," + String.valueOf(this.passengerFloor)		//3
-				+ "," + String.valueOf(this.destFloor)			//4
-				+ "," + String.valueOf(this.destFloors.size())	//5
-				+ "," + state.getElevatorState()				//6
-				+ "," + (hasArrived ? "hasArrived" : "notArrived");//7
+				String.valueOf(this.carNum) 						//0
+				+ "," + String.valueOf(this.portID) 				//1
+				+ "," + String.valueOf(this.currentFloor) 			//2
+				+ "," + String.valueOf(this.passengerFloor)			//3
+				+ "," + String.valueOf(this.destFloor)				//4
+				+ "," + String.valueOf(this.destFloors.size())		//5
+				+ "," + state.getElevatorState()					//6
+				+ "," + (hasArrived ? "hasArrived" : "notArrived");	//7
 		return updateData;
 	}
 	
@@ -337,8 +349,6 @@ public class Elevator implements Runnable {
             	writeToTrace("Elevator#" + this.carNum + " current Pos: "+ currentFloor + ". Time stamp: " + f.toString() + "\n");
 
 				move();
-				//String update = String.valueOf(this.carNum) + "," + String.valueOf(this.currentFloor) + "," + state.getElevatorState();
-				
 				String updateData = getUpdateString(false);
 				
 				this.sendPacket = new DatagramPacket(updateData.getBytes(), updateData.length(), this.localAddr, 202);
@@ -363,8 +373,6 @@ public class Elevator implements Runnable {
 	            openDoors();
             	LocalTime t = LocalTime.now();
             	writeToTrace("Elevator#" + this.carNum + " current Pos: "+ currentFloor + ". Time stamp: " + t.toString() + "\n");
-
-				//String arrived = String.valueOf(this.carNum) + "," + String.valueOf(this.currentFloor) + "," + "HasArrived";
 				
 				String arrivedData = getUpdateString(true);
 				
@@ -380,7 +388,6 @@ public class Elevator implements Runnable {
 	            if (this.destFloors.containsKey(this.currentFloor)) {
 	            	this.destFloors.remove(this.currentFloor);
 	            }
-	            
 
 				break;
 			}

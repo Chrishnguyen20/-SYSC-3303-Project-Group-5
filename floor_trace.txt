@@ -1,12 +1,13 @@
-Floor Subsystem: Queued a request
+Floor Subsystem: Queued a request -- 21:22:54.314,1,up,3
 Scheduler Subsystem: Queueing event from floor subsystem
 Scheduler Subsystem: Sending floor acknowledgement
 Floor Subsystem: Received an acknowledgement
-Floor Subsystem: Queued a request
+Floor Subsystem: Queued a request -- 14:05:15.000,2,up,4
 Scheduler Subsystem: Queueing event from floor subsystem
 Scheduler Subsystem: Sending floor acknowledgement
 Floor Subsystem: Received an acknowledgement
-Floor Subsystem: Queued a request
+Floor Subsystem: Queued a request -- 04:55:20.524,6,down,5
 Scheduler Subsystem: Queueing event from floor subsystem
 Scheduler Subsystem: Sending floor acknowledgement
 Floor Subsystem: Received an acknowledgement
+EOF
