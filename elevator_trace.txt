@@ -1,115 +1,167 @@
-Scheduler Subsystem: waiting for elevator
-Elevator#0 current state - Initial
-Elevator#1 current state - Initial
-Elevator#0 initialize elevator 0
-Elevator#1 initialize elevator 1
-Elevator#0 current state - NoElevatorRequest
-Elevator#0 is currently idle and waiting for an ElevatorRequest! Time stamp: 04:42:09.724089400
-Elevator#1 current state - NoElevatorRequest
-Scheduler Subsystem: added event
-Scheduler Subsystem: waiting for elevator
-Elevator#1 is currently idle and waiting for an ElevatorRequest! Time stamp: 04:42:09.729086300
-Scheduler Subsystem: added event
-Scheduler Subsystem: current state - Initial
-Scheduler Subsystem: current state - Has request
-Scheduler Subsystem: Send data to an active elevator
-Scheduler Subsystem: current state - Notified elevator
-Scheduler Subsystem: Waiting for an elevator to update their status
-Elevator#0 current state - MoveToDestination
-Elevator#1 current state - MoveToDestination
-Elevator#0 current Pos: 1. Time stamp: 04:42:10.751451600
-Elevator#1 current Pos: 1. Time stamp: 04:42:10.751451600
-Scheduler Subsystem: current state - Notified elevator
-Scheduler Subsystem: Send data to an active elevator
-Scheduler Subsystem: current state - Notified elevator
-Scheduler Subsystem: Waiting for an elevator to update their status
-Scheduler Subsystem: current state - Notified elevator
-Scheduler Subsystem: Send data to an active elevator
-Scheduler Subsystem: current state - Notified elevator
-Scheduler Subsystem: Waiting for an elevator to update their status
-Elevator#0 current state - MoveToDestination
-Elevator#1, doors opening. Time stamp: 04:42:10.862383
-Elevator#1, doors closing. Time stamp: 04:42:10.862383
-Elevator#0 current Pos: 2. Time stamp: 04:42:10.862383
-Elevator#1 current state - PassengersBoarding
-Elevator#1 current Pos of Elevator: 2. Time stamp: 04:42:10.863381400
-Scheduler Subsystem: current state - Notified elevator
-Elevator#1 passengers boarded on floor: 2. Time stamp: 04:42:10.863381400
-Scheduler Subsystem: Send data to an active elevator
-Elevator#1 passengers currently in elevator: 1. Time stamp: 04:42:10.863381400
-Scheduler Subsystem: current state - Notified elevator
-Scheduler Subsystem: Waiting for an elevator to update their status
-Elevator#1 current state - MoveToDestination
-Elevator#1 current Pos: 2. Time stamp: 04:42:10.864381200
-Scheduler Subsystem: current state - Notified elevator
-Scheduler Subsystem: Send data to an active elevator
-Scheduler Subsystem: current state - Notified elevator
-Scheduler Subsystem: Waiting for an elevator to update their status
-Elevator#1 current state - MoveToDestination
-Elevator#0 current state - MoveToDestination
-Elevator#0 current Pos: 3. Time stamp: 04:42:10.973313100
-Elevator#1 current Pos: 3. Time stamp: 04:42:10.973313100
-Scheduler Subsystem: current state - Notified elevator
-Scheduler Subsystem: Send data to an active elevator
-Scheduler Subsystem: current state - Notified elevator
-Scheduler Subsystem: Waiting for an elevator to update their status
-Scheduler Subsystem: current state - Notified elevator
-Scheduler Subsystem: Send data to an active elevator
-Scheduler Subsystem: current state - Notified elevator
-Scheduler Subsystem: Waiting for an elevator to update their status
-Elevator#1 current state - HasArrived
-Elevator#1, doors opening. Time stamp: 04:42:11.085243200
-Elevator#0 current state - MoveToDestination
-Elevator#0 current Pos: 4. Time stamp: 04:42:11.085243200
-Elevator#1, doors closing. Time stamp: 04:42:11.085243200
-Scheduler Subsystem: current state - Notified elevator
-Scheduler Subsystem: Send data to an active elevator
-Elevator#1 current Pos: 4. Time stamp: 04:42:11.087242500
-Scheduler Subsystem: current state - Notified elevator
-Scheduler Subsystem: Waiting for an elevator to update their status
-Elevator#1 current state - NoElevatorRequest
-Elevator#1 is currently idle and waiting for an ElevatorRequest! Time stamp: 04:42:11.087242500
-Scheduler Subsystem: current state - Notified elevator
-Scheduler Subsystem: Send data to an active elevator
-Scheduler Subsystem: current state - Notified elevator
-Scheduler Subsystem: Waiting for an elevator to update their status
-Scheduler Subsystem: current state - Notified elevator
-Scheduler Subsystem: Send data to an active elevator
-Elevator#0 current state - MoveToDestination
-Elevator#0 current Pos: 5. Time stamp: 04:42:11.197175500
-Elevator#0, doors opening. Time stamp: 04:42:11.307107
-Elevator#0, doors closing. Time stamp: 04:42:11.307107
-Elevator#0 current state - PassengersBoarding
-Elevator#0 current Pos of Elevator: 6. Time stamp: 04:42:11.308106600
-Elevator#0 passengers boarded on floor: 6. Time stamp: 04:42:11.308106600
-Elevator#0 passengers currently in elevator: 1. Time stamp: 04:42:11.308106600
-Elevator#0 current state - MoveToDestination
-Elevator#0 current Pos: 6. Time stamp: 04:42:11.309105200
-Elevator#0 current state - HasArrived
-Elevator#0, doors opening. Time stamp: 04:42:11.417037900
-Elevator#0, doors closing. Time stamp: 04:42:11.417037900
-Elevator#0 current Pos: 5. Time stamp: 04:42:11.418037600
-Elevator#0 current state - NoElevatorRequest
-Elevator#0 is currently idle and waiting for an ElevatorRequest! Time stamp: 04:42:11.418037600
-Elevator#1 current state - MoveToDestination
-Elevator#1 current Pos: 4. Time stamp: 04:42:12.099614500
-Elevator#1 current state - MoveToDestination
-Elevator#1 current Pos: 3. Time stamp: 04:42:12.211545300
-Elevator#1 current state - MoveToDestination
-Elevator#1 current Pos: 2. Time stamp: 04:42:12.323474900
-Elevator#1, doors opening. Time stamp: 04:42:12.434407800
-Elevator#1, doors closing. Time stamp: 04:42:12.434407800
-Elevator#1 current state - PassengersBoarding
-Elevator#1 current Pos of Elevator: 1. Time stamp: 04:42:12.435406200
-Elevator#1 passengers boarded on floor: 1. Time stamp: 04:42:12.435406200
-Elevator#1 passengers currently in elevator: 1. Time stamp: 04:42:12.435406200
-Elevator#1 current state - MoveToDestination
-Elevator#1 current Pos: 1. Time stamp: 04:42:12.436407
-Elevator#1 current state - MoveToDestination
-Elevator#1 current Pos: 2. Time stamp: 04:42:12.548337700
-Elevator#1 current state - HasArrived
-Elevator#1, doors opening. Time stamp: 04:42:12.656268500
-Elevator#1, doors closing. Time stamp: 04:42:12.656268500
-Elevator#1 current Pos: 3. Time stamp: 04:42:12.659267500
-Elevator#1 current state - NoElevatorRequest
-Elevator#1 is currently idle and waiting for an ElevatorRequest! Time stamp: 04:42:12.660267200
+Scheduler Subsystem: waiting for elevator. Time: 15:40:39.812
+Elevator#1 current state - Initial. Time: 15:40:42.594
+Elevator#0 current state - Initial. Time: 15:40:42.594
+Elevator#0 initialize elevator 0. Time: 15:40:42.594
+Elevator#1 initialize elevator 1. Time: 15:40:42.594
+Elevator#1 current state - NoElevatorRequest. Time: 15:40:42.607
+Elevator#0 current state - NoElevatorRequest. Time: 15:40:42.607
+Elevator#1 is currently idle and waiting for an ElevatorRequest! Time stamp: 15:40:42.607
+Elevator#0 is currently idle and waiting for an ElevatorRequest! Time stamp: 15:40:42.607
+Scheduler Subsystem: added event. Time: 15:40:39.812
+Scheduler Subsystem: waiting for elevator. Time: 15:40:39.812
+Scheduler Subsystem: added event. Time: 15:40:39.812
+Scheduler Subsystem: current state - Initial. Time: 15:40:39.812
+Scheduler Subsystem: current state - Has request. Time: 15:40:42.609
+Scheduler Subsystem: Send data to an active elevator. Time: 15:40:42.609
+Scheduler Subsystem: current state - Notified elevator. Time: 15:40:42.610
+Scheduler Subsystem: Waiting for an elevator to update their status. Time: 15:40:42.610
+Elevator#0 sending button press to floor 5 to Scheduler. Time stamp: 15:40:42.607
+Elevator#1 sending button press to floor 4 to Scheduler. Time stamp: 15:40:42.607
+Elevator#1 current state - MoveToDestination. Time: 15:40:42.612
+Elevator#0 current state - MoveToDestination. Time: 15:40:42.612
+Elevator#1 current Pos: 1. Time stamp: 15:40:42.612
+Elevator#0 current Pos: 1. Time stamp: 15:40:42.612
+Scheduler Subsystem: got update from elevator#1 -- MoveToDestination. Time: 15:40:42.610
+Scheduler Subsystem: current state - Notified elevator. Time: 15:40:42.615
+Scheduler Subsystem: Send data to an active elevator. Time: 15:40:42.615
+Scheduler Subsystem: current state - Notified elevator. Time: 15:40:42.615
+Scheduler Subsystem: Waiting for an elevator to update their status. Time: 15:40:42.615
+Scheduler Subsystem: got update from elevator#0 -- MoveToDestination. Time: 15:40:42.615
+Scheduler Subsystem: current state - Notified elevator. Time: 15:40:42.616
+Scheduler Subsystem: Send data to an active elevator. Time: 15:40:42.616
+Scheduler Subsystem: current state - Notified elevator. Time: 15:40:42.616
+Scheduler Subsystem: Waiting for an elevator to update their status. Time: 15:40:42.616
+Elevator#1, doors opening. Time stamp: 15:40:51.791
+Elevator#0 current state - MoveToDestination. Time: 15:40:51.790
+Elevator#0 current Pos: 2. Time stamp: 15:40:51.790
+Scheduler Subsystem: got update from elevator#0 -- MoveToDestination. Time: 15:40:42.616
+Scheduler Subsystem: current state - Notified elevator. Time: 15:40:51.793
+Scheduler Subsystem: Send data to an active elevator. Time: 15:40:51.793
+Scheduler Subsystem: current state - Notified elevator. Time: 15:40:51.793
+Scheduler Subsystem: Waiting for an elevator to update their status. Time: 15:40:51.793
+Elevator#1, doors closing. Time stamp: 15:40:51.791
+Elevator#1 current state - PassengersBoarding. Time: 15:40:51.790
+Elevator#1 current Pos of Elevator: 2. Time stamp: 15:40:51.790
+Elevator#1 passengers boarded on floor: 2. Time stamp: 15:40:51.790
+Elevator#1 passengers currently in elevator: 1. Time stamp: 15:40:51.790
+Elevator#1 current state - MoveToDestination. Time: 15:40:51.803
+Elevator#1 current Pos: 2. Time stamp: 15:40:51.803
+Scheduler Subsystem: got update from elevator#1 -- MoveToDestination. Time: 15:40:51.793
+Scheduler Subsystem: current state - Notified elevator. Time: 15:40:51.804
+Scheduler Subsystem: Send data to an active elevator. Time: 15:40:51.804
+Scheduler Subsystem: current state - Notified elevator. Time: 15:40:51.804
+Scheduler Subsystem: Waiting for an elevator to update their status. Time: 15:40:51.804
+Elevator#0 current state - MoveToDestination. Time: 15:41:00.969
+Elevator#0 current Pos: 3. Time stamp: 15:41:00.969
+Scheduler Subsystem: got update from elevator#0 -- MoveToDestination. Time: 15:40:51.804
+Scheduler Subsystem: current state - Notified elevator. Time: 15:41:00.971
+Scheduler Subsystem: Send data to an active elevator. Time: 15:41:00.971
+Scheduler Subsystem: current state - Notified elevator. Time: 15:41:00.972
+Scheduler Subsystem: Waiting for an elevator to update their status. Time: 15:41:00.972
+Elevator#1 current state - MoveToDestination. Time: 15:41:00.983
+Elevator#1 current Pos: 3. Time stamp: 15:41:00.983
+Scheduler Subsystem: got update from elevator#1 -- MoveToDestination. Time: 15:41:00.972
+Scheduler Subsystem: current state - Notified elevator. Time: 15:41:00.984
+Scheduler Subsystem: Send data to an active elevator. Time: 15:41:00.984
+Scheduler Subsystem: current state - Notified elevator. Time: 15:41:00.984
+Scheduler Subsystem: Waiting for an elevator to update their status. Time: 15:41:00.984
+Elevator#0 current state - MoveToDestination. Time: 15:41:10.149
+Elevator#0 current Pos: 4. Time stamp: 15:41:10.149
+Scheduler Subsystem: got update from elevator#0 -- MoveToDestination. Time: 15:41:00.984
+Scheduler Subsystem: current state - Notified elevator. Time: 15:41:10.151
+Scheduler Subsystem: Send data to an active elevator. Time: 15:41:10.151
+Scheduler Subsystem: current state - Notified elevator. Time: 15:41:10.151
+Scheduler Subsystem: Waiting for an elevator to update their status. Time: 15:41:10.151
+Elevator#1 current state - HasArrived. Time: 15:41:10.162
+Elevator#1, doors opening. Time stamp: 15:41:10.163
+Elevator#1, doors closing. Time stamp: 15:41:10.163
+Elevator#1 current Pos: 4. Time stamp: 15:41:10.162
+Elevator#1 current state - NoElevatorRequest. Time: 15:41:10.174
+Scheduler Subsystem: got update from elevator#1 -- HasArrived. Time: 15:41:10.151
+Elevator#1 is currently idle and waiting for an ElevatorRequest! Time stamp: 15:41:10.174
+Scheduler Subsystem: service floor 4. Time: 15:41:10.151
+Scheduler Subsystem: current state - Request served. Time: 15:41:10.175
+Scheduler Subsystem: current state - Request removed. Time: 15:41:10.176
+Scheduler Subsystem: current state - Has request. Time: 15:41:10.176
+Scheduler Subsystem: Send data to an active elevator. Time: 15:41:10.176
+Scheduler Subsystem: current state - Notified elevator. Time: 15:41:10.176
+Scheduler Subsystem: Waiting for an elevator to update their status. Time: 15:41:10.176
+Scheduler Subsystem: got update from elevator#1 -- NoElevatorRequest. Time: 15:41:10.176
+Scheduler Subsystem: current state - Notified elevator. Time: 15:41:10.177
+Scheduler Subsystem: Send data to an active elevator. Time: 15:41:10.177
+Scheduler Subsystem: current state - Notified elevator. Time: 15:41:10.178
+Scheduler Subsystem: Waiting for an elevator to update their status. Time: 15:41:10.178
+Elevator#1 sending button press to floor 3 to Scheduler. Time stamp: 15:41:10.174
+Elevator#1 current state - MoveToDestination. Time: 15:41:10.179
+Elevator#1 current Pos: 4. Time stamp: 15:41:10.179
+Scheduler Subsystem: got update from elevator#1 -- MoveToDestination. Time: 15:41:10.178
+Scheduler Subsystem: current state - Request served. Time: 15:41:10.180
+Scheduler Subsystem: Waiting for an elevator to update their status. Time: 15:41:10.180
+Elevator#0 current state - MoveToDestination. Time: 15:41:19.330
+Elevator#0 current Pos: 5. Time stamp: 15:41:19.330
+Scheduler Subsystem: got update from elevator#0 -- MoveToDestination. Time: 15:41:10.180
+Scheduler Subsystem: current state - Request served. Time: 15:41:19.331
+Scheduler Subsystem: Waiting for an elevator to update their status. Time: 15:41:19.331
+Elevator#1 current state - MoveToDestination. Time: 15:41:19.359
+Elevator#1 current Pos: 3. Time stamp: 15:41:19.359
+Scheduler Subsystem: got update from elevator#1 -- MoveToDestination. Time: 15:41:19.331
+Scheduler Subsystem: current state - Request served. Time: 15:41:19.360
+Scheduler Subsystem: Waiting for an elevator to update their status. Time: 15:41:19.360
+Elevator#0, doors opening. Time stamp: 15:41:28.510
+Elevator#0, doors closing. Time stamp: 15:41:28.510
+Elevator#0 current state - PassengersBoarding. Time: 15:41:28.510
+Elevator#0 current Pos of Elevator: 6. Time stamp: 15:41:28.510
+Elevator#0 passengers boarded on floor: 6. Time stamp: 15:41:28.510
+Elevator#0 passengers currently in elevator: 1. Time stamp: 15:41:28.510
+Elevator#0 current state - MoveToDestination. Time: 15:41:28.523
+Elevator#0 current Pos: 6. Time stamp: 15:41:28.523
+Scheduler Subsystem: got update from elevator#0 -- MoveToDestination. Time: 15:41:19.360
+Scheduler Subsystem: current state - Request served. Time: 15:41:28.524
+Scheduler Subsystem: Waiting for an elevator to update their status. Time: 15:41:28.524
+Elevator#1 current state - MoveToDestination. Time: 15:41:28.538
+Elevator#1 current Pos: 2. Time stamp: 15:41:28.538
+Scheduler Subsystem: got update from elevator#1 -- MoveToDestination. Time: 15:41:28.524
+Scheduler Subsystem: current state - Request served. Time: 15:41:28.539
+Scheduler Subsystem: Waiting for an elevator to update their status. Time: 15:41:28.539
+Elevator#0 current state - HasArrived. Time: 15:41:37.702
+Elevator#0, doors opening. Time stamp: 15:41:37.702
+Elevator#0, doors closing. Time stamp: 15:41:37.702
+Elevator#0 current Pos: 5. Time stamp: 15:41:37.702
+Elevator#0 current state - NoElevatorRequest. Time: 15:41:37.715
+Scheduler Subsystem: got update from elevator#0 -- HasArrived. Time: 15:41:28.539
+Elevator#0 is currently idle and waiting for an ElevatorRequest! Time stamp: 15:41:37.715
+Scheduler Subsystem: service floor 5. Time: 15:41:28.539
+Scheduler Subsystem: current state - Request served. Time: 15:41:37.716
+Scheduler Subsystem: current state - Request removed. Time: 15:41:37.716
+Scheduler Subsystem: current state - Has request. Time: 15:41:37.717
+Scheduler Subsystem: Send data to an active elevator. Time: 15:41:37.717
+Scheduler Subsystem: current state - Notified elevator. Time: 15:41:37.717
+Scheduler Subsystem: Waiting for an elevator to update their status. Time: 15:41:37.717
+Scheduler Subsystem: got update from elevator#0 -- NoElevatorRequest. Time: 15:41:37.717
+Scheduler Subsystem: current state - Request served. Time: 15:41:37.718
+Elevator#1, doors opening. Time stamp: 15:41:37.718
+Scheduler Subsystem: Waiting for an elevator to update their status. Time: 15:41:37.718
+Elevator#1, doors closing. Time stamp: 15:41:37.718
+Elevator#1 current state - PassengersBoarding. Time: 15:41:37.718
+Elevator#1 current Pos of Elevator: 1. Time stamp: 15:41:37.718
+Elevator#1 passengers boarded on floor: 1. Time stamp: 15:41:37.718
+Elevator#1 passengers currently in elevator: 1. Time stamp: 15:41:37.718
+Elevator#1 current state - MoveToDestination. Time: 15:41:37.730
+Elevator#1 current Pos: 1. Time stamp: 15:41:37.730
+Scheduler Subsystem: got update from elevator#1 -- MoveToDestination. Time: 15:41:37.718
+Scheduler Subsystem: current state - Request served. Time: 15:41:37.731
+Scheduler Subsystem: Waiting for an elevator to update their status. Time: 15:41:37.731
+Elevator#1 current state - MoveToDestination. Time: 15:41:46.909
+Elevator#1 current Pos: 2. Time stamp: 15:41:46.909
+Scheduler Subsystem: got update from elevator#1 -- MoveToDestination. Time: 15:41:37.731
+Scheduler Subsystem: current state - Request served. Time: 15:41:46.912
+Scheduler Subsystem: Waiting for an elevator to update their status. Time: 15:41:46.912
+Elevator#1 current state - HasArrived. Time: 15:41:56.089
+Elevator#1, doors opening. Time stamp: 15:41:56.089
+Elevator#1, doors closing. Time stamp: 15:41:56.089
+Elevator#1 current Pos: 3. Time stamp: 15:41:56.089
+Elevator#1 current state - NoElevatorRequest. Time: 15:41:56.101
+Elevator#1 is currently idle and waiting for an ElevatorRequest! Time stamp: 15:41:56.101
+Scheduler Subsystem: got update from elevator#1 -- HasArrived. Time: 15:41:46.912
+Scheduler Subsystem: service floor 3. Time: 15:41:46.912
+EOF. Time: 15:41:46.912

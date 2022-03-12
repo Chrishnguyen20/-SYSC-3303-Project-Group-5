@@ -6,14 +6,10 @@ Leo Xu - 101149896
 
 Source files:
 - Elevator.java
-- ElevatorRequest.java
 - ElevatorState.java
 - ElevatorSystemTest.java
 - Floor.java
-- FloorRequest.java
-- Main.java
 - Scheduler.java
-- TraceFile.java
 
 
 Documentation:
@@ -24,18 +20,20 @@ Documentation:
 
 Instructions:
 The program's usage is fairly straightforward, however, requires the use of the Eclipse IDE. 
-Simply unzip the source file, open the project in Eclipse, then press run. 
-All the output is printed to the console for easy reading.
+Simply unzip the source file, open the project in Eclipse, then run the three classes in the following order:
+1. Scheduler
+2. Floor
+3. Elevator
 
 JUnit testing:
 This program comes with a JUnit package for quick and seamless testing. 
-To execute the tests, simple right click the "ElevatorSystemTest.java" file in Eclipse and run the program as a  JUnit test. 
-There are a total of 8 tests which are all documented in the source code via comments.  
+To execute the tests, first you must successfully run the program once (see Instructions). Then simply right click the "ElevatorSystemTest.java" file in Eclipse and run the program as a  JUnit test. 
+There are a total of 31 tests which are all documented in the source code via comments.  
 
 Breakdown or responsibilities: 
-- Billal:  the JUnit testing
-- Minh:   Elevator state machine
-- Leo:    Scheduler state machine
+- Billal:  the JUnit testing + UDP communication 
+- Minh:  smart scheduler 
+- Leo:    design documentations 
 - Chris:  design documentations
 
 Distance between floor is 4 meters.

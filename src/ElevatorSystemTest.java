@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.SocketException;
 
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -45,7 +46,7 @@ class ElevatorSystemTest {
 					while ((line = reader.readLine()) != null){
 						if(line.contains(s)) {
 							return true;
-						}else if(line.equals("EOF")) {
+						}else if(line.contains("EOF")) {
 							flag = false;
 						}
 					}
@@ -75,7 +76,7 @@ class ElevatorSystemTest {
 					while ((line = reader.readLine()) != null){
 						if(line.contains(s)) {
 							return true;
-						}else if(line.equals("EOF")) {
+						}else if(line.contains("EOF")) {
 							flag = false;
 						}
 					}
@@ -112,9 +113,9 @@ class ElevatorSystemTest {
 			String line;
 			try {
 				while ((line = reader.readLine()) != null){
-					if(line.equals("EOF")) {
+					if(line.contains("EOF")) {
 						flag = false;
-					}else if(line.equals(s)) {
+					}else if(line.contains(s)) {
 						return true;
 					}
 				}
@@ -127,45 +128,21 @@ class ElevatorSystemTest {
 		
 		return false;
 	}
-
-	@Test
-	//@purpose run through the program once, the trace file is then used for unit testing
-	private void initTests() {
-		this.scheduler_server = new Scheduler(true, 1);
-		this.scheduler_client = new Scheduler(false, 1);
-		try {
-			this.elevator = new Elevator(1, 206);
-		} catch (SocketException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		this.floor = new Floor();
-
-		Thread s1 = new Thread(this.scheduler_server, "Scheduler Thread");
-		Thread s2 = new Thread(this.scheduler_client, "Scheduler Thread");
-		Thread e = new Thread(this.elevator, "Elevator Thread");
-		Thread f = new Thread(this.floor, "Floor Thread");
-
-
-		s1.start();
-		s2.start();
-		f.start();
-		e.start();
-		assert(existsInTrace("EOF", false) && existsInTrace("EOF", true));
-	}
 	
 	//@purpose test that the program runs successfully
 	@ParameterizedTest
-	@ValueSource(strings = {"EOF", "Floor Subsystem: Queued a request -- 21:22:54.314,1,up,3",
+	@ValueSource(strings = {"EOF", "Floor Subsystem: Queued a request -- request for floor 1 going up",
 			 "Scheduler Subsystem: Queueing event from floor subsystem",
 			 "Scheduler Subsystem: Sending floor acknowledgement",
-			 "Floor Subsystem: Queued a request -- 14:05:15.000,2,up,4"})
+			 "Floor Subsystem: Received an acknowledgement",
+			 "Floor Subsystem: Queued a request -- request for floor 6 going down"})
 	void floor_tests(String event) {		
 		assert(existsInTrace(event, false));	
 	}
 	
 	//@purpose test that the program runs successfully
 	@ParameterizedTest
+	@Order(3)
 	@ValueSource(strings = {"EOF", 
 			"Elevator#0 initialize elevator 0", "Elevator#0 is currently idle and waiting for an ElevatorRequest!",
 			"Scheduler Subsystem: added event", "Scheduler Subsystem: Send data to an active elevator", "Elevator#0 current Pos: 1",
@@ -188,6 +165,20 @@ class ElevatorSystemTest {
 			 "Elevator#0 current state - HasArrived"})
 	void elevatorHasArrivedState(String event) {		
 		assert(checkState(event));
+	}
+	
+	//@purpose checks the whether multiple elevators are moving throughout the program
+	@ParameterizedTest
+	@ValueSource(strings = {"Elevator#1 current state - Initial",
+			 "Elevator#0 current state - Initial",
+			 "Elevator#0 initialize elevator 0",
+			 "Elevator#1 initialize elevator 1",
+			 "Elevator#0 current Pos: 3",
+			 "Elevator#1 current Pos: 2",
+			 "Elevator#1 current state - HasArrived",
+			 "Elevator#0 current state - HasArrived"})
+	void multipleElevators(String event) {		
+		assert(existsInTrace(event, true));
 	}
 	
 }
