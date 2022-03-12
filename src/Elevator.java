@@ -21,6 +21,7 @@ import java.util.Collections;
  * @param hasRequest         - To check if there is a request or not for the elevator
  * @param nextCarNum         - Static variable used to assign id's to the elevator
  * @param carNum		     - The elevator id number
+ * @param passengerFloor     - The floor of the passenger
  * @param time			     - Amount of time the elevator should sleep for to simulate movement, doors opening, and passengers boarding/disembarking
  * @param receivedPassengers - Whether passengers have boarded the elevator 
  * @param elevatorRequest    - the shared memory between the elevator and scheduler.
