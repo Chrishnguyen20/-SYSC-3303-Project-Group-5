@@ -131,8 +131,8 @@ class ElevatorSystemTest {
 	@Test
 	//@purpose run through the program once, the trace file is then used for unit testing
 	private void initTests() {
-		this.scheduler_server = new Scheduler(true);
-		this.scheduler_client = new Scheduler(false);
+		this.scheduler_server = new Scheduler(true, 1);
+		this.scheduler_client = new Scheduler(false, 1);
 		try {
 			this.elevator = new Elevator(1, 206);
 		} catch (SocketException e1) {

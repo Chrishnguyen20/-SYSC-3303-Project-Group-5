@@ -7,6 +7,7 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.time.LocalTime;
+import java.util.TreeMap;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -23,13 +24,14 @@ import java.util.Collections;
  */
 public class Elevator implements Runnable {
 	
-	private static final float time = 9.175f;
+	private static final float time = 0.1f;//9.175f;
 	
 	private int currentFloor;
 	private static int nextCarNum = 0;
 	private int carNum;
 	private int receivedPassengers;
-	private ArrayList<Integer> destFloor;
+	private int destFloor;
+	private TreeMap<Integer, Integer> destFloors;
 	private int passengerFloor;
 	private boolean hasRequest;
 	private ElevatorState state;
@@ -47,7 +49,7 @@ public class Elevator implements Runnable {
 		this.state = ElevatorState.Initial;
 		this.eleSocket = new DatagramSocket(portID);
 		this.portID = portID;
-		this.destFloor = new ArrayList<Integer>();
+		this.destFloor = 0;
 		this.doorClosed = false;
 		try {
 			this.localAddr = InetAddress.getLocalHost();
@@ -55,6 +57,7 @@ public class Elevator implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		destFloors = new TreeMap<Integer, Integer>();
 	}
 	
 	public int getCarNum() { return this.carNum; }
@@ -75,7 +78,7 @@ public class Elevator implements Runnable {
 		return getObjectiveFloor() > this.currentFloor ? "up" : "down";
 	}
 	
-	public ArrayList<Integer> getDestFloor() {
+	public int getDestFloor() {
 		return this.destFloor;
 	}
 	
@@ -87,7 +90,7 @@ public class Elevator implements Runnable {
 		if (this.receivedPassengers == 0) {
 			return getFloorNum(); 
 		}
-		return getDestFloor().get(getDestFloor().size()-1); 
+		return getDestFloor(); 
 	}
 	
 	/*
@@ -118,11 +121,6 @@ public class Elevator implements Runnable {
         }
 	}
 	
-	/*
-	 * @purpose - writes to the elevator_trace.txt file
-	 * @param s - elevator data
-	 * @return void
-	 */
 	public void writeToTrace(String s) {
 	    BufferedWriter writer;
 		try {
@@ -136,13 +134,8 @@ public class Elevator implements Runnable {
 		}
 
 
-}
-	/*
-	 * @purpose - Moves the elevator to the destination floor of the request
-	 * 
-	 * @param s - elevator data
-	 * @return void
-	 */
+	}
+	
 	public void move() {
 		if (this.currentFloor >= 1 && this.currentFloor <= 7) {
 			if (this.currentFloor == 1 && getDiretion() == "down") {
@@ -157,6 +150,123 @@ public class Elevator implements Runnable {
 		if (this.currentFloor == getObjectiveFloor()) {
 			return;
 		}
+	}
+	
+
+	/*
+
+	Function: isAcending
+	This determines if the elevator should move up or down based on it's position and destination
+
+	 @param 
+	No parameters
+
+	 @return bool
+	True if the elevator is moving up, else false
+
+	*/
+	
+	boolean isAcending(int cur, int dest)
+	{
+	    if (cur < dest){
+	        return true;
+	    }
+	    return false;
+	}
+	
+	boolean isAcending()
+	{
+	    return isAcending(this.passengerFloor, this.destFloor);
+	}
+
+	/*
+
+	Function: isPassengerOnPath
+	This determines if the given passenger is on the elevators path to it's destination
+
+	 @param Passenger* passenger
+	the passenger which will be determined if is on the elevators path to it's destination
+
+	 @return bool
+	True if the given passenger is on the elevators path to it's destination, else false
+
+	*/
+
+	boolean isPassengerOnPath(int start, int dest)
+	{
+	    if (this.destFloors.isEmpty()){
+	        return true;
+	    }
+	    else if (isAcending()
+	             && isAcending(start, dest)
+	             && this.currentFloor <= start){
+	        return true;
+	    }
+	    else if (!isAcending()
+	             && !isAcending(start, dest)
+	             && this.currentFloor >= start){
+	        return true;
+	    }
+
+	    return false;
+	}
+
+
+	/*
+
+	Function: addPassenger
+	This attempts to add a passenger to the list of requests to complete
+	it will add only if elevator is idle or if
+	the given passenger is on the elevators path to it's destination
+
+	this also determines the value of the current destination and final destination
+
+	 @param Passenger* passenger
+	the passenger which will be determined if is on the elevators path to it's destination
+
+	 @return bool
+	True if the given passenger is added to the list of requests to complete, else false
+
+	*/
+
+	boolean addPassenger(int start, int dest)
+	{
+	    if (isPassengerOnPath(start, dest)){
+	    	if (this.destFloors.isEmpty()) {
+	    		this.passengerFloor = start;
+	    	}
+	    	
+	    	if(this.destFloors.containsKey(dest)) {
+	    		this.destFloors.put(dest, this.destFloors.get(dest) + 1);
+	    	}
+	    	else {
+	    		this.destFloors.put(dest, 1);
+	    	}
+	    	
+	    	this.hasRequest = true;
+	        
+	    	this.destFloor = this.destFloors.lastKey();
+
+	        return true;
+	    }
+	    else if (start == dest){
+	        return true;
+	    }
+
+	    return false;
+	}
+	
+	private String getUpdateString(boolean hasArrived) {
+		String updateData = 
+				String.valueOf(this.carNum) 					//0
+				+ "," + String.valueOf(this.portID) 			//1
+				+ "," + String.valueOf(this.currentFloor) 		//2
+				+ "," + String.valueOf(this.passengerFloor)		//3
+				+ "," + String.valueOf(this.destFloor)			//4
+				+ "," + String.valueOf(this.destFloors.size())	//5
+				+ "," + state.getElevatorState()				//6
+				+ "," + (hasArrived ? "hasArrived" : "notArrived");//7
+		return updateData;
 	}
 	
 	public void run() {		
@@ -175,14 +285,17 @@ public class Elevator implements Runnable {
 				LocalTime s = LocalTime.now();
 				writeToTrace("Elevator#" + this.carNum + " current state - " + state.getElevatorState() + "\n");
 				writeToTrace("Elevator#" + this.carNum + " is currently idle and waiting for an ElevatorRequest! Time stamp: " + s.toString() + "\n");
-				String data = String.valueOf(this.carNum) + "," + String.valueOf(this.currentFloor) + "," + state.getElevatorState();
-				this.sendPacket = new DatagramPacket(data.getBytes(), data.length(), this.localAddr, 202);
+				
+				String initData = getUpdateString(false);
+				
+				this.sendPacket = new DatagramPacket(initData.getBytes(), initData.length(), this.localAddr, 202);
 				this.receivePacket = new DatagramPacket(new byte[21], 21);
 				boolean receivedWork = false;
+				
 				while(!receivedWork) {
 					try {
 						this.eleSocket.send(this.sendPacket);
-						eleSocket.receive(this.receivePacket);
+						this.eleSocket.receive(this.receivePacket);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -199,9 +312,11 @@ public class Elevator implements Runnable {
 				}
 				this.hasRequest = true;
 				String[] jobData = new String(this.receivePacket.getData()).split(",");
-				this.passengerFloor = Integer.parseInt(jobData[0].trim());
-				this.destFloor.add(Integer.parseInt(jobData[1].trim()));
-				Collections.sort(destFloor);
+				int start = Integer.parseInt(jobData[0].trim());
+				int dest = Integer.parseInt(jobData[1].trim());
+				
+				addPassenger(start, dest);
+				
 				break;
 			case "PassengersBoarding":
 				// Simulate passengers boarding
@@ -222,8 +337,11 @@ public class Elevator implements Runnable {
             	writeToTrace("Elevator#" + this.carNum + " current Pos: "+ currentFloor + ". Time stamp: " + f.toString() + "\n");
 
 				move();
-				String update = String.valueOf(this.carNum) + "," + String.valueOf(this.currentFloor) + "," + state.getElevatorState();
-				this.sendPacket = new DatagramPacket(update.getBytes(), update.length(), this.localAddr, 202);
+				//String update = String.valueOf(this.carNum) + "," + String.valueOf(this.currentFloor) + "," + state.getElevatorState();
+				
+				String updateData = getUpdateString(false);
+				
+				this.sendPacket = new DatagramPacket(updateData.getBytes(), updateData.length(), this.localAddr, 202);
 				try {
 					this.eleSocket.send(this.sendPacket);
 				} catch (IOException e) {
@@ -246,8 +364,11 @@ public class Elevator implements Runnable {
             	LocalTime t = LocalTime.now();
             	writeToTrace("Elevator#" + this.carNum + " current Pos: "+ currentFloor + ". Time stamp: " + t.toString() + "\n");
 
-				String arrived = String.valueOf(this.carNum) + "," + String.valueOf(this.currentFloor) + "," + "HasArrived";
-				this.sendPacket = new DatagramPacket(arrived.getBytes(), arrived.length(), this.localAddr, 202);
+				//String arrived = String.valueOf(this.carNum) + "," + String.valueOf(this.currentFloor) + "," + "HasArrived";
+				
+				String arrivedData = getUpdateString(true);
+				
+				this.sendPacket = new DatagramPacket(arrivedData.getBytes(), arrivedData.length(), this.localAddr, 202);
 				try {
 					this.eleSocket.send(this.sendPacket);
 				} catch (IOException e) {
@@ -255,6 +376,12 @@ public class Elevator implements Runnable {
 					e.printStackTrace();
 				}
 	            this.receivedPassengers--;
+	            
+	            if (this.destFloors.containsKey(this.currentFloor)) {
+	            	this.destFloors.remove(this.currentFloor);
+	            }
+	            
+
 				break;
 			}
 						
