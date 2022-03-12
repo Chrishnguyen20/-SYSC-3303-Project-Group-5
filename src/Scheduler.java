@@ -27,6 +27,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  * @param   activeElevators    		- list of all active elevators
  * @param   numEventsQueued     	- static int representing the number of events queued by the floor
  * @param   numEventsServed     	- static int representing the number of requests served by the elevator
+ * @param   elevatorCount           - The number of elevators
  */
 
 public class Scheduler implements Runnable {
