@@ -7,6 +7,8 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Collections;
 
 
 /**     
@@ -27,7 +29,7 @@ public class Elevator implements Runnable {
 	private static int nextCarNum = 0;
 	private int carNum;
 	private int receivedPassengers;
-	private int destFloor;
+	private ArrayList<Integer> destFloor;
 	private int passengerFloor;
 	private boolean hasRequest;
 	private ElevatorState state;
@@ -35,6 +37,7 @@ public class Elevator implements Runnable {
 	private DatagramPacket sendPacket;
 	private DatagramPacket receivePacket;
 	private InetAddress localAddr;
+	private boolean doorClosed;
 
 	private int portID;
 
@@ -44,6 +47,8 @@ public class Elevator implements Runnable {
 		this.state = ElevatorState.Initial;
 		this.eleSocket = new DatagramSocket(portID);
 		this.portID = portID;
+		this.destFloor = new ArrayList<Integer>();
+		this.doorClosed = false;
 		try {
 			this.localAddr = InetAddress.getLocalHost();
 		} catch (UnknownHostException e) {
@@ -70,7 +75,7 @@ public class Elevator implements Runnable {
 		return getObjectiveFloor() > this.currentFloor ? "up" : "down";
 	}
 	
-	public int getDestFloor() {
+	public ArrayList<Integer> getDestFloor() {
 		return this.destFloor;
 	}
 	
@@ -82,11 +87,15 @@ public class Elevator implements Runnable {
 		if (this.receivedPassengers == 0) {
 			return getFloorNum(); 
 		}
-		return getDestFloor(); 
+		return getDestFloor().get(getDestFloor().size()-1); 
 	}
 	
+	/*
+	 * @purpose - simulates doors opening
+	 * 
+	 * @return void
+	 */
 	private void openDoors() {
-		// Simulate doors opening
         try {
           	LocalTime t = LocalTime.now();
         	writeToTrace("Elevator#" + this.carNum + ", doors opening. Time stamp: " + t.toString() + "\n");
@@ -97,14 +106,26 @@ public class Elevator implements Runnable {
         }
 	}
 	
+	
+	/*
+	 * @purpose - simulates movement between floors with the time taken
+	 * 
+	 * @return void
+	 */
 	private void simulateFloorMovement() {
-		// Simulate movement between floors
         try {
             Thread.sleep((int) getTime() * 1000);
         } catch (InterruptedException e) {
         	System.err.println(e);
         }
 	}
+	
+	/*
+	 * @purpose - writes to the trace file
+	 * 
+	 * @param s - elevator data
+	 * @return void
+	 */
 	public void writeToTrace(String s) {
 	    BufferedWriter writer;
 		try {
@@ -119,6 +140,12 @@ public class Elevator implements Runnable {
 
 
 }
+	/*
+	 * @purpose - Moves the elevator to the destination floor of the request
+	 * 
+	 * @param s - elevator data
+	 * @return void
+	 */
 	public void move() {
 		if (this.currentFloor >= 1 && this.currentFloor <= 7) {
 			if (this.currentFloor == 1 && getDiretion() == "down") {
@@ -176,7 +203,8 @@ public class Elevator implements Runnable {
 				this.hasRequest = true;
 				String[] jobData = new String(this.receivePacket.getData()).split(",");
 				this.passengerFloor = Integer.parseInt(jobData[0].trim());
-				this.destFloor = Integer.parseInt(jobData[1].trim());
+				this.destFloor.add(Integer.parseInt(jobData[1].trim()));
+				Collections.sort(destFloor);
 				break;
 			case "PassengersBoarding":
 				// Simulate passengers boarding
@@ -205,7 +233,13 @@ public class Elevator implements Runnable {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				simulateFloorMovement();				
+				simulateFloorMovement();
+				try {
+					Thread.sleep((long) (time*1000));
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				break;
 				
 			case "HasArrived":
@@ -224,7 +258,6 @@ public class Elevator implements Runnable {
 					e.printStackTrace();
 				}
 	            this.receivedPassengers--;
-
 				break;
 			}
 						

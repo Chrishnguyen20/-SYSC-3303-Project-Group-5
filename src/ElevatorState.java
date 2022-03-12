@@ -31,8 +31,10 @@ public enum ElevatorState {
 		public ElevatorState nextState(Elevator elevator) { 			
 			if (elevator.getReceivedPassengers() == 0 && elevator.getCurrentFloor() == elevator.getFloorNum()) {
 				return PassengersBoarding;
-			} else if (elevator.getCurrentFloor() == elevator.getDestFloor() && !(elevator.getReceivedPassengers() == 0)) {
-				return HasArrived;
+			} 
+			if (elevator.getCurrentFloor() == elevator.getDestFloor().get(0) && !(elevator.getReceivedPassengers() == 0)) {
+				elevator.getDestFloor().remove(0);
+				return HasArrived;	
 			}
 			return MoveToDestination;
 		}
