@@ -178,7 +178,7 @@ public class Elevator implements Runnable {
 
 	*/
 	
-	boolean isAcending(int cur, int dest)
+	private boolean isAcending(int cur, int dest)
 	{
 	    if (cur < dest){
 	        return true;
@@ -186,7 +186,7 @@ public class Elevator implements Runnable {
 	    return false;
 	}
 	
-	boolean isAcending()
+	private boolean isAcending()
 	{
 	    return isAcending(this.passengerFloor, this.destFloor);
 	}

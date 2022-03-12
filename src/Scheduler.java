@@ -166,7 +166,7 @@ public class Scheduler implements Runnable {
 
 	*/
 	
-	boolean isAcending(int cur, int dest)
+	private boolean isAcending(int cur, int dest)
 	{
 	    if (cur < dest){
 	        return true;
@@ -187,7 +187,7 @@ public class Scheduler implements Runnable {
 
 	*/
 
-	boolean isPassengerOnPath(int requestStart, int requestDest, int eStart, int eDest, int eCurrentFloor)
+	private boolean isPassengerOnPath(int requestStart, int requestDest, int eStart, int eDest, int eCurrentFloor)
 	{
 	    if (isAcending(eStart, eDest)
 	             && isAcending(requestStart, requestDest)
@@ -203,6 +203,13 @@ public class Scheduler implements Runnable {
 	    return false;
 	}
 	
+	/*
+	 * @purpose 
+	 * 
+	 * @param data - 
+	 * @param index - 
+	 */
+	
 	private void updateActiveElevator(String[] data, int index) {
 		activeElevators.get(index)[0] = data[0];
 		activeElevators.get(index)[1] = data[1];
@@ -214,7 +221,13 @@ public class Scheduler implements Runnable {
 		activeElevators.get(index)[7] = data[7];
 	}
 	
-	int getAvailableElevator(int requestStart, int requestDest) {
+	/*
+	 * @purpose - 
+	 * 
+	 * @param requestStart - 
+	 * @param requestDest - 
+	 */
+	private int getAvailableElevator(int requestStart, int requestDest) {
 		if (activeElevators.isEmpty()) {
 			return receivedElevatorPacket.getPort();
 		}
