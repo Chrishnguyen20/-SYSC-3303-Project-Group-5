@@ -99,6 +99,10 @@ public class Scheduler implements Runnable {
 		return states;
 	}
 	
+	/*
+	 * @purpose - writes to the elevator_trace.txt file
+	 * @return void
+	 */
 	public void writeToElevatorTrace(String s) {
 		BufferedWriter writer;
 			try {
@@ -113,6 +117,10 @@ public class Scheduler implements Runnable {
 
 	}
 	
+	/*
+	 * @purpose - writes to the floor_trace.txt file
+	 * @return void
+	 */
 	public void writeToFloorTrace(String s) {
 	    BufferedWriter writer;
 		try {
@@ -126,6 +134,7 @@ public class Scheduler implements Runnable {
 		}
 
 	}
+	
 	public void run() {
 		try {
 			if(isClient) {

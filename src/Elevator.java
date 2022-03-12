@@ -91,8 +91,7 @@ public class Elevator implements Runnable {
 	}
 	
 	/*
-	 * @purpose - simulates doors opening
-	 * 
+	 * @purpose - Simulates doors opening
 	 * @return void
 	 */
 	private void openDoors() {
@@ -108,8 +107,7 @@ public class Elevator implements Runnable {
 	
 	
 	/*
-	 * @purpose - simulates movement between floors with the time taken
-	 * 
+	 * @purpose - Simulates movement between floors with the time taken
 	 * @return void
 	 */
 	private void simulateFloorMovement() {
@@ -121,8 +119,7 @@ public class Elevator implements Runnable {
 	}
 	
 	/*
-	 * @purpose - writes to the trace file
-	 * 
+	 * @purpose - writes to the elevator_trace.txt file
 	 * @param s - elevator data
 	 * @return void
 	 */
