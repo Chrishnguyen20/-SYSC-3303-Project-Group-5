@@ -267,7 +267,12 @@ public class Elevator implements Runnable {
 
 	    return false;
 	}
-	
+	/*
+	 * @purpose - To create a string of the elevator data
+	 * 
+	 * @param boolean hasArrived - if the elevator has arrived at the destination
+	 * @return String - data of the elevator
+	 */
 	private String getUpdateString(boolean hasArrived) {
 		String updateData = 
 				String.valueOf(this.carNum) 						//0
