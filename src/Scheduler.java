@@ -49,7 +49,9 @@ public class Scheduler implements Runnable {
 		}
 	}
 
-	
+	/*
+	 * @purpose - The states of the scheduler 
+	 */
 	public enum schedulerState {
 		WaitRequest {
 			public schedulerState nextState() {

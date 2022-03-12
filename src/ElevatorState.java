@@ -1,3 +1,6 @@
+/*
+* @purpose - The states of the elevator 
+*/
 
 public enum ElevatorState {
 
