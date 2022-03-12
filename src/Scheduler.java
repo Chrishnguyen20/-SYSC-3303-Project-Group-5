@@ -204,10 +204,10 @@ public class Scheduler implements Runnable {
 	}
 	
 	/*
-	 * @purpose 
+	 * @purpose to get the data of the active elevators
 	 * 
-	 * @param data - 
-	 * @param index - 
+	 * @param data - data of the elevator
+	 * @param index - the index of the elevator
 	 */
 	
 	private void updateActiveElevator(String[] data, int index) {
@@ -222,10 +222,10 @@ public class Scheduler implements Runnable {
 	}
 	
 	/*
-	 * @purpose - 
+	 * @purpose - To get an available elevator
 	 * 
-	 * @param requestStart - 
-	 * @param requestDest - 
+	 * @param requestStart - Starting floor of the request
+	 * @param requestDest - Destination floor of the request
 	 */
 	private int getAvailableElevator(int requestStart, int requestDest) {
 		if (activeElevators.isEmpty()) {
