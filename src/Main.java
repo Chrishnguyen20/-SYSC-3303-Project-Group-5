@@ -12,9 +12,11 @@ public class Main {
 	 * @throws SocketException 
 	 */
 	public static void main(String args[]) throws SocketException {
+		
+		final int elevatorCount = 2;
 				
-		Thread scheduler_server = new Thread(new Scheduler(true), "Floor Scheduler Thread");
-		Thread scheduler_client = new Thread(new Scheduler(false), "Elevator Scheduler Thread");
+		Thread scheduler_server = new Thread(new Scheduler(true, elevatorCount), "Floor Scheduler Thread");
+		Thread scheduler_client = new Thread(new Scheduler(false, elevatorCount), "Elevator Scheduler Thread");
 		Thread elevator1 = new Thread(new Elevator(1, 204), "Elevator1 Thread");
 		Thread elevator2 = new Thread(new Elevator(1, 205), "Elevator2 Thread");
 		Thread floor = new Thread(new Floor(), "Floor Thread");
