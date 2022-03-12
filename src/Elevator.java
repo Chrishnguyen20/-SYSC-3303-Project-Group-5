@@ -35,8 +35,10 @@ import java.util.Collections;
  */
 public class Elevator implements Runnable {
 	
-	//private static final float time = 9.175f;
-	private static final float time = 0.175f;
+	private static final float time = 9.175f;
+	
+	// Short time for debugging
+	//private static final float time = 0.175f;
 	
 	private int currentFloor;
 	private static int nextCarNum = 0;
@@ -63,6 +65,9 @@ public class Elevator implements Runnable {
 		this.portID = portID;
 		this.destFloor = 0;
 		this.doorClosed = false;
+		this.receivedPassengers = 0;
+		setCarNum();
+		
 		try {
 			this.localAddr = InetAddress.getLocalHost();
 		} catch (UnknownHostException e) {
@@ -71,6 +76,8 @@ public class Elevator implements Runnable {
 		}
 		destFloors = new TreeMap<Integer, Integer>();
 	}
+	
+	private synchronized void setCarNum() { this.carNum =  nextCarNum++; }
 	
 	public int getCarNum() { return this.carNum; }
 	
@@ -236,8 +243,6 @@ public class Elevator implements Runnable {
 			LocalTime s = LocalTime.now();
 			switch (currentState) {
 			case "Initial":
-				this.carNum = nextCarNum++;
-				this.receivedPassengers = 0;
 				writeToTrace("Elevator#" + this.carNum + " current state - " + state.getElevatorState() + ". Time: " + s.toString() + "\n");
 				writeToTrace("Elevator#" + this.carNum + " initialize elevator " + this.carNum + ". Time: " + s.toString() + "\n");
 				break; 
@@ -275,7 +280,7 @@ public class Elevator implements Runnable {
 				String[] jobData = new String(this.receivePacket.getData()).split(",");
 				int start = Integer.parseInt(jobData[0].trim());
 				int dest = Integer.parseInt(jobData[1].trim());
-            	writeToTrace("Elevator#" + this.carNum + " sending button press to floor " + dest + " to Scheduler. Time stamp: " + s.toString() + "\n");
+            	writeToTrace("Elevator#" + this.carNum + " sending button press from floor "+start+" to floor " + dest + " to Scheduler. Time stamp: " + s.toString() + "\n");
 				addPassenger(start, dest);
 				
 				break;

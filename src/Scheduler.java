@@ -239,7 +239,7 @@ public class Scheduler implements Runnable {
 		int canidateIndex = randNum;
 		int minimumDist = Math.abs(Integer.parseInt(this.activeElevators.get(randNum)[2]) - requestStart);
 		boolean isIdle = false;
-		this.activeElevators.get(canidateIndex)[5] = String.valueOf(Integer.parseInt(this.activeElevators.get(canidateIndex)[5]) - 1);
+		this.activeElevators.get(canidateIndex)[5] = String.valueOf(Integer.parseInt(this.activeElevators.get(canidateIndex)[5]) + 1);
 		
 		for (int i = 0; i < this.activeElevators.size(); ++i) {
 			String[] elevator = this.activeElevators.get(i);
@@ -358,6 +358,7 @@ public class Scheduler implements Runnable {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
+							writeToElevatorTrace("Scheduler Subsystem: sent elevator #" + this.activeElevators.get(elevatorIndex)[1] + " a request\n");
 						}
 						
 						state = state.nextState();
