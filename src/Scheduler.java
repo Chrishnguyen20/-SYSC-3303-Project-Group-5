@@ -40,7 +40,6 @@ public class Scheduler implements Runnable {
 	private DatagramPacket receivedElevatorPacket;
 	private DatagramPacket sendElevatorPacket;
 	private static ArrayList<String[]> requestList;
-	private static LinkedBlockingQueue<String[]> floorQueue;
 	private static ArrayList<String[]> currentRequests;
 	private ArrayList<String[]> activeElevators;
 	private int elevatorCount;
@@ -54,7 +53,6 @@ public class Scheduler implements Runnable {
 		this.activeElevators = new ArrayList<String[]>();
 		Scheduler.requestList = new ArrayList<String[]>();
 		Scheduler.currentRequests = new ArrayList<String[]>();
-		Scheduler.floorQueue = new LinkedBlockingQueue<String[]>();
 		try {
 			this.localAddr = InetAddress.getLocalHost();
 		} catch (UnknownHostException e) {
@@ -161,8 +159,7 @@ public class Scheduler implements Runnable {
 	Function: isAcending
 	This determines if the elevator should move up or down based on it's position and destination
 
-	 @param 
-	No parameters
+	 @param int cur, int dest
 
 	 @return bool
 	True if the elevator is moving up, else false
@@ -182,7 +179,7 @@ public class Scheduler implements Runnable {
 	Function: isPassengerOnPath
 	This determines if the given passenger is on the elevators path to it's destination
 
-	 @param Passenger* passenger
+	 @param int requestStart, int requestDest, int eStart, int eDest, int eCurrentFloor
 	the passenger which will be determined if is on the elevators path to it's destination
 
 	 @return bool
@@ -271,7 +268,6 @@ public class Scheduler implements Runnable {
 
 				requestList.add(floorReq);
 				Scheduler.numEventsQueued++;
-				floorQueue.offer(floorReq);
 				try {
 					receivedFloorPacket.setPort(200);
 					writeToFloorTrace("Scheduler Subsystem: Sending floor acknowledgement\n");
@@ -348,13 +344,9 @@ public class Scheduler implements Runnable {
 						
 						String[] updateData = new String(receivedElevatorPacket.getData()).split(",");
 						
-						//boolean newElevator = true;
-						
 						for(int i = 0; i < activeElevators.size(); i++) {
 							if(activeElevators.get(i)[0].equals(updateData[0])) {
-								//activeElevators.get(i)[1] = updateData[1];
 								updateActiveElevator(updateData, i);
-								//newElevator = false;
 							}
 						}
 						
