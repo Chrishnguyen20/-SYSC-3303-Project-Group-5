@@ -35,7 +35,8 @@ import java.util.Collections;
  */
 public class Elevator implements Runnable {
 	
-	private static final float time = 9.175f;
+	//private static final float time = 9.175f;
+	private static final float time = 0.175f;
 	
 	private int currentFloor;
 	private static int nextCarNum = 0;
@@ -175,66 +176,6 @@ public class Elevator implements Runnable {
 			return;
 		}
 	}
-	
-
-	/*
-
-	Function: isAcending
-	This determines if the elevator should move up or down based on it's position and destination
-
-	 @param 
-	No parameters
-
-	 @return bool
-	True if the elevator is moving up, else false
-
-	*/
-	
-	private boolean isAcending(int cur, int dest)
-	{
-	    if (cur < dest){
-	        return true;
-	    }
-	    return false;
-	}
-	
-	private boolean isAcending()
-	{
-	    return isAcending(this.passengerFloor, this.destFloor);
-	}
-
-	/*
-
-	Function: isPassengerOnPath
-	This determines if the given passenger is on the elevators path to it's destination
-
-	 @param Passenger* int start, int dest
-	the passenger which will be determined if is on the elevators path to it's destination
-
-	 @return bool
-	True if the given passenger is on the elevators path to it's destination, else false
-
-	*/
-
-	boolean isPassengerOnPath(int start, int dest)
-	{
-	    if (this.destFloors.isEmpty()){
-	        return true;
-	    }
-	    else if (isAcending()
-	             && isAcending(start, dest)
-	             && this.currentFloor <= start){
-	        return true;
-	    }
-	    else if (!isAcending()
-	             && !isAcending(start, dest)
-	             && this.currentFloor >= start){
-	        return true;
-	    }
-
-	    return false;
-	}
-
 
 	/*
 
@@ -253,31 +194,22 @@ public class Elevator implements Runnable {
 
 	*/
 
-	boolean addPassenger(int start, int dest)
+	void addPassenger(int start, int dest)
 	{
-	    if (isPassengerOnPath(start, dest)){
-	    	if (this.destFloors.isEmpty()) {
-	    		this.passengerFloor = start;
-	    	}
-	    	
-	    	if(this.destFloors.containsKey(dest)) {
-	    		this.destFloors.put(dest, this.destFloors.get(dest) + 1);
-	    	}
-	    	else {
-	    		this.destFloors.put(dest, 1);
-	    	}
-	    	
-	    	this.hasRequest = true;
-	        
-	    	this.destFloor = this.destFloors.lastKey();
-
-	        return true;
-	    }
-	    else if (start == dest){
-	        return true;
-	    }
-
-	    return false;
+		if (this.destFloors.isEmpty()) {
+    		this.passengerFloor = start;
+    	}
+    	
+    	if(this.destFloors.containsKey(dest)) {
+    		this.destFloors.put(dest, this.destFloors.get(dest) + 1);
+    	}
+    	else {
+    		this.destFloors.put(dest, 1);
+    	}
+    	
+    	this.hasRequest = true;
+        
+    	this.destFloor = this.destFloors.lastKey();
 	}
 	/*
 	 * @purpose - To create a string of the elevator data

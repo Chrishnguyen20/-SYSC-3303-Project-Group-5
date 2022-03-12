@@ -233,19 +233,30 @@ public class Scheduler implements Runnable {
 		if (activeElevators.isEmpty()) {
 			return receivedElevatorPacket.getPort();
 		}
+		
 		Random rand = new Random();
 		int randNum = rand.nextInt(this.activeElevators.size());
-		int canidateIndex = -1;
-		int minimumRequests = Integer.parseInt(this.activeElevators.get(randNum)[5]);
+		int canidateIndex = randNum;
+		int minimumDist = Math.abs(Integer.parseInt(this.activeElevators.get(randNum)[2]) - requestStart);
+		boolean isIdle = false;
+		this.activeElevators.get(canidateIndex)[5] = String.valueOf(Integer.parseInt(this.activeElevators.get(canidateIndex)[5]) - 1);
+		
 		for (int i = 0; i < this.activeElevators.size(); ++i) {
 			String[] elevator = this.activeElevators.get(i);
-			if (Integer.parseInt(elevator[5]) == 0) {
+			if (Integer.parseInt(elevator[5]) == 0
+					&& (minimumDist > Math.abs(Integer.parseInt(elevator[2])) || !isIdle)) {
 				elevator[5] = "1";
-				return i;
+				minimumDist = Math.abs(Integer.parseInt(elevator[2]));
+				isIdle = true;
+				this.activeElevators.get(canidateIndex)[5] = String.valueOf(Integer.parseInt(this.activeElevators.get(canidateIndex)[5]) - 1);
+				canidateIndex = i;
 			}
 			else if (isPassengerOnPath(requestStart, requestDest, Integer.parseInt(elevator[3]), Integer.parseInt(elevator[4]), Integer.parseInt(elevator[2]))
-					&& Integer.parseInt(elevator[5]) < minimumRequests) {
+					&& minimumDist > Math.abs(Integer.parseInt(elevator[3]) - requestStart)
+					&& !isIdle) {
 				elevator[5] = String.valueOf(Integer.parseInt(elevator[5]) + 1);
+				minimumDist = Math.abs(Integer.parseInt(elevator[3]));
+				this.activeElevators.get(canidateIndex)[5] = String.valueOf(Integer.parseInt(this.activeElevators.get(canidateIndex)[5]) - 1);
 				canidateIndex = i;
 			}
 		}
@@ -307,9 +318,16 @@ public class Scheduler implements Runnable {
 							
 							String[] data = new String(this.receivedElevatorPacket.getData()).split(",");
 							
-							this.activeElevators.add(data);
-							
-							writeToElevatorTrace("Scheduler Subsystem: added event. Time: " + s.toString() + "\n");
+							boolean newElevator = true;
+							for (int i = 0; i < this.activeElevators.size(); ++i) {
+								if (this.activeElevators.get(i)[1].equals(data[1])) {
+									newElevator = false;
+								}
+							}
+							if (newElevator) {
+								this.activeElevators.add(data);
+								writeToElevatorTrace("Scheduler Subsystem: added event\n");
+							}
 						}
 						writeToElevatorTrace("Scheduler Subsystem: current state - " + states + ". Time: " + s.toString() + "\n");
 						state = state.nextState();
