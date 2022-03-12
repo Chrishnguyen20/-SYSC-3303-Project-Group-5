@@ -16,11 +16,22 @@ import java.util.Collections;
  * @purpose                  - The Elevator class obtains elevator requests from the scheduler
  * 					           and will move until it gets to the destination floor
  * @param currentFloor       - Represents the current floor that the elevator is on 
+ * @param destFloor			 - The destination floor of the elevator
+ * @param destFloors         - The destination floors of the elevator when more than 1 passenger is boarded
+ * @param hasRequest         - To check if there is a request or not for the elevator
  * @param nextCarNum         - Static variable used to assign id's to the elevator
  * @param carNum		     - The elevator id number
+ * @param passengerFloor     - The floor of the passenger
  * @param time			     - Amount of time the elevator should sleep for to simulate movement, doors opening, and passengers boarding/disembarking
  * @param receivedPassengers - Whether passengers have boarded the elevator 
  * @param elevatorRequest    - the shared memory between the elevator and scheduler.
+ * @param eleSocket 		 - The datagram socket of the elevator
+ * @param sendPacket 		 - The datagram packet that is being sent
+ * @param receivePacket 	 - The datagram packet that is being received
+ * @param localAddr          - InetAddress
+ * @param doorClosed         - When door is open or closed
+ * @param state				 - The state of the elevator
+ * @param portid			 - The port id of the elevator
  */
 public class Elevator implements Runnable {
 	
@@ -179,7 +190,7 @@ public class Elevator implements Runnable {
 
 	*/
 	
-	boolean isAcending(int cur, int dest)
+	private boolean isAcending(int cur, int dest)
 	{
 	    if (cur < dest){
 	        return true;
@@ -187,7 +198,7 @@ public class Elevator implements Runnable {
 	    return false;
 	}
 	
-	boolean isAcending()
+	private boolean isAcending()
 	{
 	    return isAcending(this.passengerFloor, this.destFloor);
 	}
@@ -268,7 +279,12 @@ public class Elevator implements Runnable {
 
 	    return false;
 	}
-	
+	/*
+	 * @purpose - To create a string of the elevator data
+	 * 
+	 * @param boolean hasArrived - if the elevator has arrived at the destination
+	 * @return String - data of the elevator
+	 */
 	private String getUpdateString(boolean hasArrived) {
 		String updateData = 
 				String.valueOf(this.carNum) 						//0

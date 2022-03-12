@@ -28,6 +28,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  * @param   activeElevators    		- list of all active elevators
  * @param   numEventsQueued     	- static int representing the number of events queued by the floor
  * @param   numEventsServed     	- static int representing the number of requests served by the elevator
+ * @param   elevatorCount           - The number of elevators
  */
 
 public class Scheduler implements Runnable {
@@ -167,7 +168,7 @@ public class Scheduler implements Runnable {
 
 	*/
 	
-	boolean isAcending(int cur, int dest)
+	private boolean isAcending(int cur, int dest)
 	{
 	    if (cur < dest){
 	        return true;
@@ -188,7 +189,7 @@ public class Scheduler implements Runnable {
 
 	*/
 
-	boolean isPassengerOnPath(int requestStart, int requestDest, int eStart, int eDest, int eCurrentFloor)
+	private boolean isPassengerOnPath(int requestStart, int requestDest, int eStart, int eDest, int eCurrentFloor)
 	{
 	    if (isAcending(eStart, eDest)
 	             && isAcending(requestStart, requestDest)
@@ -204,6 +205,13 @@ public class Scheduler implements Runnable {
 	    return false;
 	}
 	
+	/*
+	 * @purpose to get the data of the active elevators
+	 * 
+	 * @param String[] data - data of the elevator
+	 * @param int index - the index of the elevator
+	 */
+	
 	private void updateActiveElevator(String[] data, int index) {
 		activeElevators.get(index)[0] = data[0];
 		activeElevators.get(index)[1] = data[1];
@@ -215,7 +223,13 @@ public class Scheduler implements Runnable {
 		activeElevators.get(index)[7] = data[7];
 	}
 	
-	int getAvailableElevator(int requestStart, int requestDest) {
+	/*
+	 * @purpose - To get an available elevator
+	 * 
+	 * @param int requestStart - Starting floor of the request
+	 * @param int requestDest - Destination floor of the request
+	 */
+	private int getAvailableElevator(int requestStart, int requestDest) {
 		if (activeElevators.isEmpty()) {
 			return receivedElevatorPacket.getPort();
 		}
