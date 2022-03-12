@@ -30,6 +30,7 @@ import java.util.Collections;
  * @param localAddr          - InetAddress
  * @param doorClosed         - When door is open or closed
  * @param state				 - The state of the elevator
+ * @param portid			 - The port id of the elevator
  */
 public class Elevator implements Runnable {
 	
