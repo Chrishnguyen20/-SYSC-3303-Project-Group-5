@@ -1,13 +1,13 @@
-Floor Subsystem: Queued a request -- request for floor 1 going up at 16:10:52.550394500 to floor 3
-Scheduler Subsystem: Queueing event from floor subsystem. Time: 16:10:48.204501600
-Scheduler Subsystem: Sending floor acknowledgement. Time: 16:10:48.204501600
-Floor Subsystem: Received an acknowledgement. Time: 16:10:52.550394500
-Floor Subsystem: Queued a request -- request for floor 2 going up at 16:10:52.550394500 to floor 4
-Scheduler Subsystem: Queueing event from floor subsystem. Time: 16:10:52.569382300
-Scheduler Subsystem: Sending floor acknowledgement. Time: 16:10:52.569382300
-Floor Subsystem: Received an acknowledgement. Time: 16:10:52.550394500
-Floor Subsystem: Queued a request -- request for floor 6 going down at 16:10:52.550394500 to floor 5
-Scheduler Subsystem: Queueing event from floor subsystem. Time: 16:10:52.574380
-Scheduler Subsystem: Sending floor acknowledgement. Time: 16:10:52.574380
-Floor Subsystem: Received an acknowledgement. Time: 16:10:52.550394500
-EOF. Time: 16:10:52.550394500
+Floor Subsystem: Queued a request -- request for floor 1 going up at 16:41:06.488082100 to floor 3
+Scheduler Subsystem: Queueing event from floor subsystem. Time: 16:41:03.236053400
+Scheduler Subsystem: Sending floor acknowledgement. Time: 16:41:03.236053400
+Floor Subsystem: Received an acknowledgement. Time: 16:41:06.488082100
+Floor Subsystem: Queued a request -- request for floor 2 going up at 16:41:06.488082100 to floor 4
+Scheduler Subsystem: Queueing event from floor subsystem. Time: 16:41:06.504072300
+Scheduler Subsystem: Sending floor acknowledgement. Time: 16:41:06.504072300
+Floor Subsystem: Received an acknowledgement. Time: 16:41:06.488082100
+Floor Subsystem: Queued a request -- request for floor 6 going down at 16:41:06.488082100 to floor 5
+Scheduler Subsystem: Queueing event from floor subsystem. Time: 16:41:06.508070100
+Scheduler Subsystem: Sending floor acknowledgement. Time: 16:41:06.508070100
+Floor Subsystem: Received an acknowledgement. Time: 16:41:06.488082100
+EOF. Time: 16:41:06.488082100
