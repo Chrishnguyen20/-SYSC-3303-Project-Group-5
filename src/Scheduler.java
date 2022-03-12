@@ -14,8 +14,19 @@ import java.util.Random;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /*
- * @param	floorRequest    	- the floor request that acts as the shared memory between the floor and scheduler
- * @param   elevatorRequest     - the elevator request that acts as the shared memory between the elevator and scheduler
+ * @purpose 						- The scheduler class coordinates how made by the floors are served by the elevator.
+ * @param	isClient    			- is the current scheduler client (floor) facing
+ * @param   states     				- the state of the scheduler
+ * @param   receiveSocket  			- the socket used to receive data
+ * @param   localAddr  	   			- the computers IP address
+ * @param   receivedFloorPacket     - the data packet received from the floor
+ * @param   receivedElevatorPacket  - the data packet received from the elevator
+ * @param   sendElevatorPacket      - the packet sent to the floor/elevator
+ * @param   floorQueue    			- a thread safe queue of floor requests
+ * @param   currentRequests    		- all requests currently being handled 
+ * @param   activeElevators    		- list of all active elevators
+ * @param   numEventsQueued     	- static int representing the number of events queued by the floor
+ * @param   numEventsServed     	- static int representing the number of requests served by the elevator
  */
 
 public class Scheduler implements Runnable {
@@ -28,18 +39,22 @@ public class Scheduler implements Runnable {
 	private DatagramPacket receivedFloorPacket;
 	private DatagramPacket receivedElevatorPacket;
 	private DatagramPacket sendElevatorPacket;
-	//private static LinkedBlockingQueue<String[]> floorQueue;
 	private static ArrayList<String[]> requestList;
+	private static LinkedBlockingQueue<String[]> floorQueue;
+	private static ArrayList<String[]> currentRequests;
 	private ArrayList<String[]> activeElevators;
 	private int elevatorCount;
+	
+	private static int numEventsQueued = 0;
+	private static int numEventsServed = -1;
 
 	public Scheduler(boolean b, int c) {
 		this.isClient = b;
 		this.elevatorCount = c;
 		this.activeElevators = new ArrayList<String[]>();
 		Scheduler.requestList = new ArrayList<String[]>();
-		//`Scheduler.floorQueue = new LinkedBlockingQueue<String[]>();
-		
+		Scheduler.currentRequests = new ArrayList<String[]>();
+		Scheduler.floorQueue = new LinkedBlockingQueue<String[]>();
 		try {
 			this.localAddr = InetAddress.getLocalHost();
 		} catch (UnknownHostException e) {
@@ -56,7 +71,9 @@ public class Scheduler implements Runnable {
 		}
 	}
 
-	
+	/*
+	 * @purpose - The states of the scheduler 
+	 */
 	public enum schedulerState {
 		WaitRequest {
 			public schedulerState nextState() {
@@ -104,6 +121,10 @@ public class Scheduler implements Runnable {
 		return states;
 	}
 	
+	/*
+	 * @purpose - writes to the elevator_trace.txt file
+	 * @return void
+	 */
 	public void writeToElevatorTrace(String s) {
 		BufferedWriter writer;
 			try {
@@ -118,6 +139,10 @@ public class Scheduler implements Runnable {
 
 	}
 	
+	/*
+	 * @purpose - writes to the floor_trace.txt file
+	 * @return void
+	 */
 	public void writeToFloorTrace(String s) {
 	    BufferedWriter writer;
 		try {
@@ -243,8 +268,10 @@ public class Scheduler implements Runnable {
 					floorReq[i] = floorReq[i].trim();
 				}
 				writeToFloorTrace("Scheduler Subsystem: Queueing event from floor subsystem\n");
+
 				requestList.add(floorReq);
-				//floorQueue.offer(floorReq);
+				Scheduler.numEventsQueued++;
+				floorQueue.offer(floorReq);
 				try {
 					receivedFloorPacket.setPort(200);
 					writeToFloorTrace("Scheduler Subsystem: Sending floor acknowledgement\n");
@@ -254,7 +281,7 @@ public class Scheduler implements Runnable {
 					e.printStackTrace();
 				}
 			}else {
-				if (!Scheduler.requestList.isEmpty()) {
+				if (!Scheduler.requestList.isEmpty() || !Scheduler.currentRequests.isEmpty()) {
 					switch (state.Current()) {
 					case 1:
 						while(activeElevators.size() < this.elevatorCount) {
@@ -273,11 +300,13 @@ public class Scheduler implements Runnable {
 							
 							writeToElevatorTrace("Scheduler Subsystem: added event\n");
 						}
+						writeToElevatorTrace("Scheduler Subsystem: current state - " + states + "\n");
 						state = state.nextState();
 						states = "Has request";
 						break;
 						
 					case 2:
+						writeToElevatorTrace("Scheduler Subsystem: current state - " + states + "\n");
 						writeToElevatorTrace("Scheduler Subsystem: Send data to an active elevator\n");
 						
 						for (int i = Scheduler.requestList.size() - 1; i >= 0; --i) {
@@ -307,6 +336,7 @@ public class Scheduler implements Runnable {
 						break;
 						
 					case 3:
+						writeToElevatorTrace("Scheduler Subsystem: current state - " + states + "\n");
 						writeToElevatorTrace("Scheduler Subsystem: Waiting for an elevator to update their status\n");
 						receivedElevatorPacket = new DatagramPacket(new byte[1000], 1000);
 						try {
@@ -335,21 +365,29 @@ public class Scheduler implements Runnable {
 							continue;
 						}
 						
-						
-						writeToElevatorTrace("Scheduler Subsystem: got update from elevator#" + updateData[0] + "\n");
-						if(updateData[7].replaceAll("\\P{Print}","").equals("hasArrived")) {
+						writeToElevatorTrace("Scheduler Subsystem: got update from elevator#" + updateData[0] + " -- " + updateData[2] + "\n");
+						if(updateData[2].replaceAll("\\P{Print}","").equals("HasArrived")) {
 							writeToElevatorTrace("Scheduler Subsystem: service floor " + updateData[1] + "\n");
 							state = state.nextState();
+							Scheduler.currentRequests.remove(0);
+							if(Scheduler.numEventsServed < 0) {
+								Scheduler.numEventsServed = 0;
+							}
+							Scheduler.numEventsServed++;
 						}
 						states = "Request served";
 						break;
 						
 					case 4:
-						writeToElevatorTrace("Scheduler Subsystem: Removed Request!\n");
+						writeToElevatorTrace("Scheduler Subsystem: current state - " + states + "\n");
 						state = state.nextState();
 						states = "Request removed";
 						break;
 						
+					}
+					if(Scheduler.numEventsQueued == Scheduler.numEventsServed) {
+						writeToElevatorTrace("EOF");
+						Scheduler.numEventsServed++;
 					}
 				}
 			}

@@ -8,6 +8,8 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.time.LocalTime;
 import java.util.TreeMap;
+import java.util.ArrayList;
+import java.util.Collections;
 
 
 /**     
@@ -37,6 +39,7 @@ public class Elevator implements Runnable {
 	private DatagramPacket sendPacket;
 	private DatagramPacket receivePacket;
 	private InetAddress localAddr;
+	private boolean doorClosed;
 
 	private int portID;
 
@@ -46,6 +49,8 @@ public class Elevator implements Runnable {
 		this.state = ElevatorState.Initial;
 		this.eleSocket = new DatagramSocket(portID);
 		this.portID = portID;
+		this.destFloor = 0;
+		this.doorClosed = false;
 		try {
 			this.localAddr = InetAddress.getLocalHost();
 		} catch (UnknownHostException e) {
@@ -88,8 +93,11 @@ public class Elevator implements Runnable {
 		return getDestFloor(); 
 	}
 	
+	/*
+	 * @purpose - Simulates doors opening
+	 * @return void
+	 */
 	private void openDoors() {
-		// Simulate doors opening
         try {
           	LocalTime t = LocalTime.now();
         	writeToTrace("Elevator#" + this.carNum + ", doors opening. Time stamp: " + t.toString() + "\n");
@@ -100,8 +108,12 @@ public class Elevator implements Runnable {
         }
 	}
 	
+	
+	/*
+	 * @purpose - Simulates movement between floors with the time taken
+	 * @return void
+	 */
 	private void simulateFloorMovement() {
-		// Simulate movement between floors
         try {
             Thread.sleep((int) getTime() * 1000);
         } catch (InterruptedException e) {
@@ -336,7 +348,13 @@ public class Elevator implements Runnable {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				simulateFloorMovement();				
+				simulateFloorMovement();
+				try {
+					Thread.sleep((long) (time*1000));
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				break;
 				
 			case "HasArrived":
