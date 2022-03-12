@@ -11,8 +11,10 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.time.LocalTime;
 /*
- * @purpose 		- The floor class reads floor requests from a file and passes 
- * 					  them to the scheduler. 
+ * @purpose 			- the floor class reads floor requests from a file and passes 
+ * 						  them to the scheduler via UDP. 
+ * @param	localAddr   - is the current scheduler client (floor) facing
+ * @param	socket    	- is the current scheduler client (floor) facing
  */
 public class Floor implements Runnable{
 
@@ -22,6 +24,9 @@ public class Floor implements Runnable{
 	public Floor() {
 	}
 	
+	/*
+	 * @purpose - write the string to the appropriate trace file
+	 */
 	public void writeToTrace(String s) {
 	    BufferedWriter writer;
 		try {
@@ -68,26 +73,19 @@ public class Floor implements Runnable{
 					LocalTime d = LocalTime.now();
 					writeToTrace("Floor Subsystem: Read data error! Time Stamp: " + d.toString() + "\n");
 				}else {
-					//create a new floor request and pass the data to the scheduler. 
+					//create a new floor request and pass the data to the scheduler as a comma delimited string. 
 					String s = arr[0] + "," + arr[1] + "," + arr[2]+ "," + arr[3];
 					byte[] dataArray = s.getBytes();
 					DatagramPacket sendPacket = new DatagramPacket(dataArray, dataArray.length, this.localAddr, 201);
 					DatagramPacket receivePacket = new DatagramPacket(new byte[dataArray.length], dataArray.length);
-					writeToTrace("Floor Subsystem: Queued a request\n");
+					writeToTrace("Floor Subsystem: Queued a request -- " + s + "\n");
+					//send the packet and receive a acknowledgement
 					this.socket.send(sendPacket);
 					this.socket.receive(receivePacket);
 					writeToTrace("Floor Subsystem: Received an acknowledgement\n");
 				}
-				
-	            try {
-					// Sleep for between 0 and 2 seconds
-	                Thread.sleep((int)(Math.random() * 5));
-	            } catch (InterruptedException e) {
-	            	//an interrupt occurred
-	            	e.printStackTrace();
-	            }
 			}
-			
+			writeToTrace("EOF");
 			//close the in-file
 			reader.close();
 			

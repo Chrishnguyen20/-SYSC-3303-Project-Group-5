@@ -12,8 +12,19 @@ import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /*
- * @param	floorRequest    	- the floor request that acts as the shared memory between the floor and scheduler
- * @param   elevatorRequest     - the elevator request that acts as the shared memory between the elevator and scheduler
+ * @purpose 						- The scheduler class coordinates how made by the floors are served by the elevator.
+ * @param	isClient    			- is the current scheduler client (floor) facing
+ * @param   states     				- the state of the scheduler
+ * @param   receiveSocket  			- the socket used to receive data
+ * @param   localAddr  	   			- the computers IP address
+ * @param   receivedFloorPacket     - the data packet received from the floor
+ * @param   receivedElevatorPacket  - the data packet received from the elevator
+ * @param   sendElevatorPacket      - the packet sent to the floor/elevator
+ * @param   floorQueue    			- a thread safe queue of floor requests
+ * @param   currentRequests    		- all requests currently being handled 
+ * @param   activeElevators    		- list of all active elevators
+ * @param   numEventsQueued     	- static int representing the number of events queued by the floor
+ * @param   numEventsServed     	- static int representing the number of requests served by the elevator
  */
 
 public class Scheduler implements Runnable {
@@ -27,11 +38,16 @@ public class Scheduler implements Runnable {
 	private DatagramPacket receivedElevatorPacket;
 	private DatagramPacket sendElevatorPacket;
 	private static LinkedBlockingQueue<String[]> floorQueue;
+	private static ArrayList<String[]> currentRequests;
 	private ArrayList<String[]> activeElevators;
+	
+	private static int numEventsQueued = 0;
+	private static int numEventsServed = -1;
 
 	public Scheduler(boolean b) {
 		this.isClient = b;
 		this.activeElevators = new ArrayList<String[]>();
+		Scheduler.currentRequests = new ArrayList<String[]>();
 		Scheduler.floorQueue = new LinkedBlockingQueue<String[]>();
 		try {
 			this.localAddr = InetAddress.getLocalHost();
@@ -151,6 +167,7 @@ public class Scheduler implements Runnable {
 					floorReq[i] = floorReq[i].trim();
 				}
 				writeToFloorTrace("Scheduler Subsystem: Queueing event from floor subsystem\n");
+				Scheduler.numEventsQueued++;
 				floorQueue.offer(floorReq);
 				try {
 					receivedFloorPacket.setPort(200);
@@ -161,9 +178,10 @@ public class Scheduler implements Runnable {
 					e.printStackTrace();
 				}
 			}else {
-				if (!Scheduler.floorQueue.isEmpty()) {
+				if (!Scheduler.floorQueue.isEmpty() || !Scheduler.currentRequests.isEmpty()) {
 					switch (state.Current()) {
 					case 1:
+						writeToElevatorTrace("Scheduler Subsystem: current state - " + states + "\n");
 						state = state.nextState();
 						states = "Has request";
 						this.receivedElevatorPacket = new DatagramPacket(new byte[1000], 1000);
@@ -179,9 +197,10 @@ public class Scheduler implements Runnable {
 						writeToElevatorTrace("Scheduler Subsystem: added event\n");
 						break;
 					case 2:
+						writeToElevatorTrace("Scheduler Subsystem: current state - " + states + "\n");
 						writeToElevatorTrace("Scheduler Subsystem: Send data to an active elevator\n");
 						String elevatorData = String.valueOf(Scheduler.floorQueue.peek()[1]) + "," + String.valueOf(Scheduler.floorQueue.peek()[3]);
-						Scheduler.floorQueue.poll();
+						Scheduler.currentRequests.add(Scheduler.floorQueue.poll());
 						this.sendElevatorPacket = new DatagramPacket(elevatorData.getBytes(), elevatorData.getBytes().length, localAddr, receivedElevatorPacket.getPort());
 						try { 
 							this.receiveSocket.send(sendElevatorPacket);
@@ -193,6 +212,7 @@ public class Scheduler implements Runnable {
 						states = "Notified elevator";
 						break;
 					case 3:
+						writeToElevatorTrace("Scheduler Subsystem: current state - " + states + "\n");
 						writeToElevatorTrace("Scheduler Subsystem: Waiting for an elevator to update their status\n");
 						receivedElevatorPacket = new DatagramPacket(new byte[1000], 1000);
 						try {
@@ -206,20 +226,28 @@ public class Scheduler implements Runnable {
 							if(activeElevators.get(i)[0].equals(updateData[0])) {
 								activeElevators.get(i)[1] = updateData[1];
 							}
-						}
-						//be smart and pick up any passengers on this floor going in the direction 
-						
-						writeToElevatorTrace("Scheduler Subsystem: got update from elevator#" + updateData[0] + "\n");
+						}						
+						writeToElevatorTrace("Scheduler Subsystem: got update from elevator#" + updateData[0] + " -- " + updateData[2] + "\n");
 						if(updateData[2].replaceAll("\\P{Print}","").equals("HasArrived")) {
 							writeToElevatorTrace("Scheduler Subsystem: service floor " + updateData[1] + "\n");
 							state = state.nextState();
+							Scheduler.currentRequests.remove(0);
+							if(Scheduler.numEventsServed < 0) {
+								Scheduler.numEventsServed = 0;
+							}
+							Scheduler.numEventsServed++;
 						}
 						states = "Request served";
 						break;
 					case 4:
+						writeToElevatorTrace("Scheduler Subsystem: current state - " + states + "\n");
 						state = state.nextState();
 						states = "Request removed";
 						break;
+					}
+					if(Scheduler.numEventsQueued == Scheduler.numEventsServed) {
+						writeToElevatorTrace("EOF");
+						Scheduler.numEventsServed++;
 					}
 				}
 			}
