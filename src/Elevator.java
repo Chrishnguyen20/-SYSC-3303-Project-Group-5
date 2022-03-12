@@ -7,6 +7,8 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Collections;
 
 
 /**     
@@ -27,7 +29,7 @@ public class Elevator implements Runnable {
 	private static int nextCarNum = 0;
 	private int carNum;
 	private int receivedPassengers;
-	private int destFloor;
+	private ArrayList<Integer> destFloor;
 	private int passengerFloor;
 	private boolean hasRequest;
 	private ElevatorState state;
@@ -44,6 +46,7 @@ public class Elevator implements Runnable {
 		this.state = ElevatorState.Initial;
 		this.eleSocket = new DatagramSocket(portID);
 		this.portID = portID;
+		this.destFloor = new ArrayList<Integer>();
 		try {
 			this.localAddr = InetAddress.getLocalHost();
 		} catch (UnknownHostException e) {
@@ -70,7 +73,7 @@ public class Elevator implements Runnable {
 		return getObjectiveFloor() > this.currentFloor ? "up" : "down";
 	}
 	
-	public int getDestFloor() {
+	public ArrayList<Integer> getDestFloor() {
 		return this.destFloor;
 	}
 	
@@ -82,7 +85,7 @@ public class Elevator implements Runnable {
 		if (this.receivedPassengers == 0) {
 			return getFloorNum(); 
 		}
-		return getDestFloor(); 
+		return getDestFloor().get(getDestFloor().size()-1); 
 	}
 	
 	private void openDoors() {
@@ -176,7 +179,8 @@ public class Elevator implements Runnable {
 				this.hasRequest = true;
 				String[] jobData = new String(this.receivePacket.getData()).split(",");
 				this.passengerFloor = Integer.parseInt(jobData[0].trim());
-				this.destFloor = Integer.parseInt(jobData[1].trim());
+				this.destFloor.add(Integer.parseInt(jobData[1].trim()));
+				Collections.sort(destFloor);
 				break;
 			case "PassengersBoarding":
 				// Simulate passengers boarding
@@ -205,7 +209,13 @@ public class Elevator implements Runnable {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				simulateFloorMovement();				
+				simulateFloorMovement();
+				try {
+					Thread.sleep((long) (time*1000));
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				break;
 				
 			case "HasArrived":
@@ -224,7 +234,6 @@ public class Elevator implements Runnable {
 					e.printStackTrace();
 				}
 	            this.receivedPassengers--;
-
 				break;
 			}
 						
