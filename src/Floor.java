@@ -64,28 +64,28 @@ public class Floor implements Runnable{
 		}
 		
 		String line;
+		LocalTime d = LocalTime.now();
 		try {
 			while ((line = reader.readLine()) != null){
 				String[] arr = line.split("\\t");
-				
 				//check if the data is in the correct format
 				if(arr.length != 4) {
-					LocalTime d = LocalTime.now();
 					writeToTrace("Floor Subsystem: Read data error! Time Stamp: " + d.toString() + "\n");
+					return;
 				}else {
 					//create a new floor request and pass the data to the scheduler as a comma delimited string. 
 					String s = arr[0] + "," + arr[1] + "," + arr[2]+ "," + arr[3];
 					byte[] dataArray = s.getBytes();
 					DatagramPacket sendPacket = new DatagramPacket(dataArray, dataArray.length, this.localAddr, 201);
 					DatagramPacket receivePacket = new DatagramPacket(new byte[dataArray.length], dataArray.length);
-					writeToTrace("Floor Subsystem: Queued a request -- " + s + "\n");
+					writeToTrace("Floor Subsystem: Queued a request -- request for floor " + arr[1] + " going " + arr[2] + " at " + d.toString() + " to floor " + arr[3] + "\n");
 					//send the packet and receive a acknowledgement
 					this.socket.send(sendPacket);
 					this.socket.receive(receivePacket);
-					writeToTrace("Floor Subsystem: Received an acknowledgement\n");
+					writeToTrace("Floor Subsystem: Received an acknowledgement. Time: " + d.toString() + "\n");
 				}
 			}
-			writeToTrace("EOF");
+			writeToTrace("EOF. Time: " + d.toString());
 			//close the in-file
 			reader.close();
 			
@@ -93,5 +93,12 @@ public class Floor implements Runnable{
 			//an I/O error occurred 
 			e.printStackTrace();
 		}
+	}
+	public static void main(String args[]) throws SocketException {
+		
+		Thread floor = new Thread(new Floor(), "Floor Thread");
+		
+		floor.start();
+
 	}
 }
