@@ -234,28 +234,35 @@ public class Scheduler implements Runnable {
 			return receivedElevatorPacket.getPort();
 		}
 		
-		Random rand = new Random();
-		int randNum = rand.nextInt(this.activeElevators.size());
-		int canidateIndex = randNum;
-		int minimumDist = Math.abs(Integer.parseInt(this.activeElevators.get(randNum)[2]) - requestStart);
+		int canidateIndex = 0;
+		int minimumDist = Math.abs(Integer.parseInt(this.activeElevators.get(canidateIndex)[2]) - requestStart);
 		boolean isIdle = false;
 		this.activeElevators.get(canidateIndex)[5] = String.valueOf(Integer.parseInt(this.activeElevators.get(canidateIndex)[5]) + 1);
 		
-		for (int i = 0; i < this.activeElevators.size(); ++i) {
+		for (int i = 1; i < this.activeElevators.size(); ++i) {
 			String[] elevator = this.activeElevators.get(i);
+			
+			int currentFloor = Integer.parseInt(elevator[2]);
+			int passengerFloor = Integer.parseInt(elevator[3]);
+			int effectiveFloor = passengerFloor;
+			if ((isAcending(passengerFloor, Integer.parseInt(elevator[4])) && currentFloor < passengerFloor)
+					|| (!isAcending(passengerFloor, Integer.parseInt(elevator[4])) && currentFloor > passengerFloor)) {
+				effectiveFloor = currentFloor;
+			}
+			
 			if (Integer.parseInt(elevator[5]) == 0
-					&& (minimumDist > Math.abs(Integer.parseInt(elevator[2])) || !isIdle)) {
+					&& (minimumDist > Math.abs(effectiveFloor - requestStart) || !isIdle)) {
 				elevator[5] = "1";
-				minimumDist = Math.abs(Integer.parseInt(elevator[2]));
+				minimumDist = Math.abs(effectiveFloor - requestStart);
 				isIdle = true;
 				this.activeElevators.get(canidateIndex)[5] = String.valueOf(Integer.parseInt(this.activeElevators.get(canidateIndex)[5]) - 1);
 				canidateIndex = i;
 			}
-			else if (isPassengerOnPath(requestStart, requestDest, Integer.parseInt(elevator[3]), Integer.parseInt(elevator[4]), Integer.parseInt(elevator[2]))
-					&& minimumDist > Math.abs(Integer.parseInt(elevator[3]) - requestStart)
+			else if (isPassengerOnPath(requestStart, requestDest, passengerFloor, Integer.parseInt(elevator[4]), currentFloor)
+					&& minimumDist > Math.abs(effectiveFloor - requestStart)
 					&& !isIdle) {
 				elevator[5] = String.valueOf(Integer.parseInt(elevator[5]) + 1);
-				minimumDist = Math.abs(Integer.parseInt(elevator[3]));
+				minimumDist = Math.abs(effectiveFloor - requestStart);
 				this.activeElevators.get(canidateIndex)[5] = String.valueOf(Integer.parseInt(this.activeElevators.get(canidateIndex)[5]) - 1);
 				canidateIndex = i;
 			}
