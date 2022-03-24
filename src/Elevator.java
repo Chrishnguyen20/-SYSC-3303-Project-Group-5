@@ -35,7 +35,8 @@ import java.util.Collections;
  */
 public class Elevator implements Runnable {
 	
-	private static final float time = 9.175f;
+	//private static final float time = 9.175f;
+	private static final float time = 0.175f;
 	
 	// Short time for debugging
 	//private static final float time = 0.175f;
@@ -119,9 +120,9 @@ public class Elevator implements Runnable {
 	private void openDoors() {
         try {
           	LocalTime t = LocalTime.now();
-        	writeToTrace("Elevator#" + this.carNum + ", doors opening. Time stamp: " + t.toString() + "\n");
+        	writeToTrace(t.toString() + " - Elevator#" + this.carNum + ", doors opening.\n");
 			Thread.sleep((long) (time*1000));
-        	writeToTrace("Elevator#" + this.carNum + ", doors closing. Time stamp: " + t.toString() + "\n");
+        	writeToTrace(t.toString() + " - Elevator#" + this.carNum + ", doors closing.\n");
         } catch (InterruptedException e) {
         	System.err.println(e);
         }
@@ -152,6 +153,7 @@ public class Elevator implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		System.out.println(s);
 	}
 	
 	/*
@@ -243,15 +245,16 @@ public class Elevator implements Runnable {
 			LocalTime s = LocalTime.now();
 			switch (currentState) {
 			case "Initial":
-				writeToTrace("Elevator#" + this.carNum + " current state - " + state.getElevatorState() + ". Time: " + s.toString() + "\n");
-				writeToTrace("Elevator#" + this.carNum + " initialize elevator " + this.carNum + ". Time: " + s.toString() + "\n");
+				writeToTrace(s.toString() + " - Elevator#" + this.carNum + " current state - " + state.getElevatorState() + ".\n");
+				writeToTrace(s.toString() + " - Elevator#" + this.carNum + " initialize elevator " + this.carNum + ".\n");
+            	writeToTrace(s.toString() + " - Elevator#" + this.carNum + " current Pos: "+ currentFloor + ".\n");
 				break; 
 				
 			case "NoElevatorRequest":
 				// Elevator is waiting for ElevatorRequest
-				writeToTrace("Elevator#" + this.carNum + " current state - " + state.getElevatorState() + ". Time: " + s.toString() + "\n");
-				writeToTrace("Elevator#" + this.carNum + " is currently idle and waiting for an ElevatorRequest! Time stamp: " + s.toString() + "\n");
-				
+				writeToTrace(s.toString() + " - Elevator#" + this.carNum + " current state - " + state.getElevatorState() + ".\n");
+				writeToTrace(s.toString() + " - Elevator#" + this.carNum + " is currently idle and waiting for an ElevatorRequest!\n");
+            	writeToTrace(s.toString() + " - Elevator#" + this.carNum + " current Pos: "+ currentFloor + ".\n");
 				String initData = getUpdateString(false);
 				
 				this.sendPacket = new DatagramPacket(initData.getBytes(), initData.length(), this.localAddr, 202);
@@ -280,25 +283,25 @@ public class Elevator implements Runnable {
 				String[] jobData = new String(this.receivePacket.getData()).split(",");
 				int start = Integer.parseInt(jobData[0].trim());
 				int dest = Integer.parseInt(jobData[1].trim());
-            	writeToTrace("Elevator#" + this.carNum + " sending button press from floor "+start+" to floor " + dest + " to Scheduler. Time stamp: " + s.toString() + "\n");
+            	writeToTrace(s.toString() + " - Elevator#" + this.carNum + " received floor request from floor " + start + ".\n");
 				addPassenger(start, dest);
 				
 				break;
 			case "PassengersBoarding":
 				// Simulate passengers boarding
 				openDoors();
-				writeToTrace("Elevator#" + this.carNum + " current state - " + state.getElevatorState() + ". Time: " + s.toString() + "\n");
+				writeToTrace(s.toString() + " - Elevator#" + this.carNum + " current state - " + state.getElevatorState() + ".\n");
 
 	            this.receivedPassengers++;
-            	writeToTrace("Elevator#" + this.carNum + " current Pos of Elevator: "+ currentFloor + ". Time stamp: " + s.toString() + "\n");
-            	writeToTrace("Elevator#" + this.carNum + " passengers boarded on floor: " + currentFloor + ". Time stamp: " + s.toString() + "\n");
-            	writeToTrace("Elevator#" + this.carNum + " passengers currently in elevator: " + receivedPassengers + ". Time stamp: " + s.toString() + "\n");
-            	
+	            writeToTrace(s.toString() + " - Elevator#" + this.carNum + " current Pos of Elevator: "+ currentFloor + ".\n");
+            	writeToTrace(s.toString() + " - Elevator#" + this.carNum + " passengers boarded on floor: " + currentFloor + ".\n");
+            	writeToTrace(s.toString() + " - Elevator#" + this.carNum + " passengers currently in elevator: " + receivedPassengers + ".\n");
+
 				break;
 			case "MoveToDestination":
 				// Simulate movement between floors
-				writeToTrace("Elevator#" + this.carNum + " current state - " + state.getElevatorState() + ". Time: " + s.toString() + "\n");
-            	writeToTrace("Elevator#" + this.carNum + " current Pos: "+ currentFloor + ". Time stamp: " + s.toString() + "\n");
+				writeToTrace(s.toString() + " - Elevator#" + this.carNum + " current state - " + state.getElevatorState() + ".\n");
+            	writeToTrace(s.toString() + " - Elevator#" + this.carNum + " current Pos: "+ currentFloor + ".\n");
 
 				move();
 				String updateData = getUpdateString(false);
@@ -315,9 +318,9 @@ public class Elevator implements Runnable {
 				
 			case "HasArrived":
 				// Simulate doors opening
-				writeToTrace("Elevator#" + this.carNum + " current state - " + state.getElevatorState() + ". Time: " + s.toString() + "\n");
+				writeToTrace(s.toString() + " - Elevator#" + this.carNum + " current state - " + state.getElevatorState() + ".\n");
 	            openDoors();
-            	writeToTrace("Elevator#" + this.carNum + " current Pos: "+ currentFloor + ". Time stamp: " + s.toString() + "\n");
+            	writeToTrace(s.toString() + " - Elevator#" + this.carNum + " current Pos: "+ currentFloor + ".\n");
 				
 				String arrivedData = getUpdateString(true);
 				

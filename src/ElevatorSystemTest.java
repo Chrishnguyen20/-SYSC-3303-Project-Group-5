@@ -132,8 +132,8 @@ class ElevatorSystemTest {
 	//@purpose test that the program runs successfully
 	@ParameterizedTest
 	@ValueSource(strings = {"EOF", "Floor Subsystem: Queued a request -- request for floor 1 going up",
-			 "Scheduler Subsystem: Queueing event from floor subsystem",
-			 "Scheduler Subsystem: Sending floor acknowledgement",
+			 "Scheduler Subsystem (floor): Queueing event from floor subsystem",
+			 "Scheduler Subsystem (floor): Sending floor acknowledgement",
 			 "Floor Subsystem: Received an acknowledgement",
 			 "Floor Subsystem: Queued a request -- request for floor 6 going down"})
 	void floor_tests(String event) {		
@@ -145,8 +145,9 @@ class ElevatorSystemTest {
 	@Order(3)
 	@ValueSource(strings = {"EOF", 
 			"Elevator#0 initialize elevator 0", "Elevator#0 is currently idle and waiting for an ElevatorRequest!",
-			"Scheduler Subsystem: added event", "Scheduler Subsystem: Send data to an active elevator", "Elevator#0 current Pos: 1",
-			"Scheduler Subsystem: service floor 5", "Scheduler Subsystem: service floor 3", "Scheduler Subsystem: service floor 4"})
+			"Scheduler Subsystem (elevator): sent elevator", "Elevator#0 current Pos: 1",
+			"Scheduler Subsystem (elevator): service floor 5", "Scheduler Subsystem (elevator): service floor 3", 
+			"Scheduler Subsystem (elevator): service floor 4", "Scheduler Subsystem (elevator): added elevator#1 to active elevators"})
 	
 	void elevator_scheduler_tests(String event) {		
 		assert(existsInTrace(event, true));	
@@ -155,12 +156,12 @@ class ElevatorSystemTest {
 	
 	//@purpose checks the states of the elevator and scheduler subsystem
 	@ParameterizedTest
-	@ValueSource(strings = {"Scheduler Subsystem: current state - Initial",
+	@ValueSource(strings = {"Scheduler Subsystem (elevator): current state - Initial",
 			 "Elevator#0 current state - NoElevatorRequest",
-			 "Scheduler Subsystem: current state - Has request",
-			 "Scheduler Subsystem: current state - Notified elevator",
+			 "Scheduler Subsystem (elevator): current state - Has request",
+			 "Scheduler Subsystem (elevator): current state - Notified elevator",
 			 "Elevator#0 current state - MoveToDestination",
-			 "Scheduler Subsystem: current state - Request served",
+			 "Scheduler Subsystem (elevator): current state - Request Served",
 			 "Elevator#0 current state - PassengersBoarding",
 			 "Elevator#0 current state - HasArrived"})
 	void elevatorHasArrivedState(String event) {		
