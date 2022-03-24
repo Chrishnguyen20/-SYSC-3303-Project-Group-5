@@ -120,6 +120,7 @@ public class Elevator implements Runnable {
 	private void openDoors() {
         try {
           	LocalTime t = LocalTime.now();
+        	writeToTrace(t.toString() + " - Elevator#" + this.carNum + " current Pos: "+ currentFloor + ".\n");
         	writeToTrace(t.toString() + " - Elevator#" + this.carNum + ", doors opening.\n");
 			Thread.sleep((long) (time*1000));
         	writeToTrace(t.toString() + " - Elevator#" + this.carNum + ", doors closing.\n");
