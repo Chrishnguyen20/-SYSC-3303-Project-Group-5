@@ -38,6 +38,7 @@ public class Floor implements Runnable{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		System.out.println(s);
 
 	}
 	
@@ -70,7 +71,7 @@ public class Floor implements Runnable{
 				String[] arr = line.split("\\t");
 				//check if the data is in the correct format
 				if(arr.length != 4) {
-					writeToTrace("Floor Subsystem: Read data error! Time Stamp: " + d.toString() + "\n");
+					writeToTrace(d.toString() + " - Floor Subsystem: Read data error!\n");
 					return;
 				}else {
 					//create a new floor request and pass the data to the scheduler as a comma delimited string. 
@@ -78,11 +79,11 @@ public class Floor implements Runnable{
 					byte[] dataArray = s.getBytes();
 					DatagramPacket sendPacket = new DatagramPacket(dataArray, dataArray.length, this.localAddr, 201);
 					DatagramPacket receivePacket = new DatagramPacket(new byte[dataArray.length], dataArray.length);
-					writeToTrace("Floor Subsystem: Queued a request -- request for floor " + arr[1] + " going " + arr[2] + " at " + d.toString() + " to floor " + arr[3] + "\n");
+					writeToTrace(d.toString() + " - Floor Subsystem: Queued a request -- request for floor " + arr[1] + " going " + arr[2] + " to floor " + arr[3] + "\n");
 					//send the packet and receive a acknowledgement
 					this.socket.send(sendPacket);
 					this.socket.receive(receivePacket);
-					writeToTrace("Floor Subsystem: Received an acknowledgement. Time: " + d.toString() + "\n");
+					writeToTrace(d.toString() + " - Floor Subsystem: Received an acknowledgement.\n");
 				}
 			}
 			writeToTrace("EOF. Time: " + d.toString());
