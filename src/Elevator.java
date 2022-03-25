@@ -8,6 +8,7 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.time.LocalTime;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -35,10 +36,10 @@ import java.util.Collections;
  */
 public class Elevator implements Runnable {
 	
-	private static final float time = 9.175f;
+	//private static final float time = 9.175f;
 	
 	// Short time for debugging
-	//private static final float time = 0.175f;
+	private static final float time = 0.175f;
 	
 	private int currentFloor;
 	private static int nextCarNum = 0;
@@ -46,7 +47,8 @@ public class Elevator implements Runnable {
 	private int receivedPassengers;
 	private int destFloor;
 	private TreeMap<Integer, Integer> destFloors;
-	private int passengerFloor;
+	private TreeSet<Integer> passengerFloors;
+	//private int passengerFloor;
 	private boolean hasRequest;
 	private ElevatorState state;
 	private DatagramSocket eleSocket;
@@ -75,6 +77,7 @@ public class Elevator implements Runnable {
 			e.printStackTrace();
 		}
 		destFloors = new TreeMap<Integer, Integer>();
+		passengerFloors = new TreeSet<Integer>();
 	}
 	
 	private synchronized void setCarNum() { this.carNum =  nextCarNum++; }
@@ -101,15 +104,41 @@ public class Elevator implements Runnable {
 		return this.destFloor;
 	}
 	
-	public int getFloorNum() {
-		return this.passengerFloor;
-	}
-	
 	public int getObjectiveFloor() {
 		if (this.receivedPassengers == 0) {
-			return getFloorNum(); 
+			return getFirstPassengerFloor(); 
 		}
 		return getDestFloor(); 
+	}
+	
+	public int getFirstDestFloor() {
+		if (this.destFloors.isEmpty()) {
+			return -1;
+		}
+		
+		int start = this.currentFloor;
+		if (!this.passengerFloors.isEmpty()) {
+			start = this.passengerFloors.first();
+		}
+		
+		if (start < destFloor) {
+			return this.destFloors.firstKey();
+		}
+    	
+		return this.destFloors.lastKey();
+	}
+	
+	public int getFirstPassengerFloor() {
+		if (this.passengerFloors.isEmpty()) {
+			return -1;
+		}
+		
+		int start = this.passengerFloors.first();
+		if (start < destFloor) {
+			return start;
+		}
+    	
+		return this.passengerFloors.last();
 	}
 	
 	/*
@@ -203,9 +232,7 @@ public class Elevator implements Runnable {
 
 	void addPassenger(int start, int dest)
 	{
-		if (this.destFloors.isEmpty()) {
-    		this.passengerFloor = start;
-    	}
+		this.passengerFloors.add(start);
     	
     	if(this.destFloors.containsKey(dest)) {
     		this.destFloors.put(dest, this.destFloors.get(dest) + 1);
@@ -216,7 +243,12 @@ public class Elevator implements Runnable {
     	
     	this.hasRequest = true;
         
-    	this.destFloor = this.destFloors.lastKey();
+    	if (start < dest) {
+    		this.destFloor = this.destFloors.lastKey();
+    	}
+    	else {
+    		this.destFloor = this.destFloors.firstKey();
+    	}
 	}
 	/*
 	 * @purpose - To create a string of the elevator data
@@ -229,7 +261,7 @@ public class Elevator implements Runnable {
 				String.valueOf(this.carNum) 						//0
 				+ "," + String.valueOf(this.portID) 				//1
 				+ "," + String.valueOf(this.currentFloor) 			//2
-				+ "," + String.valueOf(this.passengerFloor)			//3
+				+ "," + String.valueOf(getFirstPassengerFloor())	//3
 				+ "," + String.valueOf(this.destFloor)				//4
 				+ "," + String.valueOf(this.destFloors.size())		//5
 				+ "," + state.getElevatorState()					//6
@@ -294,6 +326,10 @@ public class Elevator implements Runnable {
             	writeToTrace("Elevator#" + this.carNum + " passengers boarded on floor: " + currentFloor + ". Time stamp: " + s.toString() + "\n");
             	writeToTrace("Elevator#" + this.carNum + " passengers currently in elevator: " + receivedPassengers + ". Time stamp: " + s.toString() + "\n");
             	
+            	if (this.passengerFloors.contains(this.currentFloor)) {
+	            	this.passengerFloors.remove(this.currentFloor);
+	            }
+            	
 				break;
 			case "MoveToDestination":
 				// Simulate movement between floors
@@ -328,15 +364,20 @@ public class Elevator implements Runnable {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-	            this.receivedPassengers--;
 	            
 	            if (this.destFloors.containsKey(this.currentFloor)) {
+	            	this.receivedPassengers -= this.destFloors.get(this.currentFloor);
 	            	this.destFloors.remove(this.currentFloor);
+	            }
+	            
+	            if (this.destFloors.isEmpty()) {
+	            	this.hasRequest = false;
 	            }
 
 				break;
 			}
 						
+			System.out.println(currentFloor+", "+getFirstPassengerFloor()+", "+passengerFloors.size());
 			state = state.nextState(this);
 
 		}

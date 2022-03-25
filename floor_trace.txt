@@ -1,13 +1,13 @@
-Floor Subsystem: Queued a request -- request for floor 1 going up at 16:41:06.488082100 to floor 3
-Scheduler Subsystem: Queueing event from floor subsystem. Time: 16:41:03.236053400
-Scheduler Subsystem: Sending floor acknowledgement. Time: 16:41:03.236053400
-Floor Subsystem: Received an acknowledgement. Time: 16:41:06.488082100
-Floor Subsystem: Queued a request -- request for floor 2 going up at 16:41:06.488082100 to floor 4
-Scheduler Subsystem: Queueing event from floor subsystem. Time: 16:41:06.504072300
-Scheduler Subsystem: Sending floor acknowledgement. Time: 16:41:06.504072300
-Floor Subsystem: Received an acknowledgement. Time: 16:41:06.488082100
-Floor Subsystem: Queued a request -- request for floor 6 going down at 16:41:06.488082100 to floor 5
-Scheduler Subsystem: Queueing event from floor subsystem. Time: 16:41:06.508070100
-Scheduler Subsystem: Sending floor acknowledgement. Time: 16:41:06.508070100
-Floor Subsystem: Received an acknowledgement. Time: 16:41:06.488082100
-EOF. Time: 16:41:06.488082100
+Floor Subsystem: Queued a request -- request for floor 1 going up at 20:59:58.781898800 to floor 3
+Scheduler Subsystem: Queueing event from floor subsystem. Time: 20:59:55.247087200
+Scheduler Subsystem: Sending floor acknowledgement. Time: 20:59:55.247087200
+Floor Subsystem: Received an acknowledgement. Time: 20:59:58.781898800
+Floor Subsystem: Queued a request -- request for floor 2 going up at 20:59:58.781898800 to floor 4
+Scheduler Subsystem: Queueing event from floor subsystem. Time: 20:59:58.795889600
+Scheduler Subsystem: Sending floor acknowledgement. Time: 20:59:58.795889600
+Floor Subsystem: Received an acknowledgement. Time: 20:59:58.781898800
+Floor Subsystem: Queued a request -- request for floor 6 going down at 20:59:58.781898800 to floor 5
+Scheduler Subsystem: Queueing event from floor subsystem. Time: 20:59:58.799886800
+Scheduler Subsystem: Sending floor acknowledgement. Time: 20:59:58.799886800
+Floor Subsystem: Received an acknowledgement. Time: 20:59:58.781898800
+EOF. Time: 20:59:58.781898800
