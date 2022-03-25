@@ -1,3 +1,6 @@
+/*
+* @purpose - The states of the elevator 
+*/
 
 public enum ElevatorState {
 
@@ -32,9 +35,8 @@ public enum ElevatorState {
 			if (elevator.getReceivedPassengers() == 0 && elevator.getCurrentFloor() == elevator.getFloorNum()) {
 				return PassengersBoarding;
 			} 
-			if (elevator.getCurrentFloor() == elevator.getDestFloor().get(0) && !(elevator.getReceivedPassengers() == 0)) {
-				elevator.getDestFloor().remove(0);
-				
+			if (elevator.getCurrentFloor() == elevator.getDestFloor() && !(elevator.getReceivedPassengers() == 0)) {
+				elevator.getDestFloor();
 				return HasArrived;	
 			}
 			return MoveToDestination;
