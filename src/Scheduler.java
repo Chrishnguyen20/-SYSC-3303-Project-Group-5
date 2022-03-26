@@ -35,7 +35,8 @@ public class Scheduler implements Runnable {
 	private boolean isClient;
 	
 
-	private String states = "Initial";
+	private String states;
+	SchedulerState state;
 	private DatagramSocket receiveSocket;
 	private InetAddress localAddr;
 	private DatagramPacket receivedFloorPacket;
@@ -52,9 +53,14 @@ public class Scheduler implements Runnable {
 	public Scheduler(boolean b, int c) {
 		this.isClient = b;
 		this.elevatorCount = c;
+		
+		states = "Initial";
+		state = SchedulerState.WaitRequest;
+		
 		this.activeElevators = new ArrayList<String[]>();
 		Scheduler.requestList = new ArrayList<String[]>();
 		Scheduler.currentRequests = new ArrayList<String[]>();
+		
 		try {
 			this.localAddr = InetAddress.getLocalHost();
 		} catch (UnknownHostException e) {
@@ -74,48 +80,6 @@ public class Scheduler implements Runnable {
 	/*
 	 * @purpose - The states of the scheduler 
 	 */
-	public enum schedulerState {
-		WaitRequest {
-			public schedulerState nextState() {
-				return NotifyElevator;
-			}
-
-			public int Current() {
-				return 1;
-			}
-		},
-		NotifyElevator {
-			public schedulerState nextState() {
-				return Served;
-			}
-
-			public int Current() {
-				return 2;
-			}
-		},
-		Served {
-			public schedulerState nextState() {
-				return Removed;
-			}
-
-			public int Current() {
-				return 3;
-			}
-		},
-		Removed {
-			public schedulerState nextState() {
-				return WaitRequest;
-			}
-
-			public int Current() {
-				return 4;
-			}
-		};
-
-		public abstract schedulerState nextState();
-
-		public abstract int Current();
-	}
 	
 	public String getCurrentState() {
 		return states;
@@ -282,148 +246,29 @@ public class Scheduler implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		schedulerState state = schedulerState.WaitRequest;
+		
 		while (true) {
 			LocalTime s = LocalTime.now();
 			if(isClient) {
-				try {
-					this.receivedFloorPacket = new DatagramPacket(new byte[21], 21);
-					this.receiveSocket.receive(receivedFloorPacket);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				String[] floorReq = new String(receivedFloorPacket.getData(), StandardCharsets.UTF_8).split(",");
-				for(int i = 0; i < floorReq.length; i++) {
-					floorReq[i] = floorReq[i].trim();
-				}
-				writeToFloorTrace(s.toString() + " - Scheduler Subsystem (floor): Queueing event from floor subsystem.\n");
-
-				requestList.add(floorReq);
-				Scheduler.numEventsQueued++;
-				try {
-					receivedFloorPacket.setPort(200);
-					writeToFloorTrace(s.toString() + " - Scheduler Subsystem (floor): Sending floor acknowledgement.\n");
-					this.receiveSocket.send(receivedFloorPacket);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}else {
+				processClient();
+			}
+			else {
 				if (!Scheduler.requestList.isEmpty() || !Scheduler.currentRequests.isEmpty()) {
 					switch (state.Current()) {
 					case 1:
-						writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): current state - " + states + ".\n");
-						states = "Has request";
-						writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): current state - " + states + ".\n");
-						while(activeElevators.size() < this.elevatorCount) {
-							this.receivedElevatorPacket = new DatagramPacket(new byte[1000], 1000);
-							writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): waiting for elevator.\n");
-							try {
-								this.receiveSocket.receive(receivedElevatorPacket);
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-							
-							String[] data = new String(this.receivedElevatorPacket.getData()).split(",");
-							
-							boolean newElevator = true;
-							for (int i = 0; i < this.activeElevators.size(); ++i) {
-								if (this.activeElevators.get(i)[1].equals(data[1])) {
-									newElevator = false;
-								}
-							}
-							if (newElevator) {
-								this.activeElevators.add(data);
-								writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): added elevator#" + data[0] + " to active elevators list\n");
-							}
-						}
-						state = state.nextState();
+						processWaitRequest();
 						break;
 						
 					case 2:
-						states = "Notified elevator";
-						writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): current state - " + states + ".\n");
-						writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): Send data to an active elevator.\n");
-						
-						for (int i = Scheduler.requestList.size() - 1; i >= 0; --i) {
-							String[] request = Scheduler.requestList.get(i);
-							int elevatorIndex = getAvailableElevator(Integer.parseInt(request[1]), Integer.parseInt(request[3]));
-							
-							if (elevatorIndex == -1) {
-								continue;
-							}
-							
-							String elevatorData = String.valueOf(request[1]) + "," + String.valueOf(request[3]);
-							int port = Integer.parseInt(this.activeElevators.get(elevatorIndex)[1]);
-							Scheduler.requestList.remove(i);
-							currentRequests.add(request);
-							this.sendElevatorPacket = new DatagramPacket(elevatorData.getBytes(), elevatorData.getBytes().length, localAddr, port);
-							
-							try { 
-								this.receiveSocket.send(sendElevatorPacket);
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-							writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): sent elevator #" + this.activeElevators.get(elevatorIndex)[1] + " a request\n");
-						}
-						
-						state = state.nextState();
+						processNotifyElevator();
 						break;
 						
 					case 3:
-						states = "Serving Requests";
-						writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): current state - " + states + ".\n");
-						writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.\n");
-						receivedElevatorPacket = new DatagramPacket(new byte[1000], 1000);
-						boolean hasArrived = false;
-						try {
-							this.receiveSocket.receive(receivedElevatorPacket);
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						
-						String[] updateData = new String(receivedElevatorPacket.getData()).split(",");
-						
-						for(int i = 0; i < activeElevators.size(); i++) {
-							if(activeElevators.get(i)[0].equals(updateData[0])) {
-								updateActiveElevator(updateData, i);
-							}
-						}
-						writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): got update from elevator#" + updateData[0] + " -- " + updateData[6] +  ".\n");
-						if(updateData[6].replaceAll("\\P{Print}","").equals("HasArrived")) {
-							writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): service floor " + updateData[2] + ".\n");
-							state = state.nextState();
-							Scheduler.currentRequests.remove(0);
-							if(Scheduler.numEventsServed < 0) {
-								Scheduler.numEventsServed = 0;
-							}
-							if(Scheduler.currentRequests.isEmpty()) {
-								states = "Request Served";
-								writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): current state - " + states + ".\n");
-							}
-							Scheduler.numEventsServed++;
-							hasArrived = true;
-						}
-						//be smart and pick up any passengers on this floor going in the direction 
-						if (!Scheduler.requestList.isEmpty() && !hasArrived) {
-							state = schedulerState.NotifyElevator;
-							continue;
-						}
-						
-						
+						processServed();
 						break;
 						
 					case 4:
-						states = "Request Served";
-						writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): current state - " + states + ".\n");
-						if(!Scheduler.currentRequests.isEmpty()) {
-							state = schedulerState.Served;
-						}
+						processRemoved();
 						break;
 						
 					}
@@ -435,6 +280,154 @@ public class Scheduler implements Runnable {
 			}
 		}
 	}
+	
+	public void processClient() {
+		LocalTime s = LocalTime.now();
+		
+		try {
+			this.receivedFloorPacket = new DatagramPacket(new byte[21], 21);
+			this.receiveSocket.receive(receivedFloorPacket);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		String[] floorReq = new String(receivedFloorPacket.getData(), StandardCharsets.UTF_8).split(",");
+		for(int i = 0; i < floorReq.length; i++) {
+			floorReq[i] = floorReq[i].trim();
+		}
+		writeToFloorTrace(s.toString() + " - Scheduler Subsystem (floor): Queueing event from floor subsystem.\n");
+
+		requestList.add(floorReq);
+		Scheduler.numEventsQueued++;
+		try {
+			receivedFloorPacket.setPort(200);
+			writeToFloorTrace(s.toString() + " - Scheduler Subsystem (floor): Sending floor acknowledgement.\n");
+			this.receiveSocket.send(receivedFloorPacket);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void processWaitRequest() {
+		LocalTime s = LocalTime.now();
+		
+		writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): current state - " + states + ".\n");
+		states = "Has request";
+		writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): current state - " + states + ".\n");
+		while(activeElevators.size() < this.elevatorCount) {
+			this.receivedElevatorPacket = new DatagramPacket(new byte[1000], 1000);
+			writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): waiting for elevator.\n");
+			try {
+				this.receiveSocket.receive(receivedElevatorPacket);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			String[] data = new String(this.receivedElevatorPacket.getData()).split(",");
+			
+			boolean newElevator = true;
+			for (int i = 0; i < this.activeElevators.size(); ++i) {
+				if (this.activeElevators.get(i)[1].equals(data[1])) {
+					newElevator = false;
+				}
+			}
+			if (newElevator) {
+				this.activeElevators.add(data);
+				writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): added elevator#" + data[0] + " to active elevators list\n");
+			}
+		}
+		state = state.nextState();
+	}
+	
+	public void processNotifyElevator() {
+		LocalTime s = LocalTime.now();
+		
+		states = "Notified elevator";
+		writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): current state - " + states + ".\n");
+		writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): Send data to an active elevator.\n");
+		
+		for (int i = Scheduler.requestList.size() - 1; i >= 0; --i) {
+			String[] request = Scheduler.requestList.get(i);
+			int elevatorIndex = getAvailableElevator(Integer.parseInt(request[1]), Integer.parseInt(request[3]));
+			
+			if (elevatorIndex == -1) {
+				continue;
+			}
+			
+			String elevatorData = String.valueOf(request[1]) + "," + String.valueOf(request[3]);
+			int port = Integer.parseInt(this.activeElevators.get(elevatorIndex)[1]);
+			Scheduler.requestList.remove(i);
+			currentRequests.add(request);
+			this.sendElevatorPacket = new DatagramPacket(elevatorData.getBytes(), elevatorData.getBytes().length, localAddr, port);
+			
+			try { 
+				this.receiveSocket.send(sendElevatorPacket);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): sent elevator #" + this.activeElevators.get(elevatorIndex)[1] + " a request\n");
+		}
+		
+		state = state.nextState();
+	}
+	
+	public void processServed() {
+		LocalTime s = LocalTime.now();
+		
+		states = "Serving Requests";
+		writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): current state - " + states + ".\n");
+		writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.\n");
+		receivedElevatorPacket = new DatagramPacket(new byte[1000], 1000);
+		boolean hasArrived = false;
+		try {
+			this.receiveSocket.receive(receivedElevatorPacket);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		String[] updateData = new String(receivedElevatorPacket.getData()).split(",");
+		
+		for(int i = 0; i < activeElevators.size(); i++) {
+			if(activeElevators.get(i)[0].equals(updateData[0])) {
+				updateActiveElevator(updateData, i);
+			}
+		}
+		writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): got update from elevator#" + updateData[0] + " -- " + updateData[6] +  ".\n");
+		if(updateData[6].replaceAll("\\P{Print}","").equals("HasArrived")) {
+			writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): service floor " + updateData[2] + ".\n");
+			state = state.nextState();
+			Scheduler.currentRequests.remove(0);
+			if(Scheduler.numEventsServed < 0) {
+				Scheduler.numEventsServed = 0;
+			}
+			if(Scheduler.currentRequests.isEmpty()) {
+				states = "Request Served";
+				writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): current state - " + states + ".\n");
+			}
+			Scheduler.numEventsServed++;
+			hasArrived = true;
+		}
+		//be smart and pick up any passengers on this floor going in the direction 
+		if (!Scheduler.requestList.isEmpty() && !hasArrived) {
+			state = SchedulerState.NotifyElevator;
+		}
+	}
+	
+	public void processRemoved() {
+		LocalTime s = LocalTime.now();
+		
+		states = "Request Served";
+		writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): current state - " + states + ".\n");
+		if(!Scheduler.currentRequests.isEmpty()) {
+			state = SchedulerState.Served;
+		}
+	}
+	
 	public static void main(String args[]) throws SocketException {
 		
 		final int elevatorCount = 2;
