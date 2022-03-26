@@ -11,6 +11,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Queue;
 
 
 /**     
@@ -56,9 +57,14 @@ public class Elevator implements Runnable {
 	private DatagramPacket receivePacket;
 	private InetAddress localAddr;
 	private boolean doorClosed;
-
+	private int doorDelay = 1000;
+	private int floorDelay = 1000;
+	private String faultType;
+	private int faultNum;
+	private int floorCount; 
+	private Queue<Integer> faultOcc; 
+	
 	private int portID;
-
 	
 	public Elevator (int floornum, int portID) throws SocketException {
 		this.currentFloor = floornum;
@@ -68,6 +74,7 @@ public class Elevator implements Runnable {
 		this.destFloor = 0;
 		this.doorClosed = false;
 		this.receivedPassengers = 0;
+		this.floorCount = 0;
 		setCarNum();
 		
 		try {
@@ -294,11 +301,22 @@ public class Elevator implements Runnable {
 			case "HasArrived":
 				processHasArrived();
 				break;
-				
+			case "handleFaults":
+				handleFault();
+				break;
 			}
-						
+					
 			state = state.nextState(this);
 
+		}
+	}
+	
+	private void handleFault() {
+		if(faultType == "Door") {
+			
+		}
+		else {
+			
 		}
 	}
 	
@@ -309,6 +327,9 @@ public class Elevator implements Runnable {
 		}
 		int start = Integer.parseInt(jobData[0].trim());
 		int dest = Integer.parseInt(jobData[1].trim());
+		
+		this.faultType = jobData[5].trim();
+		this.faultNum =  Integer.parseInt(jobData[4].trim());
 		LocalTime s = LocalTime.now();
     	writeToTrace(s.toString() + " - Elevator#" + this.carNum + " received floor request from floor " + start + ".\n");
 		addPassenger(start, dest);
@@ -332,7 +353,7 @@ public class Elevator implements Runnable {
 		String initData = getUpdateString(false);
 		
 		this.sendPacket = new DatagramPacket(initData.getBytes(), initData.length(), this.localAddr, 202);
-		this.receivePacket = new DatagramPacket(new byte[21], 21);
+		this.receivePacket = new DatagramPacket(new byte[30], 30);
 		
 		boolean receivedWork = false;
 		while(!receivedWork) {
@@ -374,7 +395,7 @@ public class Elevator implements Runnable {
 		String updateData = getUpdateString(false);
 		
 		this.sendPacket = new DatagramPacket(updateData.getBytes(), updateData.length(), this.localAddr, 202);
-		this.receivePacket = new DatagramPacket(new byte[21], 21);
+		this.receivePacket = new DatagramPacket(new byte[30], 30);
 		
 		try {
 			this.eleSocket.send(this.sendPacket);

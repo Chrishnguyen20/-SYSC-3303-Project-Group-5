@@ -285,7 +285,7 @@ public class Scheduler implements Runnable {
 		LocalTime s = LocalTime.now();
 		
 		try {
-			this.receivedFloorPacket = new DatagramPacket(new byte[21], 21);
+			this.receivedFloorPacket = new DatagramPacket(new byte[30], 30);
 			this.receiveSocket.receive(receivedFloorPacket);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

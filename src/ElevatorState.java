@@ -74,6 +74,18 @@ public enum ElevatorState {
 		public String getElevatorState() {
 			return "HasArrived";
 		}
+	},
+	handleFaults{
+		public ElevatorState nextState(Elevator elevator) {
+			return MoveToDestination;
+		}
+
+		@Override
+		public String getElevatorState() {
+			// TODO Auto-generated method stub
+			return "handleFaults";
+		}
+		
 	};
 
 	public abstract ElevatorState nextState(Elevator elevator);
