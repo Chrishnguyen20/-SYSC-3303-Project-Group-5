@@ -1,13 +1,13 @@
-04:59:50.337460500 - Floor Subsystem: Queued a request -- request for floor 1 going up to floor 3
-04:59:44.716630200 - Scheduler Subsystem (floor): Queueing event from floor subsystem.
-04:59:44.716630200 - Scheduler Subsystem (floor): Sending floor acknowledgement.
-04:59:50.337460500 - Floor Subsystem: Received an acknowledgement.
-04:59:50.337460500 - Floor Subsystem: Queued a request -- request for floor 2 going up to floor 4
-04:59:50.349453700 - Scheduler Subsystem (floor): Queueing event from floor subsystem.
-04:59:50.349453700 - Scheduler Subsystem (floor): Sending floor acknowledgement.
-04:59:50.337460500 - Floor Subsystem: Received an acknowledgement.
-04:59:50.337460500 - Floor Subsystem: Queued a request -- request for floor 6 going down to floor 5
-04:59:50.352452400 - Scheduler Subsystem (floor): Queueing event from floor subsystem.
-04:59:50.352452400 - Scheduler Subsystem (floor): Sending floor acknowledgement.
-04:59:50.337460500 - Floor Subsystem: Received an acknowledgement.
-EOF. Time: 04:59:50.337460500
+07:09:49.571115600 - Floor Subsystem: Queued a request -- request for floor 1 going up to floor 3
+07:09:47.341185800 - Scheduler Subsystem (floor): Queueing event from floor subsystem.
+07:09:47.341185800 - Scheduler Subsystem (floor): Sending floor acknowledgement.
+07:09:49.571115600 - Floor Subsystem: Received an acknowledgement.
+07:09:49.571115600 - Floor Subsystem: Queued a request -- request for floor 2 going up to floor 4
+07:09:49.589104400 - Scheduler Subsystem (floor): Queueing event from floor subsystem.
+07:09:49.589104400 - Scheduler Subsystem (floor): Sending floor acknowledgement.
+07:09:49.571115600 - Floor Subsystem: Received an acknowledgement.
+07:09:49.571115600 - Floor Subsystem: Queued a request -- request for floor 6 going down to floor 5
+07:09:49.592102700 - Scheduler Subsystem (floor): Queueing event from floor subsystem.
+07:09:49.592102700 - Scheduler Subsystem (floor): Sending floor acknowledgement.
+07:09:49.571115600 - Floor Subsystem: Received an acknowledgement.
+EOF. Time: 07:09:49.571115600

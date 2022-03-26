@@ -38,7 +38,7 @@ public enum ElevatorState {
 				return PassengersBoarding;
 			}
 			else if (curFloor == elevator.getFirstDestFloor()
-					&& (curFloor <= elevator.getObjectiveFloor() == curFloor <= elevator.getDestFloor())) {
+					&& elevator.getObjectiveFloor() == elevator.getDestFloor()) {
 				return HasArrived;
 			}
 			

@@ -361,15 +361,30 @@ public class Scheduler implements Runnable {
 			int port = Integer.parseInt(this.activeElevators.get(elevatorIndex)[1]);
 			Scheduler.requestList.remove(i);
 			currentRequests.add(request);
-			this.sendElevatorPacket = new DatagramPacket(elevatorData.getBytes(), elevatorData.getBytes().length, localAddr, port);
 			
+			this.sendElevatorPacket = new DatagramPacket(elevatorData.getBytes(), elevatorData.getBytes().length, localAddr, port);
 			try { 
 				this.receiveSocket.send(sendElevatorPacket);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): sent elevator #" + this.activeElevators.get(elevatorIndex)[1] + " a request\n");
+			
+			writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): sent elevator #" + this.activeElevators.get(elevatorIndex)[0] + " a request"
+					+ " from floor: "+request[1]+" to "+request[3]+"\n");
+		}
+		
+		byte completeBytes[] = "complete".getBytes();
+		
+		for(int i = 0; i < activeElevators.size(); i++) {
+			this.sendElevatorPacket = new DatagramPacket(completeBytes, completeBytes.length, localAddr, 
+					Integer.parseInt(activeElevators.get(i)[1]));
+			try { 
+				this.receiveSocket.send(sendElevatorPacket);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		state = state.nextState();
@@ -381,6 +396,7 @@ public class Scheduler implements Runnable {
 		states = "Serving Requests";
 		writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): current state - " + states + ".\n");
 		writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.\n");
+		
 		receivedElevatorPacket = new DatagramPacket(new byte[1000], 1000);
 		boolean hasArrived = false;
 		try {
@@ -411,15 +427,39 @@ public class Scheduler implements Runnable {
 			}
 			Scheduler.numEventsServed++;
 			hasArrived = true;
+			
+			return;
 		}
 		//be smart and pick up any passengers on this floor going in the direction 
 		if (!Scheduler.requestList.isEmpty() && !hasArrived) {
 			state = SchedulerState.NotifyElevator;
+			writeToElevatorTrace("Switching to State: SchedulerState.NotifyElevator\n");
+			return;
+		}
+		
+		byte updateBytes[] = "update".getBytes();
+		this.sendElevatorPacket = new DatagramPacket(updateBytes, updateBytes.length, localAddr, receivedElevatorPacket.getPort());
+		
+		try { 
+			this.receiveSocket.send(sendElevatorPacket);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	
 	public void processRemoved() {
 		LocalTime s = LocalTime.now();
+		
+		byte arrivedBytes[] = "arrived".getBytes();
+		this.sendElevatorPacket = new DatagramPacket(arrivedBytes, arrivedBytes.length, localAddr, receivedElevatorPacket.getPort());
+		
+		try { 
+			this.receiveSocket.send(sendElevatorPacket);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		states = "Request Served";
 		writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): current state - " + states + ".\n");
