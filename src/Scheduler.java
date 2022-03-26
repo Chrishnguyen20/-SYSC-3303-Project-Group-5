@@ -255,19 +255,19 @@ public class Scheduler implements Runnable {
 			else {
 				if (!Scheduler.requestList.isEmpty() || !Scheduler.currentRequests.isEmpty()) {
 					switch (state.Current()) {
-					case 1:
+					case "WaitRequest":
 						processWaitRequest();
 						break;
 						
-					case 2:
+					case "NotifyElevator":
 						processNotifyElevator();
 						break;
 						
-					case 3:
+					case "Served":
 						processServed();
 						break;
 						
-					case 4:
+					case "Removed":
 						processRemoved();
 						break;
 						
