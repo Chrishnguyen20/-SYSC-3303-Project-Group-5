@@ -367,6 +367,8 @@ public class Elevator implements Runnable {
 	}
 	
 	private void processMoveToDestination() {
+		long startTime = System.nanoTime();
+		
 		LocalTime s = LocalTime.now();
 		
 		// Simulate movement between floors
@@ -396,6 +398,12 @@ public class Elevator implements Runnable {
 		}
 		
 		simulateFloorMovement();
+		
+		long endTime = System.nanoTime();
+		long timeElapsed = endTime - startTime;
+		totalMoveTime += timeElapsed;
+		writeToTrace(s.toString() + " - Elevator#" + this.carNum + " took this amount of time: "+ timeElapsed + " to move to the next floor");
+		
 	}
 	
 	private void processPassengersBoarding() {
@@ -421,7 +429,8 @@ public class Elevator implements Runnable {
 		writeToTrace(s.toString() + " - Elevator#" + this.carNum + " current state - " + state.getElevatorState() + " on floor: " + this.currentFloor + ".\n");
         openDoors();
     	writeToTrace(s.toString() + " - Elevator#" + this.carNum + " current Pos: "+ currentFloor + ".\n");
-		
+		writeToTrace(s.toString() + " - Elevator#" + this.carNum + " took this amount of time to arrive: "+ totalMoveTime);
+    	
 		String arrivedData = getUpdateString(true);
 		
 		this.sendPacket = new DatagramPacket(arrivedData.getBytes(), arrivedData.length(), this.localAddr, 202);
