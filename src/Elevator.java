@@ -55,8 +55,8 @@ public class Elevator implements Runnable {
 	private DatagramPacket receivePacket;
 	private InetAddress localAddr;
 	private boolean doorClosed;
-
 	private int portID;
+	private long totalMoveTime;
 
 	
 	public Elevator (int floornum, int portID) throws SocketException {
@@ -118,6 +118,7 @@ public class Elevator implements Runnable {
 	 * @return void
 	 */
 	private void openDoors() {
+		long startTime = System.nanoTime(); 
         try {
           	LocalTime t = LocalTime.now();
         	writeToTrace(t.toString() + " - Elevator#" + this.carNum + ", doors opening.\n");
@@ -126,6 +127,9 @@ public class Elevator implements Runnable {
         } catch (InterruptedException e) {
         	System.err.println(e);
         }
+        long endTime = System.nanoTime();
+		long openDoorTime = endTime - startTime;
+		totalMoveTime += openDoorTime;
 	}
 	
 	
@@ -182,6 +186,7 @@ public class Elevator implements Runnable {
 			this.currentFloor = getDiretion() == "up" ? currentFloor + 1 : currentFloor - 1;
 		}
 		if (this.currentFloor == getObjectiveFloor()) {
+			
 			return;
 		}
 	}
@@ -289,6 +294,7 @@ public class Elevator implements Runnable {
 				break;
 			case "PassengersBoarding":
 				// Simulate passengers boarding
+				totalMoveTime = 0;
 				openDoors();
 				writeToTrace(s.toString() + " - Elevator#" + this.carNum + " current state - " + state.getElevatorState() + ".\n");
 
@@ -301,8 +307,8 @@ public class Elevator implements Runnable {
 			case "MoveToDestination":
 				// Simulate movement between floors
 				writeToTrace(s.toString() + " - Elevator#" + this.carNum + " current state - " + state.getElevatorState() + ".\n");
-            	writeToTrace(s.toString() + " - Elevator#" + this.carNum + " current Pos: "+ currentFloor + ".\n");
-
+            	writeToTrace(s.toString() + " - Elevator#" + this.carNum + " current Pos: "+ currentFloor + ".\n");            	
+            	long startTime = System.nanoTime();
 				move();
 				String updateData = getUpdateString(false);
 				
@@ -314,6 +320,14 @@ public class Elevator implements Runnable {
 					e.printStackTrace();
 				}
 				simulateFloorMovement();
+				long endTime = System.nanoTime();
+				long timeElapsed = endTime - startTime;
+				writeToTrace("Time to move a floor: "+ timeElapsed/1000000000);
+				totalMoveTime += timeElapsed;
+				if(timeElapsed > 9) {
+					writeToTrace("Time to move a floor exceeded normal times");
+				}
+				
 				break;
 				
 			case "HasArrived":
@@ -321,7 +335,8 @@ public class Elevator implements Runnable {
 				writeToTrace(s.toString() + " - Elevator#" + this.carNum + " current state - " + state.getElevatorState() + ".\n");
 	            openDoors();
             	writeToTrace(s.toString() + " - Elevator#" + this.carNum + " current Pos: "+ currentFloor + ".\n");
-				
+				writeToTrace("It took a total of this amount of time to move to the destination floor: "+ totalMoveTime/1000000000);
+            	
 				String arrivedData = getUpdateString(true);
 				
 				this.sendPacket = new DatagramPacket(arrivedData.getBytes(), arrivedData.length(), this.localAddr, 202);
@@ -336,7 +351,6 @@ public class Elevator implements Runnable {
 	            if (this.destFloors.containsKey(this.currentFloor)) {
 	            	this.destFloors.remove(this.currentFloor);
 	            }
-
 				break;
 			}
 						
