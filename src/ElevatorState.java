@@ -32,13 +32,16 @@ public enum ElevatorState {
 	MoveToDestination {
 		@Override
 		public ElevatorState nextState(Elevator elevator) { 			
-			if (elevator.getReceivedPassengers() == 0 && elevator.getCurrentFloor() == elevator.getFloorNum()) {
+			
+			int curFloor = elevator.getCurrentFloor();
+			if (curFloor == elevator.getFirstPassengerFloor()) {
 				return PassengersBoarding;
-			} 
-			if (elevator.getCurrentFloor() == elevator.getDestFloor() && !(elevator.getReceivedPassengers() == 0)) {
-				elevator.getDestFloor();
-				return HasArrived;	
 			}
+			else if (curFloor == elevator.getFirstDestFloor()
+					&& elevator.getObjectiveFloor() == elevator.getDestFloor()) {
+				return HasArrived;
+			}
+			
 			return MoveToDestination;
 		}
 
@@ -61,6 +64,9 @@ public enum ElevatorState {
 	HasArrived {
 		@Override
 		public ElevatorState nextState(Elevator elevator) {
+			if (elevator.hasRequest()) {
+				return MoveToDestination;
+			}
 			return NoElevatorRequest;
 		}
 
