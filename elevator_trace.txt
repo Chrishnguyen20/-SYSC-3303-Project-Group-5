@@ -1,0 +1,72 @@
+14:28:23.783 - Elevator#0 current state - Initial.
+14:28:23.783 - Elevator#1 current state - Initial.
+14:28:23.783 - Elevator#0 initialize elevator 0.
+14:28:23.783 - Elevator#1 initialize elevator 1.
+14:28:23.783 - Elevator#0 current Pos: 1.
+14:28:23.783 - Elevator#1 current Pos: 1.
+14:28:23.812 - Elevator#0 current state - NoElevatorRequest.
+14:28:23.812 - Elevator#1 current state - NoElevatorRequest.
+14:28:23.812 - Elevator#0 is currently idle and waiting for an ElevatorRequest!
+14:28:23.812 - Elevator#1 is currently idle and waiting for an ElevatorRequest!
+14:28:23.812 - Elevator#0 current Pos: 1.
+14:28:23.812 - Elevator#1 current Pos: 1.
+14:35:36.835 - Elevator#1 current state - Initial.
+14:35:36.835 - Elevator#0 current state - Initial.
+14:35:36.835 - Elevator#1 initialize elevator 1.
+14:35:36.835 - Elevator#0 initialize elevator 0.
+14:35:36.835 - Elevator#1 current Pos: 1.
+14:35:36.835 - Elevator#0 current Pos: 1.
+14:35:36.864 - Elevator#1 current state - NoElevatorRequest.
+14:35:36.864 - Elevator#0 current state - NoElevatorRequest.
+14:35:36.864 - Elevator#1 is currently idle and waiting for an ElevatorRequest!
+14:35:36.864 - Elevator#0 is currently idle and waiting for an ElevatorRequest!
+14:35:36.864 - Elevator#1 current Pos: 1.
+14:35:36.864 - Elevator#0 current Pos: 1.
+14:36:50.315 - Elevator#1 current state - Initial.
+14:36:50.315 - Elevator#0 current state - Initial.
+14:36:50.315 - Elevator#0 initialize elevator 0.
+14:36:50.315 - Elevator#1 initialize elevator 1.
+14:36:50.315 - Elevator#1 current Pos: 1.
+14:36:50.315 - Elevator#0 current Pos: 1.
+14:36:50.344 - Elevator#1 current state - NoElevatorRequest.
+14:36:50.344 - Elevator#0 current state - NoElevatorRequest.
+14:36:50.344 - Elevator#1 is currently idle and waiting for an ElevatorRequest!
+14:36:50.344 - Elevator#0 is currently idle and waiting for an ElevatorRequest!
+14:36:50.344 - Elevator#1 current Pos: 1.
+14:36:50.344 - Elevator#0 current Pos: 1.
+14:47:22.876 - Elevator#1 current state - Initial.
+14:47:22.876 - Elevator#0 current state - Initial.
+14:47:22.876 - Elevator#1 initialize elevator 1.
+14:47:22.876 - Elevator#0 initialize elevator 0.
+14:47:22.876 - Elevator#1 current Pos: 1.
+14:47:22.876 - Elevator#0 current Pos: 1.
+14:47:22.906 - Elevator#1 current state - NoElevatorRequest.
+14:47:22.906 - Elevator#0 current state - NoElevatorRequest.
+14:47:22.906 - Elevator#1 is currently idle and waiting for an ElevatorRequest!
+14:47:22.906 - Elevator#0 is currently idle and waiting for an ElevatorRequest!
+14:47:22.906 - Elevator#1 current Pos: 1.
+14:47:22.906 - Elevator#0 current Pos: 1.
+14:53:23.100 - Elevator#1 current state - Initial.
+14:53:23.100 - Elevator#0 current state - Initial.
+14:53:23.100 - Elevator#0 initialize elevator 0.
+14:53:23.100 - Elevator#1 initialize elevator 1.
+14:53:23.100 - Elevator#1 current Pos: 1.
+14:53:23.100 - Elevator#0 current Pos: 1.
+14:53:23.129 - Elevator#1 current state - NoElevatorRequest.
+14:53:23.129 - Elevator#0 current state - NoElevatorRequest.
+14:53:23.129 - Elevator#1 is currently idle and waiting for an ElevatorRequest!
+14:53:23.129 - Elevator#0 is currently idle and waiting for an ElevatorRequest!
+14:53:23.129 - Elevator#1 current Pos: 1.
+14:53:23.129 - Elevator#0 current Pos: 1.
+16:05:16.677 - Elevator#1 current state - Initial.
+16:05:16.677 - Elevator#0 current state - Initial.
+16:05:16.677 - Elevator#1 initialize elevator 1.
+16:05:16.677 - Elevator#0 initialize elevator 0.
+16:05:16.677 - Elevator#1 current Pos: 1.
+16:05:16.677 - Elevator#0 current Pos: 1.
+16:05:16.707 - Elevator#1 current state - NoElevatorRequest.
+16:05:16.707 - Elevator#0 current state - NoElevatorRequest.
+16:05:16.707 - Elevator#1 is currently idle and waiting for an ElevatorRequest!
+16:05:16.707 - Elevator#0 is currently idle and waiting for an ElevatorRequest!
+16:05:16.707 - Elevator#0 current Pos: 1.
+16:05:16.707 - Elevator#1 current Pos: 1.
