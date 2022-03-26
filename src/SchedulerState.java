@@ -5,8 +5,8 @@ public enum SchedulerState {
 			return NotifyElevator;
 		}
 
-		public int Current() {
-			return 1;
+		public String Current() {
+			return "WaitRequest";
 		}
 	},
 	NotifyElevator {
@@ -14,8 +14,8 @@ public enum SchedulerState {
 			return Served;
 		}
 
-		public int Current() {
-			return 2;
+		public String Current() {
+			return "NotifyElevator";
 		}
 	},
 	Served {
@@ -23,8 +23,8 @@ public enum SchedulerState {
 			return Removed;
 		}
 
-		public int Current() {
-			return 3;
+		public String Current() {
+			return "Served";
 		}
 	},
 	Removed {
@@ -32,12 +32,12 @@ public enum SchedulerState {
 			return WaitRequest;
 		}
 
-		public int Current() {
-			return 4;
+		public String Current() {
+			return "Removed";
 		}
 	};
 
 	public abstract SchedulerState nextState();
 
-	public abstract int Current();
+	public abstract String Current();
 }
