@@ -322,10 +322,10 @@ public class Elevator implements Runnable {
 				simulateFloorMovement();
 				long endTime = System.nanoTime();
 				long timeElapsed = endTime - startTime;
-				writeToTrace(s.toString() + "Time to move a floor: "+ timeElapsed/1000000000);
+				writeToTrace(s.toString() + " - Elevator#" + this.carNum + " Time to move a floor: "+ timeElapsed/1000000000 +" seconds .\n");
 				totalMoveTime += timeElapsed;
 				if(timeElapsed > 9) {
-					writeToTrace(s.toString() + "Time to move a floor exceeded normal times");
+					writeToTrace(s.toString() + " - Elevator#" + this.carNum + " exceeded normal time to move floor .\n");
 				}
 				
 				break;
@@ -335,7 +335,7 @@ public class Elevator implements Runnable {
 				writeToTrace(s.toString() + " - Elevator#" + this.carNum + " current state - " + state.getElevatorState() + ".\n");
 	            openDoors();
             	writeToTrace(s.toString() + " - Elevator#" + this.carNum + " current Pos: "+ currentFloor + ".\n");
-            	writeToTrace(s.toString() + "It took a total of this amount of time to move to the destination floor: "+ totalMoveTime/1000000000);
+            	writeToTrace(s.toString() + " - Elevator#" + this.carNum + " took a total of "+ totalMoveTime/1000000000+ " seconds to move floors .\n");
             	
 				String arrivedData = getUpdateString(true);
 				
