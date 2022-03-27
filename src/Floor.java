@@ -70,7 +70,7 @@ public class Floor implements Runnable{
 			while ((line = reader.readLine()) != null){
 				String[] arr = line.split("\\t");
 				//check if the data is in the correct format
-				if(arr.length != 4) {
+				if(arr.length != 6) {
 					writeToTrace(d.toString() + " - Floor Subsystem: Read data error!\n");
 					return;
 				}else {
