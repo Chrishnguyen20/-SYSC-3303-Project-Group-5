@@ -443,13 +443,12 @@ public class Scheduler implements Runnable {
 			String[] faultData = new String[3];
 			faultData[0] = updateData[8];	//get fault code
 			faultData[1] = updateData[1]; 	//get elevator index
-			faultData[2] = updateData[9];	//get number of events attributed to this elevator 
+			faultData[2] = updateData[5];	//get number of events attributed to this elevator 
 			this.elevatorFaults.put(Integer.parseInt(updateData[0]), faultData);
 			state = SchedulerState.HandleFault;
 			return;
 		}
-		//go to handle fault state
-		//	return
+
 		//be smart and pick up any passengers on this floor going in the direction 
 		if (!Scheduler.requestList.isEmpty() && !hasArrived) {
 			state = SchedulerState.NotifyElevator;
