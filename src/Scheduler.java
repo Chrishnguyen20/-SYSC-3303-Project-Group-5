@@ -290,6 +290,11 @@ public class Scheduler implements Runnable {
 		}
 	}
 	
+	/*
+	 * @purpose - To wait to receive the floor request and add it to the request list
+	 * 
+	 * @return void
+	 */
 	public void processClient() {
 		LocalTime s = LocalTime.now();
 		
@@ -319,6 +324,11 @@ public class Scheduler implements Runnable {
 		}
 	}
 	
+	/*
+	 * @purpose - To wait to receive the floor request and add it to the request list
+	 * 
+	 * @return void
+	 */
 	public void processWaitRequest() {
 		LocalTime s = LocalTime.now();
 		
