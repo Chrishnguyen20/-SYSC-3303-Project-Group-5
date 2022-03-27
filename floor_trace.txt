@@ -1,17 +1,17 @@
-10:50:55.419 - Floor Subsystem: Queued a request -- request for floor 1 going up to floor 3
-10:50:51.094 - Scheduler Subsystem (floor): Queueing event from floor subsystem.
-10:50:51.094 - Scheduler Subsystem (floor): Sending floor acknowledgement.
-10:50:55.419 - Floor Subsystem: Received an acknowledgement.
-10:50:55.419 - Floor Subsystem: Queued a request -- request for floor 2 going up to floor 4
-10:50:55.432 - Scheduler Subsystem (floor): Queueing event from floor subsystem.
-10:50:55.432 - Scheduler Subsystem (floor): Sending floor acknowledgement.
-10:50:55.419 - Floor Subsystem: Received an acknowledgement.
-10:50:55.419 - Floor Subsystem: Queued a request -- request for floor 4 going up to floor 5
-10:50:55.433 - Scheduler Subsystem (floor): Queueing event from floor subsystem.
-10:50:55.433 - Scheduler Subsystem (floor): Sending floor acknowledgement.
-10:50:55.419 - Floor Subsystem: Received an acknowledgement.
-10:50:55.419 - Floor Subsystem: Queued a request -- request for floor 6 going down to floor 2
-10:50:55.434 - Scheduler Subsystem (floor): Queueing event from floor subsystem.
-10:50:55.434 - Scheduler Subsystem (floor): Sending floor acknowledgement.
-10:50:55.419 - Floor Subsystem: Received an acknowledgement.
-EOF. Time: 10:50:55.419
+15:10:16.644470600 - Floor Subsystem: Queued a request -- request for floor 1 going up to floor 3
+15:10:14.114226200 - Scheduler Subsystem (floor): Queueing event from floor subsystem.
+15:10:14.114226200 - Scheduler Subsystem (floor): Sending floor acknowledgement.
+15:10:16.644470600 - Floor Subsystem: Received an acknowledgement.
+15:10:16.644470600 - Floor Subsystem: Queued a request -- request for floor 2 going up to floor 4
+15:10:16.661465 - Scheduler Subsystem (floor): Queueing event from floor subsystem.
+15:10:16.661465 - Scheduler Subsystem (floor): Sending floor acknowledgement.
+15:10:16.644470600 - Floor Subsystem: Received an acknowledgement.
+15:10:16.644470600 - Floor Subsystem: Queued a request -- request for floor 4 going up to floor 5
+15:10:16.666457800 - Scheduler Subsystem (floor): Queueing event from floor subsystem.
+15:10:16.666457800 - Scheduler Subsystem (floor): Sending floor acknowledgement.
+15:10:16.644470600 - Floor Subsystem: Received an acknowledgement.
+15:10:16.644470600 - Floor Subsystem: Queued a request -- request for floor 6 going down to floor 2
+15:10:16.670453700 - Scheduler Subsystem (floor): Queueing event from floor subsystem.
+15:10:16.670453700 - Scheduler Subsystem (floor): Sending floor acknowledgement.
+15:10:16.644470600 - Floor Subsystem: Received an acknowledgement.
+EOF. Time: 15:10:16.644470600
