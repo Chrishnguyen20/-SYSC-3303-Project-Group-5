@@ -204,40 +204,58 @@ public class Scheduler implements Runnable {
 		if (activeElevators.isEmpty()) {
 			return receivedElevatorPacket.getPort();
 		}
-		
+		boolean noneAvailable = true;
 		int canidateIndex = 0;
 		int minimumDist = Math.abs(Integer.parseInt(this.activeElevators.get(canidateIndex)[2]) - requestStart);
 		boolean isIdle = false;
-		this.activeElevators.get(canidateIndex)[5] = String.valueOf(Integer.parseInt(this.activeElevators.get(canidateIndex)[5]) + 1);
+		//this.activeElevators.get(canidateIndex)[5] = String.valueOf(Integer.parseInt(this.activeElevators.get(canidateIndex)[5]) + 1);
 		
-		for (int i = 1; i < this.activeElevators.size(); ++i) {
+		for (int i = 0; i < this.activeElevators.size(); ++i) {
 			String[] elevator = this.activeElevators.get(i);
 			
 			int currentFloor = Integer.parseInt(elevator[2]);
 			int passengerFloor = Integer.parseInt(elevator[3]);
+			int destFloor = Integer.parseInt(elevator[4]);
 			int effectiveFloor = passengerFloor;
-			if ((isAcending(passengerFloor, Integer.parseInt(elevator[4])) && currentFloor < passengerFloor)
-					|| (!isAcending(passengerFloor, Integer.parseInt(elevator[4])) && currentFloor > passengerFloor)) {
+			int requestCount = Integer.parseInt(elevator[5]);
+			
+			boolean eisAcending = isAcending(passengerFloor, destFloor);
+			boolean risAcending = isAcending(requestStart, requestDest);
+			
+			if (eisAcending != risAcending && requestCount != 0)
+				continue;
+			
+			if ((eisAcending && currentFloor > passengerFloor)
+					|| (!eisAcending && currentFloor < passengerFloor)) {
 				effectiveFloor = currentFloor;
 			}
 			
-			if (Integer.parseInt(elevator[5]) == 0
-					&& (minimumDist > Math.abs(effectiveFloor - requestStart) || !isIdle)) {
+			if (requestCount == 0
+					&& (minimumDist >= Math.abs(effectiveFloor - requestStart) || !isIdle)) {
+				
+				elevator[3] = String.valueOf(requestStart);
+				elevator[4] = String.valueOf(requestDest);
 				elevator[5] = "1";
+				
 				minimumDist = Math.abs(effectiveFloor - requestStart);
 				isIdle = true;
-				this.activeElevators.get(canidateIndex)[5] = String.valueOf(Integer.parseInt(this.activeElevators.get(canidateIndex)[5]) - 1);
 				canidateIndex = i;
+				noneAvailable = false;
+				
+				updateActiveElevator(elevator, i);
 			}
-			else if (isPassengerOnPath(requestStart, requestDest, passengerFloor, Integer.parseInt(elevator[4]), currentFloor)
-					&& minimumDist > Math.abs(effectiveFloor - requestStart)
+			else if (isPassengerOnPath(requestStart, requestDest, passengerFloor, destFloor, currentFloor)
+					&& minimumDist >= Math.abs(effectiveFloor - requestStart)
 					&& !isIdle) {
-				elevator[5] = String.valueOf(Integer.parseInt(elevator[5]) + 1);
+				this.activeElevators.get(i)[5] = String.valueOf(Integer.parseInt(this.activeElevators.get(canidateIndex)[5]) + 1);
 				minimumDist = Math.abs(effectiveFloor - requestStart);
-				this.activeElevators.get(canidateIndex)[5] = String.valueOf(Integer.parseInt(this.activeElevators.get(canidateIndex)[5]) - 1);
 				canidateIndex = i;
+				noneAvailable = false;
 			}
 		}
+		
+		if (noneAvailable)
+			return -1;
 		return canidateIndex;
 	}
 	

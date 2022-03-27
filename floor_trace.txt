@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 16:16:32.569 - Floor Subsystem: Queued a request -- request for floor 1 going up to floor 3
 16:16:29.174 - Scheduler Subsystem (floor): Queueing event from floor subsystem.
 16:16:29.174 - Scheduler Subsystem (floor): Sending floor acknowledgement.
@@ -15,3 +16,22 @@
 16:16:32.603 - Scheduler Subsystem (floor): Sending floor acknowledgement.
 16:16:32.569 - Floor Subsystem: Received an acknowledgement.
 EOF. Time: 16:16:32.569
+=======
+15:10:16.644470600 - Floor Subsystem: Queued a request -- request for floor 1 going up to floor 3
+15:10:14.114226200 - Scheduler Subsystem (floor): Queueing event from floor subsystem.
+15:10:14.114226200 - Scheduler Subsystem (floor): Sending floor acknowledgement.
+15:10:16.644470600 - Floor Subsystem: Received an acknowledgement.
+15:10:16.644470600 - Floor Subsystem: Queued a request -- request for floor 2 going up to floor 4
+15:10:16.661465 - Scheduler Subsystem (floor): Queueing event from floor subsystem.
+15:10:16.661465 - Scheduler Subsystem (floor): Sending floor acknowledgement.
+15:10:16.644470600 - Floor Subsystem: Received an acknowledgement.
+15:10:16.644470600 - Floor Subsystem: Queued a request -- request for floor 4 going up to floor 5
+15:10:16.666457800 - Scheduler Subsystem (floor): Queueing event from floor subsystem.
+15:10:16.666457800 - Scheduler Subsystem (floor): Sending floor acknowledgement.
+15:10:16.644470600 - Floor Subsystem: Received an acknowledgement.
+15:10:16.644470600 - Floor Subsystem: Queued a request -- request for floor 6 going down to floor 2
+15:10:16.670453700 - Scheduler Subsystem (floor): Queueing event from floor subsystem.
+15:10:16.670453700 - Scheduler Subsystem (floor): Sending floor acknowledgement.
+15:10:16.644470600 - Floor Subsystem: Received an acknowledgement.
+EOF. Time: 15:10:16.644470600
+>>>>>>> branch 'minh_branch' of https://github.com/leoxu321/SYSC-3303-Project-Group-5
