@@ -109,7 +109,9 @@ public class Elevator implements Runnable {
 		
 	public String getState() { return state.getElevatorState(); }
 	
-	public boolean hasRequest() { return this.hasRequest; }
+	//public boolean hasRequest() { return this.hasRequest; }
+	
+	public boolean hasRequest() { return !this.destFloors.isEmpty(); }
 	
 	public boolean checkFaulted() { return this.hasFaulted; }
 	
