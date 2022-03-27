@@ -11,6 +11,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Queue;
 
 
 /**     
@@ -39,7 +40,7 @@ public class Elevator implements Runnable {
 	//private static final float time = 9.175f;
 	
 	// Short time for debugging
-	private static final float time = 0.175f;
+	private static final float time = 9.175f;
 	
 	private int currentFloor;
 	private static int nextCarNum = 0;
@@ -56,9 +57,15 @@ public class Elevator implements Runnable {
 	private DatagramPacket receivePacket;
 	private InetAddress localAddr;
 	private boolean doorClosed;
-	private int portID;
-	private long totalMoveTime;
-
+	private int doorDelay = 1000;
+	private int floorDelay = 1000;
+	private String faultType;
+	private int faultNum;
+	private int floorCount; 
+	private int doorCount;
+	private int portID;	
+	private boolean hasFaulted;
+	private boolean isOn;
 	
 	public Elevator (int floornum, int portID) throws SocketException {
 		this.currentFloor = floornum;
@@ -68,6 +75,12 @@ public class Elevator implements Runnable {
 		this.destFloor = 0;
 		this.doorClosed = false;
 		this.receivedPassengers = 0;
+		this.floorCount = 0;
+		this.doorCount = 0;
+		this.faultNum = -1;
+		this.hasFaulted = false;
+		this.faultType = "None";
+		this.isOn = true;
 		setCarNum();
 		
 		try {
@@ -95,6 +108,8 @@ public class Elevator implements Runnable {
 	public String getState() { return state.getElevatorState(); }
 	
 	public boolean hasRequest() { return this.hasRequest; }
+	
+	public boolean checkFaulted() { return this.hasFaulted; }
 	
 	public String getDiretion() {
 		return getObjectiveFloor() > this.currentFloor ? "up" : "down";
@@ -145,33 +160,62 @@ public class Elevator implements Runnable {
 	 * @purpose - Simulates doors opening
 	 * @return void
 	 */
-	private void openDoors() {
-		long startTime = System.nanoTime(); 
+	private boolean openDoors() {
+		this.doorCount++;
+		if(this.doorCount == this.faultNum && this.faultType.contains("Door")) {
+			this.doorDelay = 500;
+		}else {
+			this.doorDelay = 1000;
+		}
+		//start timer
+		long startTime = System.nanoTime();
         try {
-          	LocalTime t = LocalTime.now();
-        	writeToTrace(t.toString() + " - Elevator#" + this.carNum + ", doors opening.\n");
-			Thread.sleep((long) (time*1000));
-        	writeToTrace(t.toString() + " - Elevator#" + this.carNum + ", doors closing.\n");
+          	LocalTime r = LocalTime.now();
+        	writeToTrace(r.toString() + " - Elevator#" + this.carNum + " current Pos: "+ currentFloor + ".\n");
+        	writeToTrace(r.toString() + " - Elevator#" + this.carNum + ", doors opening.\n");
+			Thread.sleep((long) (time*doorDelay));
+        	writeToTrace(r.toString() + " - Elevator#" + this.carNum + ", doors closing.\n");
         } catch (InterruptedException e) {
         	System.err.println(e);
         }
-        long endTime = System.nanoTime();
-		long openDoorTime = endTime - startTime;
-		totalMoveTime += openDoorTime;
+		//stop timer 
+		long endTime = System.nanoTime();
+
+		//take difference in time in seconds
+		long timeElapsed = (endTime - startTime)/1000000000;
+		if((timeElapsed < 9 || timeElapsed > 10) && !this.faultType.contains("None")) {
+			this.hasFaulted = true;
+			return false;
+		}
+		return true;
 	}
 	
 	
 	/*
 	 * @purpose - Simulates movement between floors with the time taken
-	 * @return void
+	 * @return boolean - Did the elevator arrive on time
 	 */
-	private void simulateFloorMovement() {
+	private boolean simulateFloorMovement() {
+		//start timer
+		long startTime = System.nanoTime();
+				
 		try {
-			Thread.sleep((long) (time*1000));
+			Thread.sleep((long) (time*floorDelay));
 		} catch (InterruptedException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		//stop timer 
+		long endTime = System.nanoTime();
+
+		//take difference in time in seconds
+		long timeElapsed = (endTime - startTime)/1000000000;
+		
+		if((timeElapsed < 9 || timeElapsed > 10) && !this.faultType.contains("None")) {
+			this.hasFaulted = true;
+			return false;
+		}
+		return true;
 	}
 	
 	public void writeToTrace(String s) {
@@ -210,8 +254,12 @@ public class Elevator implements Runnable {
 			else if (this.currentFloor == 7 && getDiretion() == "up") {
 				this.currentFloor -= 1;
 			}
+			this.currentFloor = getDiretion() == "up" ? this.currentFloor + 1 : this.currentFloor - 1;
+		}
+		this.floorCount++;
 
-			this.currentFloor = getDiretion() == "up" ? currentFloor + 1 : currentFloor - 1;
+		if(this.floorCount == this.faultNum && this.faultType.contains("Floor")) {
+			this.floorDelay = 500;
 		}
 		if (this.currentFloor == getObjectiveFloor()) {
 			
@@ -247,8 +295,8 @@ public class Elevator implements Runnable {
     		this.destFloors.put(dest, 1);
     	}
     	
+    	
     	this.hasRequest = true;
-        
     	if (start < dest) {
     		this.destFloor = this.destFloors.lastKey();
     	}
@@ -271,12 +319,14 @@ public class Elevator implements Runnable {
 				+ "," + String.valueOf(this.destFloor)				//4
 				+ "," + String.valueOf(this.destFloors.size())		//5
 				+ "," + state.getElevatorState()					//6
-				+ "," + (hasArrived ? "hasArrived" : "notArrived");	//7
+				+ "," + (hasArrived ? "hasArrived" : "notArrived")	//7
+				+ "," + this.faultType								//8
+				+ "," + this.destFloors.size();						//9
 		return updateData;
 	}
 	
 	public void run() {		
-		while(true) {
+		while(this.isOn) {
 			String currentState = state.getElevatorState();
 			
 			switch (currentState) {
@@ -295,15 +345,57 @@ public class Elevator implements Runnable {
 			case "MoveToDestination":
 				processMoveToDestination();
 				break;
-				
 			case "HasArrived":
 				processHasArrived();
 				break;
-				
+			case "handleFaults":
+				handleFault();
+				break;
 			}
-						
+					
 			state = state.nextState(this);
+		}
+	}
+	
+	private void handleFault() {
+		LocalTime s = LocalTime.now();
+		
+		writeToTrace(s.toString() + " - Elevator#" + this.carNum + " current state - " + state.getElevatorState() + ".\n");
+		writeToTrace(s.toString() + " - Elevator#" + this.carNum + " notifying " + this.faultType + " fault occurred.\n");
 
+		if(faultType.contains("Door")){
+			String updateData = getUpdateString(false);
+			
+			this.sendPacket = new DatagramPacket(updateData.getBytes(), updateData.length(), this.localAddr, 202);
+			this.receivePacket = new DatagramPacket(new byte[30], 30);
+			
+			try {
+				this.eleSocket.send(this.sendPacket);
+				this.eleSocket.receive(this.receivePacket);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			writeToTrace(s.toString() + " - Elevator#" + this.carNum + " reset doors.\n");
+			this.hasFaulted = false;
+		}
+		else if(faultType.contains("Floor")){
+			String updateData = getUpdateString(false);
+			
+			this.sendPacket = new DatagramPacket(updateData.getBytes(), updateData.length(), this.localAddr, 202);
+			this.receivePacket = new DatagramPacket(new byte[30], 30);
+			
+			try {
+				this.eleSocket.send(this.sendPacket);
+				this.eleSocket.receive(this.receivePacket);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			writeToTrace(s.toString() + " - Elevator#" + this.carNum + " shutting down.\n");
+			this.isOn = false;
 		}
 	}
 	
@@ -314,6 +406,12 @@ public class Elevator implements Runnable {
 		}
 		int start = Integer.parseInt(jobData[0].trim());
 		int dest = Integer.parseInt(jobData[1].trim());
+		
+		if(this.faultNum < 0 && !jobData[3].trim().contains("None")) {
+			this.faultType = jobData[3].trim();		
+			this.faultNum =  Integer.parseInt(jobData[2].trim());
+		}
+		
 		LocalTime s = LocalTime.now();
     	writeToTrace(s.toString() + " - Elevator#" + this.carNum + " received floor request from floor " + start + ".\n");
 		addPassenger(start, dest);
@@ -337,7 +435,7 @@ public class Elevator implements Runnable {
 		String initData = getUpdateString(false);
 		
 		this.sendPacket = new DatagramPacket(initData.getBytes(), initData.length(), this.localAddr, 202);
-		this.receivePacket = new DatagramPacket(new byte[21], 21);
+		this.receivePacket = new DatagramPacket(new byte[30], 30);
 		
 		boolean receivedWork = false;
 		while(!receivedWork) {
@@ -350,7 +448,8 @@ public class Elevator implements Runnable {
 			
 			parseAndAddPassenger();
 			
-			if (new String(this.receivePacket.getData()).replaceAll("\\P{Print}","").equals("complete")) {
+			if (new String(this.receivePacket.getData()).replaceAll("\\P{Print}","").contains("complete")) {
+				
 				receivedWork = true;
 			}
 			
@@ -361,9 +460,7 @@ public class Elevator implements Runnable {
 				e.printStackTrace();
 			}
 		}
-		
 		this.hasRequest = true;
-    	parseAndAddPassenger();
 	}
 	
 	private void processMoveToDestination() {
@@ -377,11 +474,16 @@ public class Elevator implements Runnable {
 
 		move();
 		
-		writeToTrace(s.toString() + " - Elevator#" + this.carNum + " moved from floor "+ oldFloor + " to "+currentFloor + ".\n");
+		writeToTrace(s.toString() + " - Elevator#" + this.carNum + " moved from floor " + oldFloor + " to "+currentFloor + ".\n");
+
+		if(!simulateFloorMovement()) {
+			return;
+		}
+
 		String updateData = getUpdateString(false);
 		
 		this.sendPacket = new DatagramPacket(updateData.getBytes(), updateData.length(), this.localAddr, 202);
-		this.receivePacket = new DatagramPacket(new byte[21], 21);
+		this.receivePacket = new DatagramPacket(new byte[30], 30);
 		
 		try {
 			this.eleSocket.send(this.sendPacket);
@@ -396,21 +498,15 @@ public class Elevator implements Runnable {
 		if (jobData.length > 1) {
 			parseAndAddPassenger();
 		}
-		
-		simulateFloorMovement();
-		
-		long endTime = System.nanoTime();
-		long timeElapsed = endTime - startTime;
-		totalMoveTime += timeElapsed;
-		writeToTrace(s.toString() + " - Elevator#" + this.carNum + " took this amount of time: "+ timeElapsed + " to move to the next floor");
-		
 	}
 	
 	private void processPassengersBoarding() {
 		LocalTime s = LocalTime.now();
 		
 		// Simulate passengers boarding
-		openDoors();
+		if(!openDoors()) {
+			return;
+		}
 		writeToTrace(s.toString() + " - Elevator#" + this.carNum + " current state - " + state.getElevatorState()  + " on floor: " + this.currentFloor + ".\n");
 
         this.receivedPassengers++;
@@ -427,9 +523,10 @@ public class Elevator implements Runnable {
 		LocalTime s = LocalTime.now();
 		// Simulate doors opening
 		writeToTrace(s.toString() + " - Elevator#" + this.carNum + " current state - " + state.getElevatorState() + " on floor: " + this.currentFloor + ".\n");
-        openDoors();
+		if(!openDoors()) {
+			return;
+		}
     	writeToTrace(s.toString() + " - Elevator#" + this.carNum + " current Pos: "+ currentFloor + ".\n");
-		writeToTrace(s.toString() + " - Elevator#" + this.carNum + " took this amount of time to arrive: "+ totalMoveTime);
     	
 		String arrivedData = getUpdateString(true);
 		
@@ -455,7 +552,9 @@ public class Elevator implements Runnable {
 		
 		Thread elevator1 = new Thread(new Elevator(1, 204), "Elevator1 Thread");
 		Thread elevator2 = new Thread(new Elevator(1, 205), "Elevator2 Thread");
+		//Thread elevator3 = new Thread(new Elevator(1, 206), "Elevator3 Thread");
 		elevator1.start();
 		elevator2.start();
+		//elevator3.start();
 	}
 }
