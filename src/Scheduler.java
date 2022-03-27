@@ -252,30 +252,28 @@ public class Scheduler implements Runnable {
 			if(isClient) {
 				processClient();
 			}
-			else {
-				if (!Scheduler.requestList.isEmpty() || !Scheduler.currentRequests.isEmpty()) {
-					switch (state.Current()) {
-					case "WaitRequest":
-						processWaitRequest();
-						break;
-						
-					case "NotifyElevator":
-						processNotifyElevator();
-						break;
-						
-					case "Served":
-						processServed();
-						break;
-						
-					case "Removed":
-						processRemoved();
-						break;
-						
-					}
-					if(Scheduler.numEventsQueued == Scheduler.numEventsServed) {
-						writeToElevatorTrace(s.toString() + " - Scheduler Subsystem: EOF.\n");
-						Scheduler.numEventsServed++;
-					}
+			else if (!Scheduler.requestList.isEmpty() || !Scheduler.currentRequests.isEmpty()) {
+				switch (state.Current()) {
+				case "WaitRequest":
+					processWaitRequest();
+					break;
+					
+				case "NotifyElevator":
+					processNotifyElevator();
+					break;
+					
+				case "Served":
+					processServed();
+					break;
+					
+				case "Removed":
+					processRemoved();
+					break;
+					
+				}
+				if(Scheduler.numEventsQueued == Scheduler.numEventsServed) {
+					writeToElevatorTrace(s.toString() + " - Scheduler Subsystem: EOF.\n");
+					Scheduler.numEventsServed++;
 				}
 			}
 		}

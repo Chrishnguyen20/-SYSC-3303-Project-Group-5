@@ -358,7 +358,6 @@ public class Elevator implements Runnable {
 		}
 		
 		this.hasRequest = true;
-    	parseAndAddPassenger();
 	}
 	
 	private void processMoveToDestination() {
