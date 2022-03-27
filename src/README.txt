@@ -19,7 +19,8 @@ Documentation:
 - State Diagrams: there are two UML state diagrams, one for the scheduler and another for the elevator.
 
 Instructions:
-The program's usage is fairly straightforward, however, requires the use of the Eclipse IDE. 
+The program's usage is fairly straightforward, however, requires the use of the Eclipse IDE. Note, the input file takes the following form and is tab delimited:
+<Time Stamp>	<floor number>	<direction>	<destination floor>	<number of occurrence befor fault>		<fault type>
 Simply unzip the source file, open the project in Eclipse, then run the three classes in the following order:
 1. Scheduler
 2. Floor
@@ -28,12 +29,12 @@ Simply unzip the source file, open the project in Eclipse, then run the three cl
 JUnit testing:
 This program comes with a JUnit package for quick and seamless testing. 
 To execute the tests, first you must successfully run the program once (see Instructions). Then simply right click the "ElevatorSystemTest.java" file in Eclipse and run the program as a  JUnit test. 
-There are a total of 31 tests which are all documented in the source code via comments.  
+There are a total of 39 tests which are all documented in the source code via comments.  
 
 Breakdown or responsibilities: 
-- Billal:  the JUnit testing + UDP communication 
-- Minh:  smart scheduler 
-- Leo:    design documentations 
+- Billal:  the JUnit testing + timing 
+- Minh:  smart scheduler + implementation for multiple elevators  
+- Leo:    Timing + documentation  
 - Chris:  design documentations
 
 Distance between floor is 4 meters.
