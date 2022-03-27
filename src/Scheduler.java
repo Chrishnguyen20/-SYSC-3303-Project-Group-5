@@ -206,9 +206,8 @@ public class Scheduler implements Runnable {
 		}
 		boolean noneAvailable = true;
 		int canidateIndex = 0;
-		int minimumDist = Math.abs(Integer.parseInt(this.activeElevators.get(canidateIndex)[2]) - requestStart);
+		int minimumDist = -1;
 		boolean isIdle = false;
-		//this.activeElevators.get(canidateIndex)[5] = String.valueOf(Integer.parseInt(this.activeElevators.get(canidateIndex)[5]) + 1);
 		
 		for (int i = 0; i < this.activeElevators.size(); ++i) {
 			String[] elevator = this.activeElevators.get(i);
@@ -230,27 +229,39 @@ public class Scheduler implements Runnable {
 				effectiveFloor = currentFloor;
 			}
 			
-			if (requestCount == 0
-					&& (minimumDist >= Math.abs(effectiveFloor - requestStart) || !isIdle)) {
-				
-				elevator[3] = String.valueOf(requestStart);
-				elevator[4] = String.valueOf(requestDest);
-				elevator[5] = "1";
+			if (requestCount == 0 && (minimumDist >= Math.abs(effectiveFloor - requestStart) || minimumDist == -1)) {
 				
 				minimumDist = Math.abs(effectiveFloor - requestStart);
 				isIdle = true;
 				canidateIndex = i;
 				noneAvailable = false;
 				
+				elevator[3] = String.valueOf(requestStart);
+				elevator[4] = String.valueOf(requestDest);
+				elevator[5] = "1";
+				
 				updateActiveElevator(elevator, i);
 			}
 			else if (isPassengerOnPath(requestStart, requestDest, passengerFloor, destFloor, currentFloor)
-					&& minimumDist >= Math.abs(effectiveFloor - requestStart)
+					&& (minimumDist >= Math.abs(effectiveFloor - requestStart) || minimumDist == -1)
 					&& !isIdle) {
-				this.activeElevators.get(i)[5] = String.valueOf(Integer.parseInt(this.activeElevators.get(canidateIndex)[5]) + 1);
+				
 				minimumDist = Math.abs(effectiveFloor - requestStart);
 				canidateIndex = i;
 				noneAvailable = false;
+				
+				elevator[5] = String.valueOf(Integer.parseInt(elevator[5]) + 1);
+				
+				if ((eisAcending && requestStart < passengerFloor)
+						|| (!eisAcending && requestStart > passengerFloor)) {
+					elevator[3] = String.valueOf(requestStart);
+		    	}
+				if ((eisAcending && requestDest > destFloor)
+						|| (!eisAcending && requestDest < destFloor)) {
+					elevator[4] = String.valueOf(requestDest);
+		    	}
+				
+				updateActiveElevator(elevator, i);
 			}
 		}
 		
@@ -391,6 +402,7 @@ public class Scheduler implements Runnable {
 			int elevatorIndex = getAvailableElevator(Integer.parseInt(request[1]), Integer.parseInt(request[3]));
 			
 			if (elevatorIndex == -1) {
+				writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): no available elevators\n");
 				continue;
 			}
 			
@@ -410,6 +422,8 @@ public class Scheduler implements Runnable {
 			writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): sent elevator #" + this.activeElevators.get(elevatorIndex)[0] + " a request"
 					+ " from floor: "+request[1]+" to "+request[3]+"\n");
 		}
+		
+		writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): sending 'complete' packages\n");
 		
 		byte completeBytes[] = "complete".getBytes();
 		
