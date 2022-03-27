@@ -35,7 +35,8 @@ public enum ElevatorState {
 			int curFloor = elevator.getCurrentFloor();
 			if(elevator.checkFaulted()) {
 				return handleFaults;
-			}else if (curFloor == elevator.getFirstPassengerFloor()) {
+			}
+			else if (curFloor == elevator.getFirstPassengerFloor()) {
 				return PassengersBoarding;
 			}
 			else if (curFloor == elevator.getFirstDestFloor()
@@ -56,6 +57,10 @@ public enum ElevatorState {
 		public ElevatorState nextState(Elevator elevator) {
 			if(elevator.checkFaulted()) {
 				return handleFaults;
+			}
+			else if (elevator.getCurrentFloor() == elevator.getFirstDestFloor()
+					&& elevator.getObjectiveFloor() == elevator.getDestFloor()) {
+				return HasArrived;
 			}
 			return MoveToDestination;
 		}
@@ -83,6 +88,14 @@ public enum ElevatorState {
 	},
 	handleFaults{
 		public ElevatorState nextState(Elevator elevator) {
+			int curFloor = elevator.getCurrentFloor();
+			if (curFloor == elevator.getFirstPassengerFloor()) {
+				return PassengersBoarding;
+			}
+			else if (curFloor == elevator.getFirstDestFloor()
+					&& elevator.getObjectiveFloor() == elevator.getDestFloor()) {
+				return HasArrived;
+			}
 			return MoveToDestination;
 		}
 

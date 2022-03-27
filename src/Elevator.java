@@ -299,7 +299,6 @@ public class Elevator implements Runnable {
     		this.destFloors.put(dest, 1);
     	}
     	
-    	
     	this.hasRequest = true;
     	if (start < dest) {
     		this.destFloor = this.destFloors.lastKey();
@@ -307,6 +306,9 @@ public class Elevator implements Runnable {
     	else {
     		this.destFloor = this.destFloors.firstKey();
     	}
+    	
+    	LocalTime s = LocalTime.now();
+    	writeToTrace(s.toString() + " - Elevator#" + this.carNum + " added a request from floor " + start+".\n");
 	}
 	/*
 	 * @purpose - To create a string of the elevator data
@@ -454,6 +456,7 @@ public class Elevator implements Runnable {
 			
 			if (new String(this.receivePacket.getData()).replaceAll("\\P{Print}","").contains("complete")) {
 				
+				writeToTrace(s.toString() + " - Elevator#" + this.carNum + " receiving 'complete' package\n");
 				receivedWork = true;
 			}
 			
@@ -478,9 +481,10 @@ public class Elevator implements Runnable {
 		
 		writeToTrace(s.toString() + " - Elevator#" + this.carNum + " moved from floor " + oldFloor + " to "+currentFloor + ".\n");
 
-		if(!simulateFloorMovement()) {
-			return;
-		}
+//		if(!simulateFloorMovement()) {
+//			//return;
+//		}
+		simulateFloorMovement();
 
 		String updateData = getUpdateString(false);
 		
@@ -501,6 +505,7 @@ public class Elevator implements Runnable {
 			parseAndAddPassenger();
 		}
 		
+		//simulateFloorMovement();
 	}
 	
 	private void processPassengersBoarding() {
