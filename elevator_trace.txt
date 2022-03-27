@@ -1,188 +1,412 @@
-10:50:55.432 - Scheduler Subsystem (elevator): current state - Initial.
-10:50:55.432 - Scheduler Subsystem (elevator): current state - Has request.
-10:50:55.432 - Scheduler Subsystem (elevator): waiting for elevator.
-10:50:59.084 - Elevator#1 current state - Initial.
-10:50:59.084 - Elevator#0 current state - Initial.
-10:50:59.084 - Elevator#0 initialize elevator 0.
-10:50:59.084 - Elevator#1 initialize elevator 1.
-10:50:59.084 - Elevator#1 current Pos: 1.
-10:50:59.084 - Elevator#0 current Pos: 1.
-10:50:59.095 - Elevator#1 current state - NoElevatorRequest.
-10:50:59.095 - Elevator#0 current state - NoElevatorRequest.
-10:50:59.095 - Elevator#1 is currently idle and waiting for an ElevatorRequest!
-10:50:59.095 - Elevator#0 is currently idle and waiting for an ElevatorRequest!
-10:50:59.095 - Elevator#1 current Pos: 1.
-10:50:59.095 - Elevator#0 current Pos: 1.
-10:50:55.432 - Scheduler Subsystem (elevator): added elevator#1 to active elevators list
-10:50:55.432 - Scheduler Subsystem (elevator): waiting for elevator.
-10:50:55.432 - Scheduler Subsystem (elevator): added elevator#0 to active elevators list
-10:50:59.098 - Scheduler Subsystem (elevator): current state - Notified elevator.
-10:50:59.098 - Scheduler Subsystem (elevator): Send data to an active elevator.
-10:50:59.098 - Scheduler Subsystem (elevator): sent elevator #0 a request from floor: 6 to 2
-10:50:59.098 - Scheduler Subsystem (elevator): sent elevator #1 a request from floor: 4 to 5
-10:50:59.098 - Scheduler Subsystem (elevator): sent elevator #1 a request from floor: 2 to 4
-10:50:59.098 - Scheduler Subsystem (elevator): sent elevator #1 a request from floor: 1 to 3
-10:50:59.099 - Elevator#1 received floor request from floor 4.
-10:50:59.099 - Elevator#0 received floor request from floor 6.
-10:50:59.099 - Scheduler Subsystem (elevator): current state - Serving Requests.
-10:50:59.099 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
-10:50:59.099 - Scheduler Subsystem (elevator): got update from elevator#0 -- NoElevatorRequest.
-10:51:00.105 - Elevator#1 received floor request from floor 2.
-10:51:00.108 - Scheduler Subsystem (elevator): current state - Serving Requests.
-10:51:00.108 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
-10:51:00.108 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
-10:51:00.108 - Scheduler Subsystem (elevator): current state - Serving Requests.
-10:51:00.108 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
-10:51:01.108 - Elevator#0 current state - MoveToDestination.
-10:51:01.108 - Elevator#0 moved from floor 1 to 2.
-10:51:00.108 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
-10:51:01.110 - Elevator#1 received floor request from floor 1.
-10:51:01.111 - Scheduler Subsystem (elevator): current state - Serving Requests.
-10:51:01.111 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
-10:51:01.111 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
-10:51:02.117 - Scheduler Subsystem (elevator): current state - Serving Requests.
-10:51:02.117 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
-10:51:03.120 - Elevator#1 current state - MoveToDestination.
-10:51:03.120 - Elevator#1 moved from floor 1 to 1.
-10:51:02.117 - Scheduler Subsystem (elevator): got update from elevator#0 -- MoveToDestination.
-10:51:10.289 - Elevator#0 current state - MoveToDestination.
-10:51:10.289 - Scheduler Subsystem (elevator): current state - Serving Requests.
-10:51:10.289 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
-10:51:10.289 - Elevator#0 moved from floor 2 to 3.
-10:51:10.289 - Scheduler Subsystem (elevator): got update from elevator#1 -- MoveToDestination.
-10:51:12.300 - Elevator#1 current Pos: 1.
-10:51:12.300 - Elevator#1, doors opening.
-10:51:12.301 - Scheduler Subsystem (elevator): current state - Serving Requests.
-10:51:12.301 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
-10:51:19.469 - Elevator#0 current state - MoveToDestination.
-10:51:12.301 - Scheduler Subsystem (elevator): got update from elevator#0 -- MoveToDestination.
-10:51:19.469 - Elevator#0 moved from floor 3 to 4.
-10:51:19.470 - Scheduler Subsystem (elevator): current state - Serving Requests.
-10:51:19.470 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
-10:51:12.300 - Elevator#1, doors closing.
-10:51:12.300 - Elevator#1 current state - PassengersBoarding on floor: 1.
-10:51:12.300 - Elevator#1 current Pos of Elevator: 1.
-10:51:12.300 - Elevator#1 passengers boarded on floor: 1.
-10:51:12.300 - Elevator#1 passengers currently in elevator: 1.
-10:51:21.484 - Elevator#1 current state - MoveToDestination.
-10:51:21.484 - Elevator#1 moved from floor 1 to 2.
-10:51:19.470 - Scheduler Subsystem (elevator): got update from elevator#0 -- MoveToDestination.
-10:51:28.650 - Elevator#0 current state - MoveToDestination.
-10:51:28.651 - Scheduler Subsystem (elevator): current state - Serving Requests.
-10:51:28.651 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
-10:51:28.650 - Elevator#0 moved from floor 4 to 5.
-10:51:28.651 - Scheduler Subsystem (elevator): got update from elevator#1 -- MoveToDestination.
-10:51:30.664 - Elevator#1 current Pos: 2.
-10:51:30.664 - Elevator#1, doors opening.
-10:51:30.665 - Scheduler Subsystem (elevator): current state - Serving Requests.
-10:51:30.665 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
-10:51:37.832 - Elevator#0 current state - MoveToDestination.
-10:51:30.665 - Scheduler Subsystem (elevator): got update from elevator#0 -- MoveToDestination.
-10:51:37.832 - Elevator#0 moved from floor 5 to 6.
-10:51:37.833 - Scheduler Subsystem (elevator): current state - Serving Requests.
-10:51:37.833 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
-10:51:30.664 - Elevator#1, doors closing.
-10:51:30.664 - Elevator#1 current state - PassengersBoarding on floor: 2.
-10:51:30.664 - Elevator#1 current Pos of Elevator: 2.
-10:51:30.664 - Elevator#1 passengers boarded on floor: 2.
-10:51:30.664 - Elevator#1 passengers currently in elevator: 2.
-10:51:39.848 - Elevator#1 current state - MoveToDestination.
-10:51:39.848 - Elevator#1 moved from floor 2 to 3.
-10:51:37.833 - Scheduler Subsystem (elevator): got update from elevator#0 -- MoveToDestination.
-10:51:47.013 - Elevator#0 current Pos: 6.
-10:51:47.014 - Scheduler Subsystem (elevator): current state - Serving Requests.
-10:51:47.013 - Elevator#0, doors opening.
-10:51:47.014 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
-10:51:49.027 - Elevator#1 current state - HasArrived on floor: 3.
-10:51:47.014 - Scheduler Subsystem (elevator): got update from elevator#1 -- MoveToDestination.
-10:51:49.028 - Elevator#1 current Pos: 3.
-10:51:49.028 - Scheduler Subsystem (elevator): current state - Serving Requests.
-10:51:49.028 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
-10:51:49.028 - Elevator#1, doors opening.
-10:51:47.013 - Elevator#0, doors closing.
-10:51:47.013 - Elevator#0 current state - PassengersBoarding on floor: 6.
-10:51:47.013 - Elevator#0 current Pos of Elevator: 6.
-10:51:47.013 - Elevator#0 passengers boarded on floor: 6.
-10:51:47.013 - Elevator#0 passengers currently in elevator: 1.
-10:51:56.185 - Elevator#0 current state - MoveToDestination.
-10:51:56.185 - Elevator#0 moved from floor 6 to 5.
-10:51:49.028 - Elevator#1, doors closing.
-10:51:49.027 - Elevator#1 current Pos: 3.
-10:51:58.196 - Elevator#1 current state - MoveToDestination.
-10:51:49.028 - Scheduler Subsystem (elevator): got update from elevator#1 -- HasArrived.
-10:51:58.196 - Elevator#1 moved from floor 3 to 4.
-10:51:49.028 - Scheduler Subsystem (elevator): service floor 3.
-10:51:58.197 - Scheduler Subsystem (elevator): current state - Request Served.
-10:51:58.197 - Scheduler Subsystem (elevator): current state - Serving Requests.
-10:51:58.197 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
-10:52:05.347 - Elevator#0 current state - MoveToDestination.
-10:51:58.197 - Scheduler Subsystem (elevator): got update from elevator#0 -- MoveToDestination.
-10:52:05.347 - Elevator#0 moved from floor 5 to 4.
-10:52:05.347 - Scheduler Subsystem (elevator): current state - Serving Requests.
-10:52:05.347 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
-10:52:07.360 - Elevator#1 current Pos: 4.
-10:52:05.347 - Scheduler Subsystem (elevator): got update from elevator#1 -- MoveToDestination.
-10:52:07.360 - Elevator#1, doors opening.
-10:52:07.362 - Scheduler Subsystem (elevator): current state - Serving Requests.
-10:52:07.362 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
-10:52:07.362 - Scheduler Subsystem (elevator): got update from elevator#0 -- MoveToDestination.
-10:52:14.516 - Elevator#0 current state - MoveToDestination.
-10:52:14.516 - Elevator#0 moved from floor 4 to 3.
-10:52:14.517 - Scheduler Subsystem (elevator): current state - Serving Requests.
-10:52:14.517 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
-10:52:07.360 - Elevator#1, doors closing.
-10:52:07.360 - Elevator#1 current state - PassengersBoarding on floor: 4.
-10:52:07.360 - Elevator#1 current Pos of Elevator: 4.
-10:52:07.360 - Elevator#1 passengers boarded on floor: 4.
-10:52:07.360 - Elevator#1 passengers currently in elevator: 2.
-10:52:16.534 - Elevator#1 current state - MoveToDestination.
-10:52:16.534 - Elevator#1 moved from floor 4 to 5.
-10:52:21.123 - Elevator#1 current state - handleFaults.
-10:52:21.123 - Elevator#1 notifying Floor fault occurred.
-10:52:21.123 - Elevator#1 shutting down.
-10:52:14.517 - Scheduler Subsystem (elevator): got update from elevator#1 -- handleFaults.
-10:52:21.126 - Scheduler Subsystem: Switching to State: HandleFault
-10:52:21.126 - Handling Floor fault from elevator#1.
-10:52:21.130 - Scheduler Subsystem (elevator): current state - Serving Requests.
-10:52:21.130 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
-10:52:21.130 - Scheduler Subsystem (elevator): got update from elevator#0 -- MoveToDestination.
-10:52:23.693 - Elevator#0 current state - MoveToDestination.
-10:52:23.693 - Elevator#0 moved from floor 3 to 2.
-10:52:23.693 - Scheduler Subsystem (elevator): current state - Serving Requests.
-10:52:23.693 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
-10:52:32.870 - Elevator#0 current state - HasArrived on floor: 2.
-10:52:23.693 - Scheduler Subsystem (elevator): got update from elevator#0 -- MoveToDestination.
-10:52:32.871 - Elevator#0 current Pos: 2.
-10:52:32.871 - Elevator#0, doors opening.
-10:52:32.872 - Scheduler Subsystem (elevator): current state - Serving Requests.
-10:52:32.872 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
-10:52:32.871 - Elevator#0, doors closing.
-10:52:37.462 - Elevator#0 current state - handleFaults.
-10:52:37.462 - Elevator#0 notifying Door fault occurred.
-10:52:37.462 - Elevator#0 reset doors.
-10:52:32.872 - Scheduler Subsystem (elevator): got update from elevator#0 -- handleFaults.
-10:52:37.463 - Elevator#0 current state - MoveToDestination.
-10:52:37.463 - Elevator#0 moved from floor 2 to 1.
-10:52:37.463 - Scheduler Subsystem: Switching to State: HandleFault
-10:52:37.463 - Handling Door fault from elevator#0.
-10:52:37.464 - Scheduler Subsystem (elevator): current state - Serving Requests.
-10:52:37.464 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
-10:52:46.647 - Elevator#0 current state - MoveToDestination.
-10:52:46.647 - Elevator#0 moved from floor 1 to 2.
-10:52:37.464 - Scheduler Subsystem (elevator): got update from elevator#0 -- MoveToDestination.
-10:52:46.662 - Scheduler Subsystem (elevator): current state - Serving Requests.
-10:52:46.662 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
-10:52:55.824 - Elevator#0 current state - HasArrived on floor: 2.
-10:52:46.662 - Scheduler Subsystem (elevator): got update from elevator#0 -- MoveToDestination.
-10:52:55.825 - Elevator#0 current Pos: 2.
-10:52:55.825 - Scheduler Subsystem (elevator): current state - Serving Requests.
-10:52:55.825 - Elevator#0, doors opening.
-10:52:55.825 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
-10:52:55.825 - Elevator#0, doors closing.
-10:52:55.824 - Elevator#0 current Pos: 2.
-10:53:05.011 - Elevator#0 current state - NoElevatorRequest.
-10:52:55.825 - Scheduler Subsystem (elevator): got update from elevator#0 -- HasArrived.
-10:53:05.011 - Elevator#0 is currently idle and waiting for an ElevatorRequest!
-10:52:55.825 - Scheduler Subsystem (elevator): service floor 2.
-10:53:05.011 - Elevator#0 current Pos: 2.
-10:52:55.825 - Scheduler Subsystem: EOF.
+15:24:52.391 - Scheduler Subsystem (elevator): current state - Initial.
+15:24:52.391 - Scheduler Subsystem (elevator): current state - Has request.
+15:24:52.391 - Scheduler Subsystem (elevator): waiting for elevator.
+15:24:56.745 - Elevator#0 current state - Initial.
+15:24:56.745 - Elevator#1 current state - Initial.
+15:24:56.745 - Elevator#0 initialize elevator 0.
+15:24:56.745 - Elevator#1 initialize elevator 1.
+15:24:56.745 - Elevator#0 current Pos: 1.
+15:24:56.745 - Elevator#1 current Pos: 1.
+15:24:56.757 - Elevator#0 current state - NoElevatorRequest.
+15:24:56.757 - Elevator#1 current state - NoElevatorRequest.
+15:24:56.757 - Elevator#0 is currently idle and waiting for an ElevatorRequest!
+15:24:56.757 - Elevator#1 is currently idle and waiting for an ElevatorRequest!
+15:24:56.757 - Elevator#0 current Pos: 1.
+15:24:56.757 - Elevator#1 current Pos: 1.
+15:24:52.391 - Scheduler Subsystem (elevator): added elevator#0 to active elevators list
+15:24:52.391 - Scheduler Subsystem (elevator): waiting for elevator.
+15:24:52.391 - Scheduler Subsystem (elevator): added elevator#1 to active elevators list
+15:24:56.760 - Scheduler Subsystem (elevator): current state - Notified elevator.
+15:24:56.760 - Scheduler Subsystem (elevator): Send data to an active elevator.
+15:24:56.760 - Scheduler Subsystem (elevator): sent elevator #1 a request from floor: 3 to 1
+15:24:56.760 - Scheduler Subsystem (elevator): sent elevator #0 a request from floor: 6 to 2
+15:24:56.760 - Scheduler Subsystem (elevator): sent elevator #0 a request from floor: 4 to 5
+15:24:56.761 - Elevator#0 received floor request from floor 6.
+15:24:56.761 - Elevator#1 received floor request from floor 3.
+15:24:56.760 - Scheduler Subsystem (elevator): sent elevator #0 a request from floor: 2 to 4
+15:24:56.760 - Scheduler Subsystem (elevator): sent elevator #0 a request from floor: 1 to 3
+15:24:56.762 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:24:56.762 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:24:56.762 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:24:57.769 - Elevator#0 received floor request from floor 4.
+15:24:57.773 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:24:57.773 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:24:57.773 - Scheduler Subsystem (elevator): got update from elevator#0 -- NoElevatorRequest.
+15:24:57.774 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:24:57.774 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:24:58.772 - Elevator#1 current state - MoveToDestination.
+15:24:58.772 - Elevator#1 moved from floor 1 to 2.
+15:24:58.774 - Elevator#0 received floor request from floor 2.
+15:24:57.774 - Scheduler Subsystem (elevator): got update from elevator#0 -- NoElevatorRequest.
+15:24:58.775 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:24:58.775 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:24:58.775 - Scheduler Subsystem (elevator): got update from elevator#0 -- NoElevatorRequest.
+15:24:59.780 - Elevator#0 received floor request from floor 1.
+15:24:59.780 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:24:59.780 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:24:59.780 - Scheduler Subsystem (elevator): got update from elevator#0 -- NoElevatorRequest.
+15:25:00.786 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:25:00.786 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:25:01.788 - Elevator#0 current state - MoveToDestination.
+15:25:01.788 - Elevator#0 moved from floor 1 to 1.
+15:25:00.786 - Scheduler Subsystem (elevator): got update from elevator#1 -- MoveToDestination.
+15:25:07.953 - Elevator#1 current state - MoveToDestination.
+15:25:07.953 - Elevator#1 moved from floor 2 to 3.
+15:25:07.954 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:25:07.954 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:25:07.954 - Scheduler Subsystem (elevator): got update from elevator#0 -- MoveToDestination.
+15:25:10.969 - Elevator#0 current Pos: 1.
+15:25:10.969 - Elevator#0, doors opening.
+15:25:10.970 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:25:10.970 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:25:10.970 - Scheduler Subsystem (elevator): got update from elevator#1 -- MoveToDestination.
+15:25:17.132 - Elevator#1 current Pos: 3.
+15:25:17.132 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:25:17.132 - Elevator#1, doors opening.
+15:25:17.132 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:25:10.969 - Elevator#0, doors closing.
+15:25:10.969 - Elevator#0 current state - PassengersBoarding on floor: 1.
+15:25:10.969 - Elevator#0 current Pos of Elevator: 1.
+15:25:10.969 - Elevator#0 passengers boarded on floor: 1.
+15:25:10.969 - Elevator#0 passengers currently in elevator: 1.
+15:25:20.152 - Elevator#0 current state - MoveToDestination.
+15:25:20.152 - Elevator#0 moved from floor 1 to 2.
+15:25:17.132 - Elevator#1, doors closing.
+15:25:17.132 - Elevator#1 current state - PassengersBoarding on floor: 3.
+15:25:17.132 - Elevator#1 current Pos of Elevator: 3.
+15:25:17.132 - Elevator#1 passengers boarded on floor: 3.
+15:25:17.132 - Elevator#1 passengers currently in elevator: 1.
+15:25:26.315 - Elevator#1 current state - MoveToDestination.
+15:25:26.315 - Elevator#1 moved from floor 3 to 2.
+15:25:17.132 - Scheduler Subsystem (elevator): got update from elevator#0 -- MoveToDestination.
+15:25:29.332 - Elevator#0 current Pos: 2.
+15:25:29.332 - Elevator#0, doors opening.
+15:25:29.333 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:25:29.333 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:25:35.493 - Elevator#1 current state - MoveToDestination.
+15:25:29.333 - Scheduler Subsystem (elevator): got update from elevator#1 -- MoveToDestination.
+15:25:35.493 - Elevator#1 moved from floor 2 to 1.
+15:25:35.495 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:25:35.495 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:25:29.332 - Elevator#0, doors closing.
+15:25:29.332 - Elevator#0 current state - PassengersBoarding on floor: 2.
+15:25:29.332 - Elevator#0 current Pos of Elevator: 2.
+15:25:29.332 - Elevator#0 passengers boarded on floor: 2.
+15:25:29.332 - Elevator#0 passengers currently in elevator: 2.
+15:25:38.515 - Elevator#0 current state - MoveToDestination.
+15:25:38.515 - Elevator#0 moved from floor 2 to 3.
+15:25:44.673 - Elevator#1 current state - HasArrived on floor: 1.
+15:25:35.495 - Scheduler Subsystem (elevator): got update from elevator#1 -- MoveToDestination.
+15:25:44.673 - Elevator#1 current Pos: 1.
+15:25:44.673 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:25:44.673 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:25:44.673 - Elevator#1, doors opening.
+15:25:44.673 - Scheduler Subsystem (elevator): got update from elevator#0 -- MoveToDestination.
+15:25:47.695 - Elevator#0 current state - MoveToDestination.
+15:25:47.695 - Elevator#0 moved from floor 3 to 4.
+15:25:47.696 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:25:47.696 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:25:44.673 - Elevator#1, doors closing.
+15:25:44.673 - Elevator#1 current Pos: 1.
+15:25:53.855 - Elevator#1 current state - NoElevatorRequest.
+15:25:47.696 - Scheduler Subsystem (elevator): got update from elevator#1 -- HasArrived.
+15:25:53.855 - Elevator#1 is currently idle and waiting for an ElevatorRequest!
+15:25:53.855 - Elevator#1 current Pos: 1.
+15:25:47.696 - Scheduler Subsystem (elevator): service floor 1.
+15:25:53.857 - Scheduler Subsystem (elevator): current state - Request Served.
+15:25:53.857 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:25:53.857 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:25:53.857 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:25:53.859 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:25:53.859 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:25:53.859 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:25:54.860 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:25:54.860 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:25:54.860 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:25:55.865 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:25:55.865 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:25:55.865 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:25:56.869 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:25:56.869 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:25:56.869 - Scheduler Subsystem (elevator): got update from elevator#0 -- MoveToDestination.
+15:25:56.875 - Elevator#0 current Pos: 4.
+15:25:56.875 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:25:56.875 - Elevator#0, doors opening.
+15:25:56.875 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:25:56.875 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:25:57.874 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:25:57.874 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:25:57.874 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:25:58.879 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:25:58.879 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:25:58.879 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:25:59.883 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:25:59.883 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:25:59.883 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:00.887 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:00.887 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:00.887 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:01.891 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:01.891 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:01.891 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:02.897 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:02.897 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:02.897 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:03.900 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:03.900 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:03.900 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:04.903 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:04.903 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:04.903 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:05.907 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:05.907 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:25:56.875 - Elevator#0, doors closing.
+15:25:56.874 - Elevator#0 current state - PassengersBoarding on floor: 4.
+15:25:56.874 - Elevator#0 current Pos of Elevator: 4.
+15:25:56.874 - Elevator#0 passengers boarded on floor: 4.
+15:25:56.874 - Elevator#0 passengers currently in elevator: 3.
+15:26:06.056 - Elevator#0 current state - MoveToDestination.
+15:26:06.056 - Elevator#0 moved from floor 4 to 5.
+15:26:05.907 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:06.912 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:06.912 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:06.912 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:07.917 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:07.917 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:07.917 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:08.922 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:08.922 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:08.922 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:09.926 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:09.926 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:09.926 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:10.929 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:10.929 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:10.929 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:11.933 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:11.933 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:11.933 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:12.937 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:12.937 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:12.937 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:13.941 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:13.941 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:13.941 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:14.946 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:14.946 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:14.946 - Scheduler Subsystem (elevator): got update from elevator#0 -- MoveToDestination.
+15:26:15.235 - Elevator#0 current state - HasArrived on floor: 5.
+15:26:15.236 - Elevator#0 current Pos: 5.
+15:26:15.236 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:15.236 - Elevator#0, doors opening.
+15:26:15.236 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:15.236 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:15.951 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:15.951 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:15.951 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:16.954 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:16.954 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:16.954 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:17.958 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:17.958 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:17.958 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:18.962 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:18.962 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:18.962 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:19.967 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:19.967 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:19.967 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:20.971 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:20.971 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:20.971 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:21.976 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:21.976 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:21.976 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:22.980 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:22.980 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:22.980 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:23.986 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:23.986 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:15.236 - Elevator#0, doors closing.
+15:26:15.235 - Elevator#0 current Pos: 5.
+15:26:24.417 - Elevator#0 current state - MoveToDestination.
+15:26:23.986 - Scheduler Subsystem (elevator): got update from elevator#0 -- HasArrived.
+15:26:24.417 - Elevator#0 moved from floor 5 to 4.
+15:26:23.986 - Scheduler Subsystem (elevator): service floor 5.
+15:26:24.418 - Scheduler Subsystem (elevator): current state - Request Served.
+15:26:24.418 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:24.418 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:24.418 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:24.990 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:24.990 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:24.990 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:25.994 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:25.994 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:25.994 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:26.999 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:26.999 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:26.999 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:28.004 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:28.004 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:28.004 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:29.009 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:29.009 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:29.009 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:30.014 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:30.014 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:30.014 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:31.020 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:31.020 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:31.020 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:32.023 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:32.023 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:32.023 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:33.028 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:33.028 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:33.028 - Scheduler Subsystem (elevator): got update from elevator#0 -- MoveToDestination.
+15:26:33.596 - Elevator#0 current state - HasArrived on floor: 4.
+15:26:33.596 - Elevator#0 current Pos: 4.
+15:26:33.596 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:33.596 - Elevator#0, doors opening.
+15:26:33.596 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:33.596 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:34.032 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:34.032 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:34.032 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:35.035 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:35.035 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:35.035 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:36.039 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:36.039 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:36.039 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:37.044 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:37.044 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:37.044 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:38.049 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:38.049 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:38.049 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:39.054 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:39.054 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:39.054 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:40.059 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:40.059 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:40.059 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:41.063 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:41.063 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:41.063 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:42.067 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:42.067 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:33.596 - Elevator#0, doors closing.
+15:26:33.596 - Elevator#0 current Pos: 4.
+15:26:42.777 - Elevator#0 current state - MoveToDestination.
+15:26:42.067 - Scheduler Subsystem (elevator): got update from elevator#0 -- HasArrived.
+15:26:42.777 - Elevator#0 moved from floor 4 to 5.
+15:26:42.067 - Scheduler Subsystem (elevator): service floor 4.
+15:26:42.778 - Scheduler Subsystem (elevator): current state - Request Served.
+15:26:42.778 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:42.778 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:42.778 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:43.071 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:43.071 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:43.071 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:44.075 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:44.075 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:44.075 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:45.080 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:45.080 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:45.080 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:46.085 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:46.085 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:46.085 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:47.089 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:47.089 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:47.089 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:48.093 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:48.093 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:48.093 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:49.098 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:49.098 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:49.098 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:50.103 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:50.103 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:50.103 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:51.106 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:51.106 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:51.106 - Scheduler Subsystem (elevator): got update from elevator#0 -- MoveToDestination.
+15:26:51.958 - Elevator#0 current state - MoveToDestination.
+15:26:51.958 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:51.958 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:51.958 - Elevator#0 moved from floor 5 to 4.
+15:26:51.958 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:52.109 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:52.109 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:52.109 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:53.111 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:53.111 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:53.111 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:54.116 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:54.116 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:54.116 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:55.121 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:55.121 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:55.121 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:56.125 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:56.125 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:56.125 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:57.129 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:57.129 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:57.129 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:58.129 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:58.129 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:58.129 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:26:59.134 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:26:59.134 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:26:59.134 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:27:00.138 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:27:00.138 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:27:00.138 - Scheduler Subsystem (elevator): got update from elevator#0 -- MoveToDestination.
+15:27:01.139 - Elevator#0 current state - MoveToDestination.
+15:27:01.140 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:27:01.140 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:27:01.139 - Elevator#0 moved from floor 4 to 5.
+15:27:01.140 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:27:01.143 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:27:01.143 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:27:01.143 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:27:02.144 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:27:02.144 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:27:02.144 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:27:03.148 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:27:03.148 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:27:03.148 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:27:04.152 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:27:04.152 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:27:04.152 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:27:05.152 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:27:05.152 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:27:05.152 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:27:06.158 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:27:06.158 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:27:06.158 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:27:07.163 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:27:07.163 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:27:07.163 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:27:08.167 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:27:08.167 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:27:08.167 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:27:09.172 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:27:09.172 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:27:09.172 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:27:10.175 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:27:10.175 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:27:10.175 - Scheduler Subsystem (elevator): got update from elevator#0 -- MoveToDestination.
+15:27:10.320 - Elevator#0 current state - MoveToDestination.
+15:27:10.321 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:27:10.321 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:27:10.320 - Elevator#0 moved from floor 5 to 4.
+15:27:10.321 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:27:11.179 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:27:11.179 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
+15:27:11.179 - Scheduler Subsystem (elevator): got update from elevator#1 -- NoElevatorRequest.
+15:27:12.184 - Scheduler Subsystem (elevator): current state - Serving Requests.
+15:27:12.184 - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.
