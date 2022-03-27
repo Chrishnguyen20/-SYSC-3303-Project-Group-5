@@ -448,8 +448,7 @@ public class Scheduler implements Runnable {
 			state = SchedulerState.HandleFault;
 			return;
 		}
-		//go to handle fault state
-		//	return
+
 		//be smart and pick up any passengers on this floor going in the direction 
 		if (!Scheduler.requestList.isEmpty() && !hasArrived) {
 			state = SchedulerState.NotifyElevator;
