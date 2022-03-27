@@ -34,6 +34,13 @@ import java.util.Queue;
  * @param doorClosed         - When door is open or closed
  * @param state				 - The state of the elevator
  * @param portid			 - The port id of the elevator
+ * @param hasFaulted		 - A boolean value to identify if the elevator has faulted or not
+ * @param isOn				 - A boolean value to identify if the elevator is running
+ * @param doorDelay			 - The delay of the door
+ * @param floorDelay		 - The delay of the floor
+ * @param faultNum			 - The number of occurrences before the fault occurs
+ * @param faultType			 - The type of fault of the elevator 
+ * 
  */
 public class Elevator implements Runnable {
 	
@@ -123,6 +130,10 @@ public class Elevator implements Runnable {
 		return this.destFloor;
 	}
 	
+	/*
+	 * @purpose - Elevator gets the objective floor
+	 * @return int - the floor number
+	 */
 	public int getObjectiveFloor() {
 		if (this.receivedPassengers == 0) {
 			return getFirstPassengerFloor(); 
@@ -130,6 +141,10 @@ public class Elevator implements Runnable {
 		return getDestFloor(); 
 	}
 	
+	/*
+	 * @purpose - Elevator goes to the first destination floor
+	 * @return int - the first destination floor
+	 */
 	public int getFirstDestFloor() {
 		if (this.destFloors.isEmpty()) {
 			return -1;
@@ -147,6 +162,10 @@ public class Elevator implements Runnable {
 		return this.destFloors.lastKey();
 	}
 	
+	/*
+	 * @purpose - Elevator picks the first passenger
+	 * @return int - the first passenger floor
+	 */
 	public int getFirstPassengerFloor() {
 		if (this.passengerFloors.isEmpty()) {
 			return -1;
@@ -162,7 +181,7 @@ public class Elevator implements Runnable {
 	
 	/*
 	 * @purpose - Simulates doors opening
-	 * @return void
+	 * @return boolean - determine whether the doors properly closed or not
 	 */
 	private boolean openDoors() {
 		this.doorCount++;
@@ -362,7 +381,11 @@ public class Elevator implements Runnable {
 			state = state.nextState(this);
 		}
 	}
-	
+	/*
+	 * @purpose - To handle the faults with the elevator
+	 * 
+	 * @return void
+	 */
 	private void handleFault() {
 		LocalTime s = LocalTime.now();
 		
@@ -405,6 +428,11 @@ public class Elevator implements Runnable {
 		}
 	}
 	
+	/*
+	 * @purpose - To get the data of the request and add the passenger to the elevator
+	 * 
+	 * @return void
+	 */
 	private void parseAndAddPassenger() {
 		String[] jobData = new String(this.receivePacket.getData()).split(",");
 		if (jobData.length < 2) {
@@ -423,6 +451,11 @@ public class Elevator implements Runnable {
 		addPassenger(start, dest);
 	}
 	
+	/*
+	 * @purpose - Prints the intial state of the elevators
+	 * 
+	 * @return void
+	 */
 	private void processInitial() {
 		LocalTime s = LocalTime.now();
 		
@@ -431,6 +464,11 @@ public class Elevator implements Runnable {
     	writeToTrace(s.toString() + " - Elevator#" + this.carNum + " current Pos: "+ currentFloor + ".\n");
 	}
 	
+	/*
+	 * @purpose - Waits to receive a request and processes the request
+	 * 
+	 * @return void
+	 */
 	private void processNoElevatorRequest() {
 		LocalTime s = LocalTime.now();
 		
@@ -470,6 +508,11 @@ public class Elevator implements Runnable {
 		this.hasRequest = true;
 	}
 	
+	/*
+	 * @purpose - Process the movement of the elevator to its destination
+	 * 
+	 * @return void
+	 */
 	private void processMoveToDestination() {
 		LocalTime s = LocalTime.now();
 		
@@ -508,6 +551,11 @@ public class Elevator implements Runnable {
 		//simulateFloorMovement();
 	}
 	
+	/*
+	 * @purpose - Processes the passengers boarding the elevator
+	 * 
+	 * @return void
+	 */
 	private void processPassengersBoarding() {
 		LocalTime s = LocalTime.now();
 		
@@ -527,6 +575,11 @@ public class Elevator implements Runnable {
         }
 	}
 	
+	/*
+	 * @purpose - The show that the elevator has arrived to its destination floor
+	 * 
+	 * @return void
+	 */
 	private void processHasArrived() {
 		LocalTime s = LocalTime.now();
 		// Simulate doors opening
