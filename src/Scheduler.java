@@ -10,7 +10,9 @@ import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -29,6 +31,8 @@ import java.util.concurrent.LinkedBlockingQueue;
  * @param   numEventsQueued     	- static int representing the number of events queued by the floor
  * @param   numEventsServed     	- static int representing the number of requests served by the elevator
  * @param   elevatorCount           - The number of elevators
+ * @param 	elevatorFaults			- Map between an elevator car num and a string array. Element 0 of string array is fauly type
+ * 									  and element 1 of string array is elevator port ID.
  */
 
 public class Scheduler implements Runnable {
@@ -46,6 +50,7 @@ public class Scheduler implements Runnable {
 	private static ArrayList<String[]> currentRequests;
 	private ArrayList<String[]> activeElevators;
 	private int elevatorCount;
+	private Map<Integer, String[]> elevatorFaults;
 	
 	private static int numEventsQueued = 0;
 	private static int numEventsServed = -1;
@@ -58,6 +63,7 @@ public class Scheduler implements Runnable {
 		state = SchedulerState.WaitRequest;
 		
 		this.activeElevators = new ArrayList<String[]>();
+		this.elevatorFaults = new HashMap<Integer, String[]>();
 		Scheduler.requestList = new ArrayList<String[]>();
 		Scheduler.currentRequests = new ArrayList<String[]>();
 		
@@ -252,6 +258,7 @@ public class Scheduler implements Runnable {
 			if(isClient) {
 				processClient();
 			}
+<<<<<<< HEAD
 			else if (!Scheduler.requestList.isEmpty() || !Scheduler.currentRequests.isEmpty()) {
 				switch (state.Current()) {
 				case "WaitRequest":
@@ -274,6 +281,35 @@ public class Scheduler implements Runnable {
 				if(Scheduler.numEventsQueued == Scheduler.numEventsServed) {
 					writeToElevatorTrace(s.toString() + " - Scheduler Subsystem: EOF.\n");
 					Scheduler.numEventsServed++;
+=======
+			else {
+				if (!Scheduler.requestList.isEmpty() || !Scheduler.currentRequests.isEmpty()) {
+					switch (state.Current()) {
+					case "WaitRequest":
+						processWaitRequest();
+						break;
+						
+					case "NotifyElevator":
+						processNotifyElevator();
+						break;
+						
+					case "GetElevatorUpdate":
+						processServed();
+						break;
+						
+					case "Removed":
+						processRemoved();
+						break;
+						
+					case "HandleFault":
+						handleFaults();
+						break;
+					}
+					if(Scheduler.numEventsQueued == Scheduler.numEventsServed) {
+						writeToElevatorTrace(s.toString() + " - Scheduler Subsystem: EOF.\n");
+						return;
+					}
+>>>>>>> branch 'main' of https://github.com/leoxu321/SYSC-3303-Project-Group-5
 				}
 			}
 		}
@@ -283,7 +319,7 @@ public class Scheduler implements Runnable {
 		LocalTime s = LocalTime.now();
 		
 		try {
-			this.receivedFloorPacket = new DatagramPacket(new byte[21], 21);
+			this.receivedFloorPacket = new DatagramPacket(new byte[30], 30);
 			this.receiveSocket.receive(receivedFloorPacket);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -355,7 +391,7 @@ public class Scheduler implements Runnable {
 				continue;
 			}
 			
-			String elevatorData = String.valueOf(request[1]) + "," + String.valueOf(request[3]);
+			String elevatorData = String.valueOf(request[1]) + "," + String.valueOf(request[3]) + "," + request[4] + "," + request[5];
 			int port = Integer.parseInt(this.activeElevators.get(elevatorIndex)[1]);
 			Scheduler.requestList.remove(i);
 			currentRequests.add(request);
@@ -427,7 +463,18 @@ public class Scheduler implements Runnable {
 			hasArrived = true;
 			
 			return;
+		}else if(updateData[6].replaceAll("\\P{Print}","").equals("handleFaults")) {
+			//elevator experienced a fault
+			String[] faultData = new String[3];
+			faultData[0] = updateData[8];	//get fault code
+			faultData[1] = updateData[1]; 	//get elevator index
+			faultData[2] = updateData[9];	//get number of events attributed to this elevator 
+			this.elevatorFaults.put(Integer.parseInt(updateData[0]), faultData);
+			state = SchedulerState.HandleFault;
+			return;
 		}
+		//go to handle fault state
+		//	return
 		//be smart and pick up any passengers on this floor going in the direction 
 		if (!Scheduler.requestList.isEmpty() && !hasArrived) {
 			state = SchedulerState.NotifyElevator;
@@ -462,8 +509,48 @@ public class Scheduler implements Runnable {
 		states = "Request Served";
 		writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): current state - " + states + ".\n");
 		if(!Scheduler.currentRequests.isEmpty()) {
-			state = SchedulerState.Served;
+			state = SchedulerState.GetElevatorUpdate;
 		}
+	}
+	
+	public void handleFaults() {
+		LocalTime s = LocalTime.now();
+		writeToElevatorTrace(s.toString() + " - Scheduler Subsystem: Switching to State: HandleFault\n");
+		
+		for(Map.Entry<Integer, String[]> entry : this.elevatorFaults.entrySet()) {
+			writeToElevatorTrace(s.toString() + " - Handling " + entry.getValue()[0] + " fault from elevator#" + entry.getKey() + ".\n");
+			if(entry.getValue()[0].equals("Door")) {
+				byte updateBytes[] = "ResetDoors".getBytes();
+				DatagramPacket faultPacket = new DatagramPacket(updateBytes, updateBytes.length, localAddr, Integer.parseInt(entry.getValue()[1]));
+				try { 
+					this.receiveSocket.send(faultPacket);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				//remove fault
+				this.elevatorFaults.remove(entry.getKey());
+			}else if(entry.getValue()[0].equals("Floor")) {
+				byte updateBytes[] = "ShutDownElevator".getBytes();
+				DatagramPacket faultPacket = new DatagramPacket(updateBytes, updateBytes.length, localAddr, Integer.parseInt(entry.getValue()[1]));
+				try { 
+					this.receiveSocket.send(faultPacket);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				if(Scheduler.numEventsServed < 0) {
+					Scheduler.numEventsServed = 0;
+				}
+				Scheduler.numEventsServed+=Integer.parseInt(entry.getValue()[2].replaceAll("\\P{Print}",""));
+				this.activeElevators.remove(entry.getKey());
+				//remove fault
+				this.elevatorFaults.remove(entry.getKey());
+			}
+		}
+		
+		state = state.nextState();
 	}
 	
 	public static void main(String args[]) throws SocketException {

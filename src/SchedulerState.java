@@ -11,20 +11,28 @@ public enum SchedulerState {
 	},
 	NotifyElevator {
 		public SchedulerState nextState() {
-			return Served;
+			return GetElevatorUpdate;
 		}
 
 		public String Current() {
 			return "NotifyElevator";
 		}
 	},
-	Served {
+	GetElevatorUpdate {
 		public SchedulerState nextState() {
 			return Removed;
 		}
 
 		public String Current() {
-			return "Served";
+			return "GetElevatorUpdate";
+		}
+	},
+	HandleFault{
+		public SchedulerState nextState() {
+			return GetElevatorUpdate;
+		}
+		public String Current() {
+			return "HandleFault";
 		}
 	},
 	Removed {
