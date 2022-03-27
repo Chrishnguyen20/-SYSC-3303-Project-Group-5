@@ -146,8 +146,8 @@ class ElevatorSystemTest {
 	@ValueSource(strings = {"EOF", 
 			"Elevator#0 initialize elevator 0", "Elevator#0 is currently idle and waiting for an ElevatorRequest!",
 			"Scheduler Subsystem (elevator): sent elevator", "Elevator#0 current Pos: 1",
-			"Scheduler Subsystem (elevator): service floor 5", "Scheduler Subsystem (elevator): service floor 3", 
-			"Scheduler Subsystem (elevator): service floor 4", "Scheduler Subsystem (elevator): added elevator#1 to active elevators"})
+			"Scheduler Subsystem (elevator): service floor", 
+			"Scheduler Subsystem (elevator): added elevator#1 to active elevators"})
 	
 	void elevator_scheduler_tests(String event) {		
 		assert(existsInTrace(event, true));	
@@ -174,11 +174,27 @@ class ElevatorSystemTest {
 			 "Elevator#0 current state - Initial",
 			 "Elevator#0 initialize elevator 0",
 			 "Elevator#1 initialize elevator 1",
-			 "Elevator#0 current Pos: 3",
-			 "Elevator#1 current Pos: 2",
+			 "Elevator#0 current state - NoElevatorRequest",
+			 "Elevator#1 current state - NoElevatorRequest",
+			 "Elevator#1 current state - MoveToDestination",
+			 "Elevator#0 current state - MoveToDestination",
 			 "Elevator#1 current state - HasArrived",
 			 "Elevator#0 current state - HasArrived"})
 	void multipleElevators(String event) {		
+		assert(existsInTrace(event, true));
+	}
+	
+	//@purpose checks the whether multiple elevators are moving throughout the program
+	@ParameterizedTest
+	@ValueSource(strings = {"notifying Floor fault occurred",
+			 "shutting down",
+			 "current state - handleFaults",
+			 "notifying Door fault occurred",
+			 "reset doors",
+			 "Scheduler Subsystem: Switching to State: HandleFault",
+			 "Handling Floor fault from elevator",
+			 "-- handleFaults."})
+	void elevatorTiming(String event) {		
 		assert(existsInTrace(event, true));
 	}
 	

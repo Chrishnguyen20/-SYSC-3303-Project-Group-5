@@ -283,7 +283,7 @@ public class Scheduler implements Runnable {
 					}
 					if(Scheduler.numEventsQueued == Scheduler.numEventsServed) {
 						writeToElevatorTrace(s.toString() + " - Scheduler Subsystem: EOF.\n");
-						Scheduler.numEventsServed++;
+						return;
 					}
 				}
 			}
@@ -514,6 +514,9 @@ public class Scheduler implements Runnable {
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+				}
+				if(Scheduler.numEventsServed < 0) {
+					Scheduler.numEventsServed = 0;
 				}
 				Scheduler.numEventsServed+=Integer.parseInt(entry.getValue()[2].replaceAll("\\P{Print}",""));
 				this.activeElevators.remove(entry.getKey());
