@@ -40,6 +40,7 @@ import java.util.Queue;
  * @param floorDelay		 - The delay of the floor
  * @param faultNum			 - The number of occurrences before the fault occurs
  * @param faultType			 - The type of fault of the elevator 
+ * 
  */
 public class Elevator implements Runnable {
 	
