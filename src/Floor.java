@@ -70,12 +70,12 @@ public class Floor implements Runnable{
 			while ((line = reader.readLine()) != null){
 				String[] arr = line.split("\\t");
 				//check if the data is in the correct format
-				if(arr.length != 4) {
+				if(arr.length != 6) {
 					writeToTrace(d.toString() + " - Floor Subsystem: Read data error!\n");
 					return;
 				}else {
 					//create a new floor request and pass the data to the scheduler as a comma delimited string. 
-					String s = arr[0] + "," + arr[1] + "," + arr[2]+ "," + arr[3];
+					String s = arr[0] + "," + arr[1] + "," + arr[2]+ "," + arr[3] + ","+arr[4]+","+arr[5];
 					byte[] dataArray = s.getBytes();
 					DatagramPacket sendPacket = new DatagramPacket(dataArray, dataArray.length, this.localAddr, 201);
 					DatagramPacket receivePacket = new DatagramPacket(new byte[dataArray.length], dataArray.length);

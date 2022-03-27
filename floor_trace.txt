@@ -1,13 +1,13 @@
-Floor Subsystem: Queued a request -- request for floor 1 going up at 16:41:06.488082100 to floor 3
-Scheduler Subsystem: Queueing event from floor subsystem. Time: 16:41:03.236053400
-Scheduler Subsystem: Sending floor acknowledgement. Time: 16:41:03.236053400
-Floor Subsystem: Received an acknowledgement. Time: 16:41:06.488082100
-Floor Subsystem: Queued a request -- request for floor 2 going up at 16:41:06.488082100 to floor 4
-Scheduler Subsystem: Queueing event from floor subsystem. Time: 16:41:06.504072300
-Scheduler Subsystem: Sending floor acknowledgement. Time: 16:41:06.504072300
-Floor Subsystem: Received an acknowledgement. Time: 16:41:06.488082100
-Floor Subsystem: Queued a request -- request for floor 6 going down at 16:41:06.488082100 to floor 5
-Scheduler Subsystem: Queueing event from floor subsystem. Time: 16:41:06.508070100
-Scheduler Subsystem: Sending floor acknowledgement. Time: 16:41:06.508070100
-Floor Subsystem: Received an acknowledgement. Time: 16:41:06.488082100
-EOF. Time: 16:41:06.488082100
+22:21:09.807 - Floor Subsystem: Queued a request -- request for floor 1 going up to floor 3
+22:21:07.488 - Scheduler Subsystem (floor): Queueing event from floor subsystem.
+22:21:07.488 - Scheduler Subsystem (floor): Sending floor acknowledgement.
+22:21:09.807 - Floor Subsystem: Received an acknowledgement.
+22:21:09.807 - Floor Subsystem: Queued a request -- request for floor 2 going up to floor 4
+22:21:09.823 - Scheduler Subsystem (floor): Queueing event from floor subsystem.
+22:21:09.823 - Scheduler Subsystem (floor): Sending floor acknowledgement.
+22:21:09.807 - Floor Subsystem: Received an acknowledgement.
+22:21:09.807 - Floor Subsystem: Queued a request -- request for floor 6 going down to floor 5
+22:21:09.825 - Scheduler Subsystem (floor): Queueing event from floor subsystem.
+22:21:09.825 - Scheduler Subsystem (floor): Sending floor acknowledgement.
+22:21:09.807 - Floor Subsystem: Received an acknowledgement.
+EOF. Time: 22:21:09.807

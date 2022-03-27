@@ -32,13 +32,17 @@ public enum ElevatorState {
 	MoveToDestination {
 		@Override
 		public ElevatorState nextState(Elevator elevator) { 			
-			if (elevator.getReceivedPassengers() == 0 && elevator.getCurrentFloor() == elevator.getFloorNum()) {
+			int curFloor = elevator.getCurrentFloor();
+			if(elevator.checkFaulted()) {
+				return handleFaults;
+			}else if (curFloor == elevator.getFirstPassengerFloor()) {
 				return PassengersBoarding;
-			} 
-			if (elevator.getCurrentFloor() == elevator.getDestFloor() && !(elevator.getReceivedPassengers() == 0)) {
-				elevator.getDestFloor();
-				return HasArrived;	
 			}
+			else if (curFloor == elevator.getFirstDestFloor()
+					&& elevator.getObjectiveFloor() == elevator.getDestFloor()) {
+				return HasArrived;
+			}
+			
 			return MoveToDestination;
 		}
 
@@ -50,6 +54,9 @@ public enum ElevatorState {
 	PassengersBoarding {
 		@Override
 		public ElevatorState nextState(Elevator elevator) {
+			if(elevator.checkFaulted()) {
+				return handleFaults;
+			}
 			return MoveToDestination;
 		}
 
@@ -61,6 +68,11 @@ public enum ElevatorState {
 	HasArrived {
 		@Override
 		public ElevatorState nextState(Elevator elevator) {
+			if(elevator.checkFaulted()) {
+				return handleFaults;
+			}else if (elevator.hasRequest()) {
+				return MoveToDestination;
+			}
 			return NoElevatorRequest;
 		}
 
@@ -68,6 +80,18 @@ public enum ElevatorState {
 		public String getElevatorState() {
 			return "HasArrived";
 		}
+	},
+	handleFaults{
+		public ElevatorState nextState(Elevator elevator) {
+			return MoveToDestination;
+		}
+
+		@Override
+		public String getElevatorState() {
+			// TODO Auto-generated method stub
+			return "handleFaults";
+		}
+		
 	};
 
 	public abstract ElevatorState nextState(Elevator elevator);
