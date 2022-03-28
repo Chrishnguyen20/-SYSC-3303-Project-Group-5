@@ -390,6 +390,12 @@ public class Scheduler implements Runnable {
 		state = state.nextState();
 	}
 	
+	
+	/*
+	 * @purpose - Notifies active elevators of floor requests that need to be served
+	 * 
+	 * @return void
+	 */
 	public void processNotifyElevator() {
 		LocalTime s = LocalTime.now();
 		
@@ -441,6 +447,15 @@ public class Scheduler implements Runnable {
 		state = state.nextState();
 	}
 	
+	
+	/*
+	 * @purpose - Waits to receive update from elevators and processes the update data.
+	 * 			  If the elevator is on a new floor, it sends an acknowledgement back.
+	 * 			  If the elevator has arrived at a destination or passenger floor, it sends an acknowledgement back.
+	 * 			  If a fault is reported it handles the fault
+	 * 
+	 * @return void
+	 */
 	public void processServed() {
 		LocalTime s = LocalTime.now();
 		
@@ -509,6 +524,11 @@ public class Scheduler implements Runnable {
 		}
 	}
 	
+	/*
+	 * @purpose - Serves the request by removing it from the queue of requests. 
+	 * 
+	 * @return void
+	 */
 	public void processRemoved() {
 		LocalTime s = LocalTime.now();
 		
@@ -529,6 +549,12 @@ public class Scheduler implements Runnable {
 		}
 	}
 	
+	/*
+	 * @purpose - Handles the faults. If a floor fault occurred shut down the elevator. If a 
+	 * 			  door fault occurs tell the elevator to reset their doors
+	 * 
+	 * @return void
+	 */
 	public void handleFaults() {
 		LocalTime s = LocalTime.now();
 		writeToElevatorTrace(s.toString() + " - Scheduler Subsystem: Switching to State: HandleFault\n");
