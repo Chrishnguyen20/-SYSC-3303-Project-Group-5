@@ -84,6 +84,13 @@ public class Floor implements Runnable{
 					this.socket.send(sendPacket);
 					this.socket.receive(receivePacket);
 					writeToTrace(d.toString() + " - Floor Subsystem: Received an acknowledgement.\n");
+					
+			        try {
+						Thread.sleep((long) (2000));
+			        } catch (InterruptedException e) {
+			        	System.err.println(e);
+			        }
+					
 				}
 			}
 			writeToTrace("EOF. Time: " + d.toString());

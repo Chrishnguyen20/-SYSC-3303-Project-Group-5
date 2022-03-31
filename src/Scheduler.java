@@ -271,6 +271,8 @@ public class Scheduler implements Runnable {
 	}
 	
 	public void run() {
+		long startTime = System.nanoTime();		
+		
 		try {
 			if(isClient) {
 				this.receiveSocket  = new DatagramSocket(201);
@@ -311,6 +313,13 @@ public class Scheduler implements Runnable {
 						break;
 					}
 					if(Scheduler.numEventsQueued == Scheduler.numEventsServed) {
+						//stop timer 
+						long endTime = System.nanoTime();
+
+						//take difference in time in seconds
+						long timeElapsed = (endTime - startTime)/1000000000;
+
+						writeToElevatorTrace("Scheduler Subsystem: Elapsed time: " + timeElapsed);
 						writeToElevatorTrace(s.toString() + " - Scheduler Subsystem: EOF.\n");
 						return;
 					}
@@ -597,7 +606,7 @@ public class Scheduler implements Runnable {
 	
 	public static void main(String args[]) throws SocketException {
 		
-		final int elevatorCount = 2;
+		final int elevatorCount = 4;
 				
 		Thread scheduler_server = new Thread(new Scheduler(true, elevatorCount), "Floor Scheduler Thread");
 		Thread scheduler_client = new Thread(new Scheduler(false, elevatorCount), "Elevator Scheduler Thread");

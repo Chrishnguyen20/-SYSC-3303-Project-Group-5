@@ -48,6 +48,7 @@ public class Elevator implements Runnable {
 	
 	// Short time for debugging
 	private static final float time = 9.175f;
+	private static final int topFloor = 22;
 	
 	private int currentFloor;
 	private static int nextCarNum = 0;
@@ -271,11 +272,11 @@ public class Elevator implements Runnable {
 	*/
 	
 	public void move() {
-		if (this.currentFloor >= 1 && this.currentFloor <= 7) {
+		if (this.currentFloor >= 1 && this.currentFloor <= topFloor) {
 			if (this.currentFloor == 1 && getDiretion() == "down") {
 				this.currentFloor += 1;
 			} 
-			else if (this.currentFloor == 7 && getDiretion() == "up") {
+			else if (this.currentFloor == topFloor && getDiretion() == "up") {
 				this.currentFloor -= 1;
 			}
 			this.currentFloor = getDiretion() == "up" ? this.currentFloor + 1 : this.currentFloor - 1;
@@ -471,7 +472,7 @@ public class Elevator implements Runnable {
 	 */
 	private void processNoElevatorRequest() {
 		LocalTime s = LocalTime.now();
-		
+		long startTime = System.nanoTime();		
 		// Elevator is waiting for ElevatorRequest
 		writeToTrace(s.toString() + " - Elevator#" + this.carNum + " current state - " + state.getElevatorState() + ".\n");
 		writeToTrace(s.toString() + " - Elevator#" + this.carNum + " is currently idle and waiting for an ElevatorRequest!\n");
@@ -483,6 +484,16 @@ public class Elevator implements Runnable {
 		
 		boolean receivedWork = false;
 		while(!receivedWork) {
+			//stop timer 
+			long endTime = System.nanoTime();
+
+			//take difference in time in seconds
+			long timeElapsed = (endTime - startTime)/1000000000;
+			if(timeElapsed > 10) {
+				this.isOn = false;
+				writeToTrace(s.toString() + " - Elevator#" + this.carNum + " no more work from scheduler, shutting down");
+				break;
+			}
 			try {
 				this.eleSocket.send(this.sendPacket);
 				this.eleSocket.receive(this.receivePacket);
@@ -611,11 +622,13 @@ public class Elevator implements Runnable {
 	
 	public static void main(String args[]) throws SocketException {
 		
-		Thread elevator1 = new Thread(new Elevator(1, 204), "Elevator1 Thread");
-		Thread elevator2 = new Thread(new Elevator(1, 205), "Elevator2 Thread");
-		//Thread elevator3 = new Thread(new Elevator(1, 206), "Elevator3 Thread");
+		Thread elevator1 = new Thread(new Elevator(1, 204),  "Elevator1 Thread");
+		Thread elevator2 = new Thread(new Elevator(22, 205), "Elevator2 Thread");
+		Thread elevator3 = new Thread(new Elevator(14, 206), "Elevator3 Thread");
+		Thread elevator4 = new Thread(new Elevator(4, 207),  "Elevator4 Thread");
 		elevator1.start();
 		elevator2.start();
-		//elevator3.start();
+		elevator3.start();
+		elevator4.start();
 	}
 }
