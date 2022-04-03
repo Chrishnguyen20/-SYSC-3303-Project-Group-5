@@ -10,6 +10,7 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.time.LocalTime;
+import java.util.Random;
 /*
  * @purpose 			- the floor class reads floor requests from a file and passes 
  * 						  them to the scheduler via UDP. 
@@ -86,7 +87,8 @@ public class Floor implements Runnable{
 					writeToTrace(d.toString() + " - Floor Subsystem: Received an acknowledgement.\n");
 					
 			        try {
-						Thread.sleep((long) (2000));
+			        	Random rand = new Random();
+						Thread.sleep((long) (rand.nextInt(1000) + 1000));
 			        } catch (InterruptedException e) {
 			        	System.err.println(e);
 			        }
