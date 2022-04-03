@@ -44,27 +44,22 @@ import java.util.Queue;
  */
 public class Elevator implements Runnable {
 	
-	//private static final float time = 9.175f;
-	
-	// Short time for debugging
-	private static final float time = 9.175f;
+	private static final float floortime = 9.5f;
+	private static final float doortime = 9.175f;
 	private static final int topFloor = 22;
 	
 	private int currentFloor;
 	private static int nextCarNum = 0;
 	private int carNum;
-	private int receivedPassengers;
 	private int destFloor;
 	// destFloor#, # of passengers going to floor
 	private TreeMap<Integer, Integer> destFloors;
 	private TreeSet<Integer> passengerFloors;
-	private boolean hasRequest;
 	private ElevatorState state;
 	private DatagramSocket eleSocket;
 	private DatagramPacket sendPacket;
 	private DatagramPacket receivePacket;
 	private InetAddress localAddr;
-	private boolean doorClosed;
 	private int doorDelay = 1000;
 	private int floorDelay = 1000;
 	private String faultType;
@@ -82,9 +77,7 @@ public class Elevator implements Runnable {
 		this.state = ElevatorState.Initial;
 		this.eleSocket = new DatagramSocket(portID);
 		this.portID = portID;
-		this.destFloor = 0;
-		this.doorClosed = false;
-		this.receivedPassengers = 0;
+		this.destFloor = -1;
 		this.floorCount = 0;
 		this.doorCount = 0;
 		this.faultNum = -1;
@@ -111,13 +104,16 @@ public class Elevator implements Runnable {
 	
 	public void setCurrentFloor(int cur) { this.currentFloor = cur; }
 	
-	public float getTime() { return Elevator.time; }
+	public float getTime() { return Elevator.doortime; }
 	
-	public int getReceivedPassengers() { return receivedPassengers; }
+	public int getReceivedPassengers() { 
+		int receivedPassengers = 0;
+		for (Integer passengers : destFloors.values()) 
+			receivedPassengers += passengers;
+		return receivedPassengers; 
+	}
 		
 	public String getState() { return state.getElevatorState(); }
-	
-	//public boolean hasRequest() { return this.hasRequest; }
 	
 	public boolean hasRequest() { return !this.destFloors.isEmpty(); }
 	
@@ -136,7 +132,7 @@ public class Elevator implements Runnable {
 	 * @return int - the floor number
 	 */
 	public int getObjectiveFloor() {
-		if (this.receivedPassengers == 0) {
+		if (this.getReceivedPassengers() == 0) {
 			return getFirstPassengerFloor(); 
 		}
 		return getDestFloor(); 
@@ -197,7 +193,7 @@ public class Elevator implements Runnable {
           	LocalTime r = LocalTime.now();
         	writeToTrace(r.toString() + " - Elevator#" + this.carNum + " current Pos: "+ currentFloor + ".\n");
         	writeToTrace(r.toString() + " - Elevator#" + this.carNum + ", doors opening.\n");
-			Thread.sleep((long) (time*doorDelay));
+			Thread.sleep((long) (doortime*doorDelay));
         	writeToTrace(r.toString() + " - Elevator#" + this.carNum + ", doors closing.\n");
         } catch (InterruptedException e) {
         	System.err.println(e);
@@ -225,7 +221,7 @@ public class Elevator implements Runnable {
 		long startTime = System.nanoTime();
 				
 		try {
-			Thread.sleep((long) (time*floorDelay));
+			Thread.sleep((long) (floortime*floorDelay));
 		} catch (InterruptedException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -251,7 +247,6 @@ public class Elevator implements Runnable {
 		    
 		    writer.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		System.out.println(s);
@@ -280,8 +275,9 @@ public class Elevator implements Runnable {
 				this.currentFloor -= 1;
 			}
 			this.currentFloor = getDiretion() == "up" ? this.currentFloor + 1 : this.currentFloor - 1;
+			
+			this.floorCount++;
 		}
-		this.floorCount++;
 
 		if(this.floorCount == this.faultNum && this.faultType.contains("Floor")) {
 			this.floorDelay = 500;
@@ -319,7 +315,6 @@ public class Elevator implements Runnable {
     		this.destFloors.put(dest, 1);
     	}
     	
-    	this.hasRequest = true;
     	if (start < dest) {
     		this.destFloor = this.destFloors.lastKey();
     	}
@@ -346,8 +341,7 @@ public class Elevator implements Runnable {
 				+ "," + String.valueOf(this.destFloors.size())		//5
 				+ "," + state.getElevatorState()					//6
 				+ "," + (hasArrived ? "hasArrived" : "notArrived")	//7
-				+ "," + this.faultType								//8
-				+ "," + this.destFloors.size();						//9
+				+ "," + this.faultType;								//8
 		return updateData;
 	}
 	
@@ -403,7 +397,6 @@ public class Elevator implements Runnable {
 				this.eleSocket.send(this.sendPacket);
 				this.eleSocket.receive(this.receivePacket);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -420,7 +413,6 @@ public class Elevator implements Runnable {
 				this.eleSocket.send(this.sendPacket);
 				this.eleSocket.receive(this.receivePacket);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -491,7 +483,7 @@ public class Elevator implements Runnable {
 			long timeElapsed = (endTime - startTime)/1000000000;
 			if(timeElapsed > 10) {
 				this.isOn = false;
-				writeToTrace(s.toString() + " - Elevator#" + this.carNum + " no more work from scheduler, shutting down");
+				writeToTrace(s.toString() + " - Elevator#" + this.carNum + " no more work from scheduler, shutting down\n");
 				break;
 			}
 			try {
@@ -512,11 +504,9 @@ public class Elevator implements Runnable {
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		this.hasRequest = true;
 	}
 	
 	/*
@@ -534,10 +524,14 @@ public class Elevator implements Runnable {
 		move();
 		
 		writeToTrace(s.toString() + " - Elevator#" + this.carNum + " moved from floor " + oldFloor + " to "+currentFloor + ".\n");
+		
+		writeToTrace(s.toString() + " - Elevator#" + this.carNum 
+				+ ", next passenger: " + getFirstPassengerFloor() 
+				+ ", final destination: "+destFloor 
+				+ ", objective floor: "+ this.getObjectiveFloor() 
+				+ ", receivedPassengers: "+ this.getReceivedPassengers()
+				+ ".\n");
 
-//		if(!simulateFloorMovement()) {
-//			//return;
-//		}
 		simulateFloorMovement();
 
 		String updateData = getUpdateString(false);
@@ -549,7 +543,6 @@ public class Elevator implements Runnable {
 			this.eleSocket.send(this.sendPacket);
 			this.eleSocket.receive(this.receivePacket);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -558,8 +551,6 @@ public class Elevator implements Runnable {
 		if (jobData.length > 1) {
 			parseAndAddPassenger();
 		}
-		
-		//simulateFloorMovement();
 	}
 	
 	/*
@@ -576,10 +567,9 @@ public class Elevator implements Runnable {
 		}
 		writeToTrace(s.toString() + " - Elevator#" + this.carNum + " current state - " + state.getElevatorState()  + " on floor: " + this.currentFloor + ".\n");
 
-        this.receivedPassengers++;
 		writeToTrace(s.toString() + " - Elevator#" + this.carNum + " current Pos of Elevator: "+ currentFloor + ".\n");
 		writeToTrace(s.toString() + " - Elevator#" + this.carNum + " passengers boarded on floor: " + currentFloor + ".\n");
-		writeToTrace(s.toString() + " - Elevator#" + this.carNum + " passengers currently in elevator: " + receivedPassengers + ".\n");
+		writeToTrace(s.toString() + " - Elevator#" + this.carNum + " passengers currently in elevator: " + this.getReceivedPassengers() + ".\n");
     	
     	if (this.passengerFloors.contains(this.currentFloor)) {
         	this.passengerFloors.remove(this.currentFloor);
@@ -606,18 +596,14 @@ public class Elevator implements Runnable {
 		try {
 			this.eleSocket.send(this.sendPacket);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         
         if (this.destFloors.containsKey(this.currentFloor)) {
-        	this.receivedPassengers -= this.destFloors.get(this.currentFloor);
         	this.destFloors.remove(this.currentFloor);
         }
         
-        if (this.destFloors.isEmpty()) {
-        	this.hasRequest = false;
-        }
+        writeToTrace(s.toString() + " - Elevator#" + this.carNum + " remaining requests: "+ this.destFloors.size() + ".\n");
 	}
 	
 	public static void main(String args[]) throws SocketException {

@@ -14,7 +14,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
+import java.util.TreeMap;
 import java.util.concurrent.LinkedBlockingQueue;
+
+import javax.swing.JLabel;
 
 /*
  * @purpose 						- The scheduler class coordinates how made by the floors are served by the elevator.
@@ -39,8 +42,8 @@ public class Scheduler implements Runnable {
 	private boolean isClient;
 	
 
-	private String states;
-	SchedulerState state;
+	//private String states;
+	private SchedulerState state;
 	private DatagramSocket receiveSocket;
 	private InetAddress localAddr;
 	private DatagramPacket receivedFloorPacket;
@@ -51,6 +54,9 @@ public class Scheduler implements Runnable {
 	private ArrayList<String[]> activeElevators;
 	private int elevatorCount;
 	private Map<Integer, String[]> elevatorFaults;
+	private GUI gui;
+	private boolean doorFaulted;
+	private boolean floorFaulted;
 	
 	private static int numEventsQueued = 0;
 	private static int numEventsServed = -1;
@@ -59,7 +65,6 @@ public class Scheduler implements Runnable {
 		this.isClient = b;
 		this.elevatorCount = c;
 		
-		states = "Initial";
 		state = SchedulerState.WaitRequest;
 		
 		this.activeElevators = new ArrayList<String[]>();
@@ -67,10 +72,12 @@ public class Scheduler implements Runnable {
 		Scheduler.requestList = new ArrayList<String[]>();
 		Scheduler.currentRequests = new ArrayList<String[]>();
 		
+		this.doorFaulted = false;
+		this.floorFaulted = false;
+		
 		try {
 			this.localAddr = InetAddress.getLocalHost();
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		if(isClient) {
@@ -81,6 +88,9 @@ public class Scheduler implements Runnable {
 				e.printStackTrace();
 			} //overwrites file
 		}
+		else {
+			this.gui = new GUI(4);
+		}
 	}
 
 	/*
@@ -88,7 +98,7 @@ public class Scheduler implements Runnable {
 	 */
 	
 	public String getCurrentState() {
-		return states;
+		return this.state.Current();
 	}
 	
 	/*
@@ -103,7 +113,6 @@ public class Scheduler implements Runnable {
 			    
 			    writer.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		System.out.println(s);
@@ -121,7 +130,6 @@ public class Scheduler implements Runnable {
 		    
 		    writer.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		System.out.println(s);
@@ -192,6 +200,49 @@ public class Scheduler implements Runnable {
 		activeElevators.get(index)[5] = data[5];
 		activeElevators.get(index)[6] = data[6];
 		activeElevators.get(index)[7] = data[7];
+		
+		updateGUI(data);
+	}
+	
+	private void updateGUI(String[] data) {
+		if(Integer.parseInt(data[4]) > 0) {
+			int currentFloor = Integer.parseInt(data[2]);
+			int passengerFloor = Integer.parseInt(data[3]);
+			int destFloor = Integer.parseInt(data[4]);
+			
+			boolean eisAcending = isAcending(passengerFloor, destFloor);
+			
+			String dir;
+			if (passengerFloor != -1
+					&& ((eisAcending && currentFloor > passengerFloor)
+					|| (!eisAcending && currentFloor < passengerFloor))) {
+				dir = isAcending(currentFloor, passengerFloor) ? "UP" : "DOWN";
+			}
+			else {
+				dir = isAcending(currentFloor, destFloor) ? "UP" : "DOWN";
+			}
+            String state = data[6];
+            
+            if (state.contains("handleFaults")) {
+            	dir = "Stationary";
+            	state = data[8].contains("Floor") ? "FloorFaulted" : "DoorFaulted";
+            }
+            else if (data[7].contains("hasArrived")) {
+            	dir = "Stationary";
+            	state = "HasArrived";
+            }
+            else if(currentFloor == passengerFloor) {
+	            dir = "Stationary";
+	            state = "PassengersBoarding";
+            }
+            else if(state.contains("NoElevatorRequest")) {
+	            dir = "Stationary";
+	            state = "NoElevatorRequest";
+            }
+
+            int index = Integer.parseInt(data[0]);
+            gui.setLabel(index, "Elevator "+index+"|"+data[2]+"| "+dir+" "+state);
+        }
 	}
 	
 	/*
@@ -204,10 +255,8 @@ public class Scheduler implements Runnable {
 		if (activeElevators.isEmpty()) {
 			return receivedElevatorPacket.getPort();
 		}
-		boolean noneAvailable = true;
-		int canidateIndex = 0;
-		int minimumDist = -1;
-		boolean isIdle = false;
+		
+		TreeMap<Float, Integer> requestTimes = new TreeMap<Float, Integer>();
 		
 		for (int i = 0; i < this.activeElevators.size(); ++i) {
 			String[] elevator = this.activeElevators.get(i);
@@ -215,59 +264,69 @@ public class Scheduler implements Runnable {
 			int currentFloor = Integer.parseInt(elevator[2]);
 			int passengerFloor = Integer.parseInt(elevator[3]);
 			int destFloor = Integer.parseInt(elevator[4]);
-			int effectiveFloor = passengerFloor;
+			int effectiveFloor = currentFloor;
 			int requestCount = Integer.parseInt(elevator[5]);
 			
-			boolean eisAcending = isAcending(passengerFloor, destFloor);
-			boolean risAcending = isAcending(requestStart, requestDest);
+			if (passengerFloor == -1 
+					|| (passengerFloor < destFloor && requestStart < passengerFloor) 
+					|| (passengerFloor > destFloor && requestStart > passengerFloor)) {
+				passengerFloor = requestStart;
+			}
 			
-			if (eisAcending != risAcending && requestCount != 0)
+			if (requestCount == 0 || destFloor == -1 
+					|| (passengerFloor < destFloor && requestDest > destFloor) 
+					|| (passengerFloor > destFloor && requestDest < destFloor)) {
+				destFloor = requestDest;
+			}
+			
+			if (((passengerFloor < destFloor != requestStart < requestDest) 
+					|| !isPassengerOnPath(requestStart, requestDest, passengerFloor, destFloor, currentFloor)) 
+					&& requestCount != 0)
 				continue;
 			
-			if ((eisAcending && currentFloor > passengerFloor)
-					|| (!eisAcending && currentFloor < passengerFloor)) {
-				effectiveFloor = currentFloor;
+			float moveTime = 0;
+			
+			if (passengerFloor != -1
+					&& ((passengerFloor < destFloor && currentFloor > passengerFloor)
+					|| (passengerFloor > destFloor && currentFloor < passengerFloor))) {
+				effectiveFloor = passengerFloor;
+				moveTime += Math.abs(currentFloor - passengerFloor) * 9.5f;
 			}
 			
-			if (requestCount == 0 && (minimumDist >= Math.abs(effectiveFloor - requestStart) || minimumDist == -1)) {
-				
-				minimumDist = Math.abs(effectiveFloor - requestStart);
-				isIdle = true;
-				canidateIndex = i;
-				noneAvailable = false;
-				
-				elevator[3] = String.valueOf(requestStart);
-				elevator[4] = String.valueOf(requestDest);
-				elevator[5] = "1";
-				
-				updateActiveElevator(elevator, i);
-			}
-			else if (isPassengerOnPath(requestStart, requestDest, passengerFloor, destFloor, currentFloor)
-					&& (minimumDist >= Math.abs(effectiveFloor - requestStart) || minimumDist == -1)
-					&& !isIdle) {
-				
-				minimumDist = Math.abs(effectiveFloor - requestStart);
-				canidateIndex = i;
-				noneAvailable = false;
-				
-				elevator[5] = String.valueOf(Integer.parseInt(elevator[5]) + 1);
-				
-				if ((eisAcending && requestStart < passengerFloor)
-						|| (!eisAcending && requestStart > passengerFloor)) {
-					elevator[3] = String.valueOf(requestStart);
-		    	}
-				if ((eisAcending && requestDest > destFloor)
-						|| (!eisAcending && requestDest < destFloor)) {
-					elevator[4] = String.valueOf(requestDest);
-		    	}
-				
-				updateActiveElevator(elevator, i);
-			}
+			moveTime += Math.abs(effectiveFloor - requestDest) * 9.5f;
+			
+			moveTime += 9.175f * requestCount;
+			
+			requestTimes.put(moveTime, i);
 		}
 		
-		if (noneAvailable)
+		if (requestTimes.isEmpty())
 			return -1;
-		return canidateIndex;
+		
+		int index = requestTimes.firstEntry().getValue();
+		String[] elevator = this.activeElevators.get(index);
+		
+		int currentFloor = Integer.parseInt(elevator[2]);
+		int passengerFloor = Integer.parseInt(elevator[3]);
+		int destFloor = Integer.parseInt(elevator[4]);
+		int requestCount = Integer.parseInt(elevator[5]);
+		
+		boolean eisAcending = passengerFloor < destFloor;
+
+		passengerFloor = passengerFloor != -1 ? passengerFloor : currentFloor;
+
+		if (passengerFloor == -1 || (eisAcending && requestStart < passengerFloor) || (!eisAcending && requestStart > passengerFloor)) {
+			elevator[3] = String.valueOf(requestStart);
+		}
+		if (requestCount == 0 || destFloor == -1 || (eisAcending && requestDest > destFloor) || (!eisAcending && requestDest < destFloor)) {
+			elevator[4] = String.valueOf(requestDest);
+		}
+		
+		elevator[5] = String.valueOf(Integer.parseInt(elevator[5]) + 1);
+
+		updateActiveElevator(elevator, index);
+		
+		return index;
 	}
 	
 	public void run() {
@@ -280,7 +339,6 @@ public class Scheduler implements Runnable {
 				this.receiveSocket  = new DatagramSocket(202);
 			}
 		} catch (SocketException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -301,7 +359,7 @@ public class Scheduler implements Runnable {
 						break;
 						
 					case "GetElevatorUpdate":
-						processServed();
+						processUpdate();
 						break;
 						
 					case "Removed":
@@ -320,6 +378,9 @@ public class Scheduler implements Runnable {
 						long timeElapsed = (endTime - startTime)/1000000000;
 
 						writeToElevatorTrace("Scheduler Subsystem: Elapsed time: " + timeElapsed);
+						for (int i = 0; i < activeElevators.size(); ++i) {
+							gui.setLabel(i, "Elevator "+i+" |"+activeElevators.get(0)[2]+"| Idle");
+				        }
 						writeToElevatorTrace(s.toString() + " - Scheduler Subsystem: EOF.\n");
 						return;
 					}
@@ -340,7 +401,6 @@ public class Scheduler implements Runnable {
 			this.receivedFloorPacket = new DatagramPacket(new byte[30], 30);
 			this.receiveSocket.receive(receivedFloorPacket);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -357,7 +417,6 @@ public class Scheduler implements Runnable {
 			writeToFloorTrace(s.toString() + " - Scheduler Subsystem (floor): Sending floor acknowledgement.\n");
 			this.receiveSocket.send(receivedFloorPacket);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -369,17 +428,14 @@ public class Scheduler implements Runnable {
 	 */
 	public void processWaitRequest() {
 		LocalTime s = LocalTime.now();
-		
-		writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): current state - " + states + ".\n");
-		states = "Has request";
-		writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): current state - " + states + ".\n");
+
+		writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): current state - " + this.state.Current() + ".\n");
 		while(activeElevators.size() < this.elevatorCount) {
 			this.receivedElevatorPacket = new DatagramPacket(new byte[1000], 1000);
 			writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): waiting for elevator.\n");
 			try {
 				this.receiveSocket.receive(receivedElevatorPacket);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -408,8 +464,7 @@ public class Scheduler implements Runnable {
 	public void processNotifyElevator() {
 		LocalTime s = LocalTime.now();
 		
-		states = "Notified elevator";
-		writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): current state - " + states + ".\n");
+		writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): current state - " + this.state.Current() + ".\n");
 		writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): Send data to an active elevator.\n");
 		
 		for (int i = Scheduler.requestList.size() - 1; i >= 0; --i) {
@@ -430,7 +485,6 @@ public class Scheduler implements Runnable {
 			try { 
 				this.receiveSocket.send(sendElevatorPacket);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -448,7 +502,6 @@ public class Scheduler implements Runnable {
 			try { 
 				this.receiveSocket.send(sendElevatorPacket);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -465,11 +518,10 @@ public class Scheduler implements Runnable {
 	 * 
 	 * @return void
 	 */
-	public void processServed() {
+	public void processUpdate() {
 		LocalTime s = LocalTime.now();
 		
-		states = "Serving Requests";
-		writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): current state - " + states + ".\n");
+		writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): current state - " + this.state.Current() + ".\n");
 		writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): Waiting for an elevator to update their status.\n");
 		
 		receivedElevatorPacket = new DatagramPacket(new byte[1000], 1000);
@@ -477,7 +529,6 @@ public class Scheduler implements Runnable {
 		try {
 			this.receiveSocket.receive(receivedElevatorPacket);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -497,11 +548,12 @@ public class Scheduler implements Runnable {
 				Scheduler.numEventsServed = 0;
 			}
 			if(Scheduler.currentRequests.isEmpty()) {
-				states = "Request Served";
-				writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): current state - " + states + ".\n");
+				writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): current state - " + this.state.Current() + ".\n");
 			}
 			Scheduler.numEventsServed++;
 			hasArrived = true;
+			
+			writeToElevatorTrace(s.toString() + " - Scheduler Subsystem: remaining requests: "+currentRequests.size()+"\n");
 			
 			return;
 		}else if(updateData[6].replaceAll("\\P{Print}","").equals("handleFaults")) {
@@ -528,7 +580,6 @@ public class Scheduler implements Runnable {
 		try { 
 			this.receiveSocket.send(sendElevatorPacket);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -547,12 +598,11 @@ public class Scheduler implements Runnable {
 		try { 
 			this.receiveSocket.send(sendElevatorPacket);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		states = "Request Served";
-		writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): current state - " + states + ".\n");
+		writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): current state - " + this.state.Current() + ".\n");
+		
 		if(!Scheduler.currentRequests.isEmpty()) {
 			state = SchedulerState.GetElevatorUpdate;
 		}
@@ -569,26 +619,26 @@ public class Scheduler implements Runnable {
 		writeToElevatorTrace(s.toString() + " - Scheduler Subsystem: Switching to State: HandleFault\n");
 		
 		for(Map.Entry<Integer, String[]> entry : this.elevatorFaults.entrySet()) {
-			writeToElevatorTrace(s.toString() + " - Handling " + entry.getValue()[0] + " fault from elevator#" + entry.getKey() + ".\n");
-			if(entry.getValue()[0].equals("Door")) {
+			writeToElevatorTrace(s.toString() + " - Handling " + entry.getValue()[0].trim() + " fault from elevator#" + entry.getKey() + ".\n");
+			if(entry.getValue()[0].contains("Door")) {
+				this.doorFaulted = true;
 				byte updateBytes[] = "ResetDoors".getBytes();
 				DatagramPacket faultPacket = new DatagramPacket(updateBytes, updateBytes.length, localAddr, Integer.parseInt(entry.getValue()[1]));
 				try { 
 					this.receiveSocket.send(faultPacket);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				
 				//remove fault
 				this.elevatorFaults.remove(entry.getKey());
-			}else if(entry.getValue()[0].equals("Floor")) {
+			}else if(entry.getValue()[0].contains("Floor")) {
+				this.floorFaulted = true;
 				byte updateBytes[] = "ShutDownElevator".getBytes();
 				DatagramPacket faultPacket = new DatagramPacket(updateBytes, updateBytes.length, localAddr, Integer.parseInt(entry.getValue()[1]));
 				try { 
 					this.receiveSocket.send(faultPacket);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				if(Scheduler.numEventsServed < 0) {
