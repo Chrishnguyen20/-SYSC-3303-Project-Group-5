@@ -212,14 +212,11 @@ public class Scheduler implements Runnable {
 			
 			boolean eisAcending = isAcending(passengerFloor, destFloor);
 			
-			String dir;
+			String dir = isAcending(currentFloor, destFloor) ? "UP" : "DOWN";;
 			if (passengerFloor != -1
 					&& ((eisAcending && currentFloor > passengerFloor)
 					|| (!eisAcending && currentFloor < passengerFloor))) {
 				dir = isAcending(currentFloor, passengerFloor) ? "UP" : "DOWN";
-			}
-			else {
-				dir = isAcending(currentFloor, destFloor) ? "UP" : "DOWN";
 			}
             String state = data[6];
             
