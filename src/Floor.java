@@ -86,12 +86,12 @@ public class Floor implements Runnable{
 					this.socket.receive(receivePacket);
 					writeToTrace(d.toString() + " - Floor Subsystem: Received an acknowledgement.\n");
 					
-//			        try {
-//			        	Random rand = new Random();
-//						Thread.sleep((long) (rand.nextInt(1000) + 1000));
-//			        } catch (InterruptedException e) {
-//			        	System.err.println(e);
-//			        }
+			        try {
+			        	Random rand = new Random();
+						Thread.sleep((long) (rand.nextInt(1000) + 1000));
+			        } catch (InterruptedException e) {
+			        	System.err.println(e);
+			        }
 					
 				}
 			}
