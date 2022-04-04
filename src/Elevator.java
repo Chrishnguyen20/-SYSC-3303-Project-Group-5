@@ -12,6 +12,7 @@ import java.util.TreeSet;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Queue;
+import java.util.Set;
 
 
 /**     
@@ -223,7 +224,6 @@ public class Elevator implements Runnable {
 		try {
 			Thread.sleep((long) (floortime*floorDelay));
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		//stop timer 
@@ -282,9 +282,6 @@ public class Elevator implements Runnable {
 		if(this.floorCount == this.faultNum && this.faultType.contains("Floor")) {
 			this.floorDelay = 500;
 		}
-		if (this.currentFloor == getObjectiveFloor()) {
-			return;
-		}
 	}
 
 	/*
@@ -341,7 +338,8 @@ public class Elevator implements Runnable {
 				+ "," + String.valueOf(this.destFloors.size())		//5
 				+ "," + state.getElevatorState()					//6
 				+ "," + (hasArrived ? "hasArrived" : "notArrived")	//7
-				+ "," + this.faultType;								//8
+				+ "," + this.faultType								//8
+				+ "," + getDiretion();								//9
 		return updateData;
 	}
 	
@@ -434,9 +432,11 @@ public class Elevator implements Runnable {
 		int start = Integer.parseInt(jobData[0].trim());
 		int dest = Integer.parseInt(jobData[1].trim());
 		
-		if(this.faultNum < 0 && !jobData[3].trim().contains("None")) {
+		if((this.faultNum < 0 && !jobData[3].trim().contains("None")) || jobData[3].trim().contains("Floor")) {
 			this.faultType = jobData[3].trim();		
 			this.faultNum =  Integer.parseInt(jobData[2].trim());
+			LocalTime s = LocalTime.now();
+			writeToTrace(s.toString() + " - Elevator#" + this.carNum + " faultType: " + faultType + ".\n");
 		}
 		
 		LocalTime s = LocalTime.now();

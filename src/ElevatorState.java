@@ -75,7 +75,8 @@ public enum ElevatorState {
 		public ElevatorState nextState(Elevator elevator) {
 			if(elevator.checkFaulted()) {
 				return handleFaults;
-			}else if (elevator.hasRequest()) {
+			}
+			else if (elevator.hasRequest()) {
 				return MoveToDestination;
 			}
 			return NoElevatorRequest;

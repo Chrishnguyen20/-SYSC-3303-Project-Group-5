@@ -200,6 +200,8 @@ public class Scheduler implements Runnable {
 		activeElevators.get(index)[5] = data[5];
 		activeElevators.get(index)[6] = data[6];
 		activeElevators.get(index)[7] = data[7];
+		activeElevators.get(index)[8] = data[8];
+		activeElevators.get(index)[9] = data[9];
 		
 		updateGUI(data);
 	}
@@ -212,12 +214,7 @@ public class Scheduler implements Runnable {
 			
 			boolean eisAcending = isAcending(passengerFloor, destFloor);
 			
-			String dir = isAcending(currentFloor, destFloor) ? "UP" : "DOWN";;
-			if (passengerFloor != -1
-					&& ((eisAcending && currentFloor > passengerFloor)
-					|| (!eisAcending && currentFloor < passengerFloor))) {
-				dir = isAcending(currentFloor, passengerFloor) ? "UP" : "DOWN";
-			}
+			String dir = data[9].contains("up") ? "UP" : "DOWN";
             String state = data[6];
             
             if (state.contains("handleFaults")) {
@@ -278,8 +275,9 @@ public class Scheduler implements Runnable {
 			
 			if (((passengerFloor < destFloor != requestStart < requestDest) 
 					|| !isPassengerOnPath(requestStart, requestDest, passengerFloor, destFloor, currentFloor)) 
-					&& requestCount != 0)
+					&& requestCount != 0) {
 				continue;
+			}
 			
 			float moveTime = 0;
 			
@@ -375,9 +373,11 @@ public class Scheduler implements Runnable {
 						long timeElapsed = (endTime - startTime)/1000000000;
 
 						writeToElevatorTrace("Scheduler Subsystem: Elapsed time: " + timeElapsed);
-						for (int i = 0; i < activeElevators.size(); ++i) {
-							gui.setLabel(i, "Elevator "+i+" |"+activeElevators.get(0)[2]+"| Idle");
-				        }
+						
+						for (int i = 0; i < activeElevators.size(); ++i)
+							if (!activeElevators.get(i)[6].contains("handleFaults")) 
+								gui.setLabel(i, "Elevator "+i+" |"+activeElevators.get(i)[2]+"| Idle");
+							
 						writeToElevatorTrace(s.toString() + " - Scheduler Subsystem: EOF.\n");
 						return;
 					}
