@@ -6,6 +6,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalTime;
@@ -373,10 +374,6 @@ public class Scheduler implements Runnable {
 						long timeElapsed = (endTime - startTime)/1000000000;
 
 						writeToElevatorTrace("Scheduler Subsystem: Elapsed time: " + timeElapsed);
-						
-						for (int i = 0; i < activeElevators.size(); ++i)
-							if (!activeElevators.get(i)[6].contains("handleFaults")) 
-								gui.setLabel(i, "Elevator "+i+" |"+activeElevators.get(i)[2]+"| Idle");
 							
 						writeToElevatorTrace(s.toString() + " - Scheduler Subsystem: EOF.\n");
 						return;
@@ -431,10 +428,19 @@ public class Scheduler implements Runnable {
 			this.receivedElevatorPacket = new DatagramPacket(new byte[1000], 1000);
 			writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): waiting for elevator.\n");
 			try {
+				this.receiveSocket.setSoTimeout(20000);
 				this.receiveSocket.receive(receivedElevatorPacket);
-			} catch (IOException e) {
+			}
+			catch (SocketTimeoutException e) {
+                // timeout exception.
+				writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): Timed out.\n");
+				state = state.nextState();
+				return;
+            } 
+			catch (IOException e) {
 				e.printStackTrace();
 			}
+			
 			
 			String[] data = new String(this.receivedElevatorPacket.getData()).split(",");
 			
