@@ -133,7 +133,7 @@ public class Elevator implements Runnable {
 	 * @return int - the floor number
 	 */
 	public int getObjectiveFloor() {
-		if (this.getReceivedPassengers() == 0) {
+		if (this.getFirstPassengerFloor() != -1) {
 			return getFirstPassengerFloor(); 
 		}
 		return getDestFloor(); 

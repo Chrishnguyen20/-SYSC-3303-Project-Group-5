@@ -36,7 +36,6 @@ public class Floor implements Runnable{
 		    
 		    writer.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		System.out.println(s);
