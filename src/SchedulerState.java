@@ -1,4 +1,6 @@
-
+/**
+  The states of the scheduler 
+*/
 public enum SchedulerState {
 	WaitRequest {
 		public SchedulerState nextState() {
@@ -45,7 +47,14 @@ public enum SchedulerState {
 		}
 	};
 
+	/**
+	 *  Returns the next state of the Scheduler 
+	 */
 	public abstract SchedulerState nextState();
 
+	/**
+	 * Gets the current state of the Scheduler
+	 * @return string - representing the current state of the Scheduler
+	 */
 	public abstract String Current();
 }

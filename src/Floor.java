@@ -11,22 +11,26 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.time.LocalTime;
 import java.util.Random;
-/*
- * @purpose 			- the floor class reads floor requests from a file and passes 
- * 						  them to the scheduler via UDP. 
- * @param	localAddr   - is the current scheduler client (floor) facing
- * @param	socket    	- is the current scheduler client (floor) facing
+/**
+ * The floor class reads floor requests from a file and passes them to the scheduler via UDP. 
+ * @param localAddr   The floor subsystems IP address
+ * @param socket      The floor socket used to send and receive data
  */
 public class Floor implements Runnable{
 
 	private InetAddress localAddr;
 	private DatagramSocket socket;
 	
+	/**
+	 * The constructor
+	 */
 	public Floor() {
 	}
 	
-	/*
-	 * @purpose - write the string to the appropriate trace file
+	/**
+	 * Writes the string to the appropriate trace file
+	 * @param s The string to be printed to the trace file
+	 * @return void 
 	 */
 	public void writeToTrace(String s) {
 	    BufferedWriter writer;

@@ -16,31 +16,30 @@ import java.util.Set;
 
 
 /**     
- * @purpose                  - The Elevator class obtains elevator requests from the scheduler
- * 					           and will move until it gets to the destination floor
- * @param currentFloor       - Represents the current floor that the elevator is on 
- * @param destFloor			 - The destination floor of the elevator
- * @param destFloors         - The destination floors of the elevator when more than 1 passenger is boarded
- * @param hasRequest         - To check if there is a request or not for the elevator
- * @param nextCarNum         - Static variable used to assign id's to the elevator
- * @param carNum		     - The elevator id number
- * @param passengerFloor     - The floor of the passenger
- * @param time			     - Amount of time the elevator should sleep for to simulate movement, doors opening, and passengers boarding/disembarking
- * @param receivedPassengers - Whether passengers have boarded the elevator 
- * @param elevatorRequest    - the shared memory between the elevator and scheduler.
- * @param eleSocket 		 - The datagram socket of the elevator
- * @param sendPacket 		 - The datagram packet that is being sent
- * @param receivePacket 	 - The datagram packet that is being received
- * @param localAddr          - InetAddress
- * @param doorClosed         - When door is open or closed
- * @param state				 - The state of the elevator
- * @param portid			 - The port id of the elevator
- * @param hasFaulted		 - A boolean value to identify if the elevator has faulted or not
- * @param isOn				 - A boolean value to identify if the elevator is running
- * @param doorDelay			 - The delay of the door
- * @param floorDelay		 - The delay of the floor
- * @param faultNum			 - The number of occurrences before the fault occurs
- * @param faultType			 - The type of fault of the elevator 
+ * The Elevator class obtains elevator requests from the scheduler and will move until it gets to the destination floor
+ * @param currentFloor        Represents the current floor that the elevator is on 
+ * @param destFloor           The destination floor of the elevator
+ * @param destFloors          The destination floors of the elevator when more than 1 passenger is boarded
+ * @param hasRequest          To check if there is a request or not for the elevator
+ * @param nextCarNum          Static variable used to assign id's to the elevator
+ * @param carNum              The elevator id number
+ * @param passengerFloor      The floor of the passenger
+ * @param time                Amount of time the elevator should sleep for to simulate movement, doors opening, and passengers boarding/disembarking
+ * @param receivedPassengers  Whether passengers have boarded the elevator 
+ * @param elevatorRequest     The shared memory between the elevator and scheduler.
+ * @param eleSocket           The datagram socket of the elevator
+ * @param sendPacket          The datagram packet that is being sent
+ * @param receivePacket       The datagram packet that is being received
+ * @param localAddr           The computers IP address
+ * @param doorClosed          When door is open or closed
+ * @param state               The state of the elevator
+ * @param portid              The port id of the elevator
+ * @param hasFaulted          A boolean value to identify if the elevator has faulted or not
+ * @param isOn                A boolean value to identify if the elevator is running
+ * @param doorDelay           The delay of the door
+ * @param floorDelay          The delay of the floor
+ * @param faultNum            The number of occurrences before the fault occurs
+ * @param faultType           The type of fault of the elevator 
  * 
  */
 public class Elevator implements Runnable {
@@ -97,39 +96,84 @@ public class Elevator implements Runnable {
 		passengerFloors = new TreeSet<Integer>();
 	}
 	
+	/**
+	 * Set the elevator car number
+	 * @return void 
+	 */
 	private synchronized void setCarNum() { this.carNum =  nextCarNum++; }
 	
+	/**
+	 * Get the elevator car number
+	 * @return int - the elevator car number
+	 */
 	public int getCarNum() { return this.carNum; }
 	
+	/**
+	 * Get the Elevators current floor
+	 * @return int - the elevator's current floor
+	 */
 	public int getCurrentFloor() { return this.currentFloor; }
 	
+	/**
+	 * Sets the elevators floor number
+	 * @param cur - integer representing the current floor
+	 * @return void 
+	 */
 	public void setCurrentFloor(int cur) { this.currentFloor = cur; }
 	
+	/**
+	 * Gets the time needed to operator the elevators door
+	 * @return int - a length of time
+	 */
 	public float getTime() { return Elevator.doortime; }
 	
+	/**
+	 * Gets the number of received passengers
+	 * @return int - the number of received passengers
+	 */
 	public int getReceivedPassengers() { 
 		int receivedPassengers = 0;
 		for (Integer passengers : destFloors.values()) 
 			receivedPassengers += passengers;
 		return receivedPassengers; 
 	}
-		
+	
+	/**
+	 * Gets the elevator's state
+	 * @return string - the elevator's current state
+	 */
 	public String getState() { return state.getElevatorState(); }
 	
+	/**
+	 * Checks whether the elevator has a request or not
+	 * @return true - if the elevator has a request, false otherwise
+	 */
 	public boolean hasRequest() { return !this.destFloors.isEmpty(); }
 	
+	/**
+	 * Checks whether the elevator has faulted
+	 * @return true - if the elevator has faulted, false otherwise
+	 */
 	public boolean checkFaulted() { return this.hasFaulted; }
 	
+	/**
+	 * Gets the elevator's current direction of travel
+	 * @return string - representing the elevators direction of travel
+	 */
 	public String getDiretion() {
 		return getObjectiveFloor() > this.currentFloor ? "up" : "down";
 	}
 	
+	/**
+	 * Gets the elevator's current destination floor
+	 * @return int - the destination floor
+	 */
 	public int getDestFloor() {
 		return this.destFloor;
 	}
 	
-	/*
-	 * @purpose - Elevator gets the objective floor
+	/**
+	 * Elevator gets the objective floor
 	 * @return int - the floor number
 	 */
 	public int getObjectiveFloor() {
@@ -139,8 +183,8 @@ public class Elevator implements Runnable {
 		return getDestFloor(); 
 	}
 	
-	/*
-	 * @purpose - Elevator goes to the first destination floor
+	/**
+	 * Elevator goes to the first destination floor
 	 * @return int - the first destination floor
 	 */
 	public int getFirstDestFloor() {
@@ -160,8 +204,8 @@ public class Elevator implements Runnable {
 		return this.destFloors.lastKey();
 	}
 	
-	/*
-	 * @purpose - Elevator picks the first passenger
+	/**
+	 * Elevator picks the first passenger
 	 * @return int - the first passenger floor
 	 */
 	public int getFirstPassengerFloor() {
@@ -177,8 +221,8 @@ public class Elevator implements Runnable {
 		return this.passengerFloors.last();
 	}
 	
-	/*
-	 * @purpose - Simulates doors opening
+	/**
+	 * Simulates doors opening
 	 * @return boolean - determine whether the doors properly closed or not
 	 */
 	private boolean openDoors() {
@@ -213,8 +257,8 @@ public class Elevator implements Runnable {
 	}
 	
 	
-	/*
-	 * @purpose - Simulates movement between floors with the time taken
+	/**
+	 * Simulates movement between floors with the time taken
 	 * @return boolean - Did the elevator arrive on time
 	 */
 	private boolean simulateFloorMovement() {
@@ -239,6 +283,11 @@ public class Elevator implements Runnable {
 		return true;
 	}
 	
+	/**
+	 * Writes the string to the appropriate trace file
+	 * @param s - the string to be printed to the trace file
+	 * @return void 
+	 */
 	public void writeToTrace(String s) {
 	    BufferedWriter writer;
 		try {
@@ -252,18 +301,9 @@ public class Elevator implements Runnable {
 		System.out.println(s);
 	}
 	
-	/*
-
-	Function: move
-	This determines if the elevator should move up or down based on it's position and destination 
-	and then moves the elevator in that direction
-
-	 @param 
-	No parameters
-
-	 @return NULL
-	This method is void and has no return value
-
+	/**
+	This determines if the elevator should move up or down based on it's position and destination and then moves the elevator in that direction
+	@return void 
 	*/
 	
 	public void move() {
@@ -284,23 +324,12 @@ public class Elevator implements Runnable {
 		}
 	}
 
-	/*
-
-	Function: addPassenger
-	This attempts to add a passenger to the list of requests to complete
-	it will add only if elevator is idle or if
-	the given passenger is on the elevators path to it's destination
-
-	this also determines the value of the current destination and final destination
-
-	 @param int start, int dest
-	the passenger which will be determined if is on the elevators path to it's destination
-
-	 @return bool
-	True if the given passenger is added to the list of requests to complete, else false
-
+	/**
+	This attempts to add a passenger to the list of requests to complete it will add only if elevator is idle or if the given passenger is on the elevators path to it's destination this also determines the value of the current destination and final destination
+	@param start -int, the starting floor of the passenger
+	@param dest - int, the passengers destination floor
+	@return void 
 	*/
-
 	void addPassenger(int start, int dest)
 	{
 		this.passengerFloors.add(start);
@@ -322,10 +351,9 @@ public class Elevator implements Runnable {
     	LocalTime s = LocalTime.now();
     	writeToTrace(s.toString() + " - Elevator#" + this.carNum + " added a request from floor " + start+".\n");
 	}
-	/*
-	 * @purpose - To create a string of the elevator data
-	 * 
-	 * @param boolean hasArrived - if the elevator has arrived at the destination
+	/**
+	 * To create a string of the elevator data
+	 * @param hasArrived - boolean, if the elevator has arrived at the destination
 	 * @return String - data of the elevator
 	 */
 	private String getUpdateString(boolean hasArrived) {
@@ -374,9 +402,8 @@ public class Elevator implements Runnable {
 			state = state.nextState(this);
 		}
 	}
-	/*
-	 * @purpose - To handle the faults with the elevator
-	 * 
+	/**
+	 * To handle the faults with the elevator
 	 * @return void
 	 */
 	private void handleFault() {
@@ -419,9 +446,8 @@ public class Elevator implements Runnable {
 		}
 	}
 	
-	/*
-	 * @purpose - To get the data of the request and add the passenger to the elevator
-	 * 
+	/**
+	 * To get the data of the request and add the passenger to the elevator
 	 * @return void
 	 */
 	private void parseAndAddPassenger() {
@@ -444,9 +470,8 @@ public class Elevator implements Runnable {
 		addPassenger(start, dest);
 	}
 	
-	/*
-	 * @purpose - Prints the intial state of the elevators
-	 * 
+	/**
+	 * Prints the initial state of the elevators
 	 * @return void
 	 */
 	private void processInitial() {
@@ -457,9 +482,8 @@ public class Elevator implements Runnable {
     	writeToTrace(s.toString() + " - Elevator#" + this.carNum + " current Pos: "+ currentFloor + ".\n");
 	}
 	
-	/*
-	 * @purpose - Waits to receive a request and processes the request
-	 * 
+	/**
+	 * Waits to receive a request and processes the request
 	 * @return void
 	 */
 	private void processNoElevatorRequest() {
@@ -509,9 +533,8 @@ public class Elevator implements Runnable {
 		}
 	}
 	
-	/*
-	 * @purpose - Process the movement of the elevator to its destination
-	 * 
+	/**
+	 * Process the movement of the elevator to its destination
 	 * @return void
 	 */
 	private void processMoveToDestination() {
@@ -553,9 +576,8 @@ public class Elevator implements Runnable {
 		}
 	}
 	
-	/*
-	 * @purpose - Processes the passengers boarding the elevator
-	 * 
+	/**
+	 * Processes the passengers boarding the elevator
 	 * @return void
 	 */
 	private void processPassengersBoarding() {
@@ -576,9 +598,8 @@ public class Elevator implements Runnable {
         }
 	}
 	
-	/*
-	 * @purpose - The show that the elevator has arrived to its destination floor
-	 * 
+	/**
+	 * The show that the elevator has arrived to its destination floor
 	 * @return void
 	 */
 	private void processHasArrived() {
