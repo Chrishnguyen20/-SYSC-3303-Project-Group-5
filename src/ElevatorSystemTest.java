@@ -11,20 +11,16 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+/**
+ * The JUnit test suit for the system 
+ */
 class ElevatorSystemTest {
-
-
-	Scheduler scheduler_client;
-	Scheduler scheduler_server;
-	Elevator elevator;
-	Floor floor;
 	
-	
-	/*
-	 * @purpose checks if an event (string) was captured in the trace file
-	 * @param s - a string representing some event
-	 * @param elevatorTace - a flag indicating which trace file to read
-	 * @return boolean true or false
+	/**
+	 * @purpose Checks if an event (string) was captured in the trace file
+	 * @param s A string representing some event
+	 * @param elevatorTace A flag indicating which trace file to read
+	 * @return boolean true if the line exists in the trace file, otherwise false
 	 */
 	private boolean existsInTrace(String s, boolean elevatorTrace) {
 		if(elevatorTrace) {
@@ -91,10 +87,10 @@ class ElevatorSystemTest {
 
 	}
 	
-	/*
-	 * @purpose checks if a subsystem is in its final state (s)
-	 * @param s   - the state (string) being tested 
-	 * @return boolean true or false
+	/**
+	 * @purpose Checks if a subsystem is in its final state (s)
+	 * @param s The state (string) being tested 
+	 * @return boolean true if the state is found, otherwise false
 	 */
 	private boolean checkState(String s) {
 		boolean flag = true;
@@ -129,7 +125,10 @@ class ElevatorSystemTest {
 		return false;
 	}
 	
-	//@purpose test that the program runs successfully
+	/**
+	 * @purpose Test that the program runs successfully
+	 * @param event A string representing the event to search for
+	 */
 	@ParameterizedTest
 	@ValueSource(strings = {"EOF", "Floor Subsystem: Queued a request -- request for floor 1 going up",
 			 "Scheduler Subsystem (floor): Queueing event from floor subsystem",
@@ -140,7 +139,10 @@ class ElevatorSystemTest {
 		assert(existsInTrace(event, false));	
 	}
 	
-	//@purpose test that the program runs successfully
+	/**
+	 * @purpose Test that the program runs successfully
+	 * @param event A string representing the event to search for
+	 */
 	@ParameterizedTest
 	@Order(3)
 	@ValueSource(strings = {"EOF", 
@@ -148,27 +150,34 @@ class ElevatorSystemTest {
 			"Scheduler Subsystem (elevator): sent elevator", "Elevator#0 current Pos: 1",
 			"Scheduler Subsystem (elevator): service floor", 
 			"Scheduler Subsystem (elevator): added elevator#1 to active elevators"})
-	
 	void elevator_scheduler_tests(String event) {		
 		assert(existsInTrace(event, true));	
 	}
 	
 	
-	//@purpose checks the states of the elevator and scheduler subsystem
+	/**
+	 * Checks the states of the elevator and scheduler subsystem
+	 * @param event A string representing the event to search for
+	 */
 	@ParameterizedTest
-	@ValueSource(strings = {"Scheduler Subsystem (elevator): current state - Initial",
+	@ValueSource(strings = {"Scheduler Subsystem (elevator): current state - WaitRequest",
 			 "Elevator#0 current state - NoElevatorRequest",
-			 "Scheduler Subsystem (elevator): current state - Has request",
-			 "Scheduler Subsystem (elevator): current state - Notified elevator",
+			 "Scheduler Subsystem (elevator): current state - GetElevatorUpdate",
+			 "Scheduler Subsystem (elevator): current state - NotifyElevator",
 			 "Elevator#0 current state - MoveToDestination",
-			 "Scheduler Subsystem (elevator): current state - Request Served",
+			 "Scheduler Subsystem: Switching to State: HandleFault",
 			 "Elevator#0 current state - PassengersBoarding",
-			 "Elevator#0 current state - HasArrived"})
+			 "current state - HasArrived",
+			 "Handling Floor fault from elevator",
+			 "Handling Door fault from elevator"})
 	void elevatorHasArrivedState(String event) {		
 		assert(checkState(event));
 	}
 	
-	//@purpose checks the whether multiple elevators are moving throughout the program
+	/**
+	 * Checks the whether multiple elevators are moving throughout the program
+	 * @param event A string representing the event to search for
+	 */
 	@ParameterizedTest
 	@ValueSource(strings = {"Elevator#1 current state - Initial",
 			 "Elevator#0 current state - Initial",
@@ -178,13 +187,17 @@ class ElevatorSystemTest {
 			 "Elevator#1 current state - NoElevatorRequest",
 			 "Elevator#1 current state - MoveToDestination",
 			 "Elevator#0 current state - MoveToDestination",
-			 "Elevator#1 current state - HasArrived",
-			 "Elevator#0 current state - HasArrived"})
+			 "HasArrived"})
 	void multipleElevators(String event) {		
 		assert(existsInTrace(event, true));
 	}
 	
-	//@purpose checks the whether multiple elevators are moving throughout the program
+	
+	
+	/**
+	 * Checks the whether multiple elevators are moving throughout the program
+	 * @param event A string representing the event to search for
+	 */
 	@ParameterizedTest
 	@ValueSource(strings = {"notifying Floor fault occurred",
 			 "shutting down",

@@ -1,5 +1,5 @@
-/*
-* @purpose - The states of the elevator 
+/**
+  The states of the elevator 
 */
 
 public enum ElevatorState {
@@ -107,7 +107,14 @@ public enum ElevatorState {
 		
 	};
 
+	/**
+	 *  Returns the next state of the Elevator 
+	 */
 	public abstract ElevatorState nextState(Elevator elevator);
 
+	/**
+	 * Gets the current state of the Elevator
+	 * @return string - representing the current state of the Elevator
+	 */
 	public abstract String getElevatorState();
 }
