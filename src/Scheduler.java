@@ -20,7 +20,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import javax.swing.JLabel;
 
-/*
+/**
  * @purpose 						- The scheduler class coordinates how made by the floors are served by the elevator.
  * @param	isClient    			- is the current scheduler client (floor) facing
  * @param   states     				- the state of the scheduler
@@ -42,8 +42,6 @@ import javax.swing.JLabel;
 public class Scheduler implements Runnable {
 	private boolean isClient;
 	
-
-	//private String states;
 	private SchedulerState state;
 	private DatagramSocket receiveSocket;
 	private InetAddress localAddr;
@@ -56,8 +54,6 @@ public class Scheduler implements Runnable {
 	private int elevatorCount;
 	private Map<Integer, String[]> elevatorFaults;
 	private GUI gui;
-	private boolean doorFaulted;
-	private boolean floorFaulted;
 	
 	private static int numEventsQueued = 0;
 	private static int numEventsServed = -1;
@@ -72,9 +68,6 @@ public class Scheduler implements Runnable {
 		this.elevatorFaults = new HashMap<Integer, String[]>();
 		Scheduler.requestList = new ArrayList<String[]>();
 		Scheduler.currentRequests = new ArrayList<String[]>();
-		
-		this.doorFaulted = false;
-		this.floorFaulted = false;
 		
 		try {
 			this.localAddr = InetAddress.getLocalHost();
@@ -94,7 +87,7 @@ public class Scheduler implements Runnable {
 		}
 	}
 
-	/*
+	/**
 	 * @purpose - The states of the scheduler 
 	 */
 	
@@ -102,7 +95,7 @@ public class Scheduler implements Runnable {
 		return this.state.Current();
 	}
 	
-	/*
+	/**
 	 * @purpose - writes to the elevator_trace.txt file
 	 * @return void
 	 */
@@ -119,7 +112,7 @@ public class Scheduler implements Runnable {
 		System.out.println(s);
 	}
 	
-	/*
+	/**
 	 * @purpose - writes to the floor_trace.txt file
 	 * @return void
 	 */
@@ -136,7 +129,7 @@ public class Scheduler implements Runnable {
 		System.out.println(s);
 	}
 	
-	/*
+	/**
 
 	Function: isAcending
 	This determines if the elevator should move up or down based on it's position and destination
@@ -156,7 +149,7 @@ public class Scheduler implements Runnable {
 	    return false;
 	}
 	
-	/*
+	/**
 
 	Function: isPassengerOnPath
 	This determines if the given passenger is on the elevators path to it's destination
@@ -185,7 +178,7 @@ public class Scheduler implements Runnable {
 	    return false;
 	}
 	
-	/*
+	/**
 	 * @purpose to get the data of the active elevators
 	 * 
 	 * @param String[] data - data of the elevator
@@ -240,7 +233,7 @@ public class Scheduler implements Runnable {
         }
 	}
 	
-	/*
+	/**
 	 * @purpose - To get an available elevator
 	 * 
 	 * @param int requestStart - Starting floor of the request
@@ -376,6 +369,14 @@ public class Scheduler implements Runnable {
 						writeToElevatorTrace("Scheduler Subsystem: Elapsed time: " + timeElapsed);
 							
 						writeToElevatorTrace(s.toString() + " - Scheduler Subsystem: EOF.\n");
+						
+						for (int i = 0; i < activeElevators.size(); ++i) {
+							int index = Integer.parseInt(activeElevators.get(i)[0]);
+							if (!activeElevators.get(index)[6].contains("handleFaults")) {
+								gui.setLabel(index, "Elevator "+index+" |"+activeElevators.get(index)[2]+"| Idle");
+							}
+						}
+						
 						return;
 					}
 				}
@@ -383,7 +384,7 @@ public class Scheduler implements Runnable {
 		}
 	}
 	
-	/*
+	/**
 	 * @purpose - To wait to receive the floor request and add it to the request list
 	 * 
 	 * @return void
@@ -415,7 +416,7 @@ public class Scheduler implements Runnable {
 		}
 	}
 	
-	/*
+	/**
 	 * @purpose - To wait to receive the floor request and add it to the request list
 	 * 
 	 * @return void
@@ -428,15 +429,8 @@ public class Scheduler implements Runnable {
 			this.receivedElevatorPacket = new DatagramPacket(new byte[1000], 1000);
 			writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): waiting for elevator.\n");
 			try {
-				this.receiveSocket.setSoTimeout(20000);
 				this.receiveSocket.receive(receivedElevatorPacket);
 			}
-			catch (SocketTimeoutException e) {
-                // timeout exception.
-				writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): Timed out.\n");
-				state = state.nextState();
-				return;
-            } 
 			catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -459,7 +453,7 @@ public class Scheduler implements Runnable {
 	}
 	
 	
-	/*
+	/**
 	 * @purpose - Notifies active elevators of floor requests that need to be served
 	 * 
 	 * @return void
@@ -513,7 +507,7 @@ public class Scheduler implements Runnable {
 	}
 	
 	
-	/*
+	/**
 	 * @purpose - Waits to receive update from elevators and processes the update data.
 	 * 			  If the elevator is on a new floor, it sends an acknowledgement back.
 	 * 			  If the elevator has arrived at a destination or passenger floor, it sends an acknowledgement back.
@@ -530,8 +524,15 @@ public class Scheduler implements Runnable {
 		receivedElevatorPacket = new DatagramPacket(new byte[1000], 1000);
 		boolean hasArrived = false;
 		try {
+			this.receiveSocket.setSoTimeout(20000);
 			this.receiveSocket.receive(receivedElevatorPacket);
-		} catch (IOException e) {
+		} 
+		catch (SocketException e) {
+            // timeout exception.
+			writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): Timed out.\n");
+			return;
+        } 
+		catch (IOException e) {
 			e.printStackTrace();
 		}
 		
@@ -559,7 +560,8 @@ public class Scheduler implements Runnable {
 			writeToElevatorTrace(s.toString() + " - Scheduler Subsystem: remaining requests: "+currentRequests.size()+"\n");
 			
 			return;
-		}else if(updateData[6].replaceAll("\\P{Print}","").equals("handleFaults")) {
+		}
+		else if(updateData[6].replaceAll("\\P{Print}","").equals("handleFaults")) {
 			//elevator experienced a fault
 			String[] faultData = new String[3];
 			faultData[0] = updateData[8];	//get fault code
@@ -587,7 +589,7 @@ public class Scheduler implements Runnable {
 		}
 	}
 	
-	/*
+	/**
 	 * @purpose - Serves the request by removing it from the queue of requests. 
 	 * 
 	 * @return void
@@ -611,7 +613,7 @@ public class Scheduler implements Runnable {
 		}
 	}
 	
-	/*
+	/**
 	 * @purpose - Handles the faults. If a floor fault occurred shut down the elevator. If a 
 	 * 			  door fault occurs tell the elevator to reset their doors
 	 * 
@@ -624,7 +626,6 @@ public class Scheduler implements Runnable {
 		for(Map.Entry<Integer, String[]> entry : this.elevatorFaults.entrySet()) {
 			writeToElevatorTrace(s.toString() + " - Handling " + entry.getValue()[0].trim() + " fault from elevator#" + entry.getKey() + ".\n");
 			if(entry.getValue()[0].contains("Door")) {
-				this.doorFaulted = true;
 				byte updateBytes[] = "ResetDoors".getBytes();
 				DatagramPacket faultPacket = new DatagramPacket(updateBytes, updateBytes.length, localAddr, Integer.parseInt(entry.getValue()[1]));
 				try { 
@@ -635,8 +636,7 @@ public class Scheduler implements Runnable {
 				
 				//remove fault
 				this.elevatorFaults.remove(entry.getKey());
-			}else if(entry.getValue()[0].contains("Floor")) {
-				this.floorFaulted = true;
+			}else if(entry.getValue()[0].contains("Floor")) { 
 				byte updateBytes[] = "ShutDownElevator".getBytes();
 				DatagramPacket faultPacket = new DatagramPacket(updateBytes, updateBytes.length, localAddr, Integer.parseInt(entry.getValue()[1]));
 				try { 
