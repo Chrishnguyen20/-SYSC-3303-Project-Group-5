@@ -40,9 +40,7 @@ public class GUI extends JFrame{
         
         for (int i = 0; i < elevatorCount; ++i) {
         	JLabel label = new JLabel("Elevator "+i+" |1| Idle");
-        	//label.setFont(new Font(Font.SANS_SERIF, Font.BOLD|Font.ITALIC, 20));
-        	label.setFont(new Font(Font.MONOSPACED, Font.BOLD|Font.ITALIC, 20));
-        	//label.setSize(400, 150);
+        	label.setFont(new Font(Font.MONOSPACED, Font.BOLD|Font.ITALIC, 18));
         	this.elevatorLabels[i] = label;
         	this.panel.add(elevatorLabels[i]);
         }
@@ -54,7 +52,7 @@ public class GUI extends JFrame{
         this.frame.setTitle("SYSC 3303 Group 5");
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.frame.setVisible(true);
-        this.frame.setSize(750, 750);
+        this.frame.setSize(800, 800);
         this.frame.setLocationRelativeTo(null);
         this.frame.setResizable(false);
         this.frame.add(panel, BorderLayout.CENTER);

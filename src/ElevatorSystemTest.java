@@ -192,8 +192,6 @@ class ElevatorSystemTest {
 		assert(existsInTrace(event, true));
 	}
 	
-	
-	
 	/**
 	 * Checks the whether multiple elevators are moving throughout the program
 	 * @param event A string representing the event to search for
@@ -210,6 +208,5 @@ class ElevatorSystemTest {
 	void elevatorTiming(String event) {		
 		assert(existsInTrace(event, true));
 	}
-	
 }
 	

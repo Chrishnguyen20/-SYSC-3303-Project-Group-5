@@ -198,6 +198,7 @@ public class Scheduler implements Runnable {
 		activeElevators.get(index)[7] = data[7];
 		activeElevators.get(index)[8] = data[8];
 		activeElevators.get(index)[9] = data[9];
+		activeElevators.get(index)[10] = data[10];
 		
 		updateGUI(data);
 	}
@@ -219,6 +220,10 @@ public class Scheduler implements Runnable {
 			String dir = data[9].contains("up") ? "UP" : "DOWN";
             String state = data[6];
             
+            String fault = data[8];
+            if (!data[8].contains("None"))
+            	fault += "Fault";
+            
             if (state.contains("handleFaults")) {
             	dir = "Stationary";
             	state = data[8].contains("Floor") ? "FloorFaulted" : "DoorFaulted";
@@ -237,9 +242,11 @@ public class Scheduler implements Runnable {
             }
 
             int index = Integer.parseInt(data[0]);
-            gui.setLabel(index, "Elevator "+index+"|"+data[2]+"| "+dir+" "+state);
+            gui.setLabel(index, "Elevator "+index+"|"+data[2]+"| "+dir+" "+state+" | "+fault);
         }
 	}
+	
+	
 	
 	/**
 	 * Gets an available elevator
@@ -378,6 +385,7 @@ public class Scheduler implements Runnable {
 						writeToElevatorTrace("Scheduler Subsystem: Elapsed time: " + timeElapsed);
 							
 						writeToElevatorTrace(s.toString() + " - Scheduler Subsystem: EOF.\n");
+						
 						return;
 					}
 				}
@@ -430,15 +438,8 @@ public class Scheduler implements Runnable {
 			this.receivedElevatorPacket = new DatagramPacket(new byte[1000], 1000);
 			writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): waiting for elevator.\n");
 			try {
-				this.receiveSocket.setSoTimeout(20000);
 				this.receiveSocket.receive(receivedElevatorPacket);
 			}
-			catch (SocketTimeoutException e) {
-                // timeout exception.
-				writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): Timed out.\n");
-				state = state.nextState();
-				return;
-            } 
 			catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -529,8 +530,17 @@ public class Scheduler implements Runnable {
 		receivedElevatorPacket = new DatagramPacket(new byte[1000], 1000);
 		boolean hasArrived = false;
 		try {
+			this.receiveSocket.setSoTimeout(20000);
 			this.receiveSocket.receive(receivedElevatorPacket);
-		} catch (IOException e) {
+		} 
+		catch (SocketTimeoutException e) {
+            // timeout exception.
+			writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): Timed out.\n");
+			state = state.nextState();
+			Scheduler.numEventsQueued = Scheduler.numEventsServed;
+			return;
+        }
+		catch (IOException e) {
 			e.printStackTrace();
 		}
 		
@@ -542,7 +552,15 @@ public class Scheduler implements Runnable {
 			}
 		}
 		writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): got update from elevator#" + updateData[0] + " -- " + updateData[6] +  ".\n");
-		if(updateData[6].replaceAll("\\P{Print}","").equals("HasArrived")) {
+		if(updateData[10].replaceAll("\\P{Print}","").equals("false")) {
+			
+			for (int i = 0; i < activeElevators.size(); ++i)
+				if (updateData[0].equals(activeElevators.get(i)[0]))
+					this.activeElevators.remove(i);
+			
+			return;
+		}
+		else if(updateData[6].replaceAll("\\P{Print}","").equals("HasArrived")) {
 			writeToElevatorTrace(s.toString() + " - Scheduler Subsystem (elevator): service floor " + updateData[2] + ".\n");
 			state = state.nextState();
 			Scheduler.currentRequests.remove(0);

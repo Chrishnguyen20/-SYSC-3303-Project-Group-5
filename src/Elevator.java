@@ -355,7 +355,7 @@ public class Elevator implements Runnable {
     	}
     	
     	LocalTime s = LocalTime.now();
-    	writeToTrace(s.toString() + " - Elevator#" + this.carNum + " added a request from floor " + start+".\n");
+    	writeToTrace(s.toString() + " - Elevator#" + this.carNum + " added a request from floor: "+start+" to destination floor: "+dest+"\n");
 	}
 	/**
 	 * To create a string of the elevator data
@@ -373,7 +373,8 @@ public class Elevator implements Runnable {
 				+ "," + state.getElevatorState()					//6
 				+ "," + (hasArrived ? "hasArrived" : "notArrived")	//7
 				+ "," + this.faultType								//8
-				+ "," + getDiretion();								//9
+				+ "," + getDiretion()								//9
+				+ "," + this.isOn;									//10
 		return updateData;
 	}
 	
@@ -513,6 +514,11 @@ public class Elevator implements Runnable {
 			long timeElapsed = (endTime - startTime)/1000000000;
 			if(timeElapsed > 10) {
 				this.isOn = false;
+				try {
+					this.eleSocket.send(this.sendPacket);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				writeToTrace(s.toString() + " - Elevator#" + this.carNum + " no more work from scheduler, shutting down\n");
 				break;
 			}
@@ -555,8 +561,7 @@ public class Elevator implements Runnable {
 		writeToTrace(s.toString() + " - Elevator#" + this.carNum + " moved from floor " + oldFloor + " to "+currentFloor + ".\n");
 		
 		writeToTrace(s.toString() + " - Elevator#" + this.carNum 
-				+ ", next passenger: " + getFirstPassengerFloor() 
-				+ ", final destination: "+destFloor 
+				+ " final destination: "+destFloor 
 				+ ", objective floor: "+ this.getObjectiveFloor() 
 				+ ", receivedPassengers: "+ this.getReceivedPassengers()
 				+ ".\n");
