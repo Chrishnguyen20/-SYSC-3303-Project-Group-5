@@ -1,5 +1,4 @@
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -12,13 +11,8 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Random;
 import java.util.TreeMap;
-import java.util.concurrent.LinkedBlockingQueue;
-
-import javax.swing.JLabel;
 
 /**
  * The scheduler class coordinates how made by the floors are served by the elevator.
@@ -55,8 +49,6 @@ public class Scheduler implements Runnable {
 	private int elevatorCount;
 	private Map<Integer, String[]> elevatorFaults;
 	private GUI gui;
-	private boolean doorFaulted;
-	private boolean floorFaulted;
 	
 	private static int numEventsQueued = 0;
 	private static int numEventsServed = -1;
@@ -72,9 +64,6 @@ public class Scheduler implements Runnable {
 		Scheduler.requestList = new ArrayList<String[]>();
 		Scheduler.currentRequests = new ArrayList<String[]>();
 		
-		this.doorFaulted = false;
-		this.floorFaulted = false;
-		
 		try {
 			this.localAddr = InetAddress.getLocalHost();
 		} catch (UnknownHostException e) {
@@ -82,6 +71,7 @@ public class Scheduler implements Runnable {
 		}
 		if(isClient) {
 			try {
+				FileWriter schedulerTrace = new FileWriter("scheduler_elevator_trace.txt", false);
 				FileWriter elevatorTrace = new FileWriter("elevator_trace.txt", false);
 				FileWriter floorTrace = new FileWriter("floor_trace.txt", false);
 			} catch (IOException e) {
@@ -90,6 +80,11 @@ public class Scheduler implements Runnable {
 		}
 		else {
 			this.gui = new GUI(4);
+			try {
+				FileWriter schedulerTrace = new FileWriter("scheduler_floor_trace.txt", false);
+			} catch (IOException e) {
+				e.printStackTrace();
+			} //overwrites file
 		}
 	}
 
@@ -108,10 +103,14 @@ public class Scheduler implements Runnable {
 	public void writeToElevatorTrace(String s) {
 		BufferedWriter writer;
 			try {
-				writer = new BufferedWriter(new FileWriter("elevator_trace.txt", true));
+				writer = new BufferedWriter(new FileWriter("scheduler_elevator_trace.txt", true));
 			    writer.append(s);
-			    
 			    writer.close();
+			    
+			    writer = new BufferedWriter(new FileWriter("elevator_trace.txt", true));
+			    writer.append(s);
+			    writer.close();
+			    
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -125,10 +124,14 @@ public class Scheduler implements Runnable {
 	public void writeToFloorTrace(String s) {
 	    BufferedWriter writer;
 		try {
-			writer = new BufferedWriter(new FileWriter("floor_trace.txt", true));
+			writer = new BufferedWriter(new FileWriter("scheduler_floor_trace.txt", true));
 		    writer.append(s);
-		    
 		    writer.close();
+		    
+		    writer = new BufferedWriter(new FileWriter("floor_trace.txt", true));
+		    writer.append(s);
+		    writer.close();
+		    
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -619,7 +622,6 @@ public class Scheduler implements Runnable {
 		for(Map.Entry<Integer, String[]> entry : this.elevatorFaults.entrySet()) {
 			writeToElevatorTrace(s.toString() + " - Handling " + entry.getValue()[0].trim() + " fault from elevator#" + entry.getKey() + ".\n");
 			if(entry.getValue()[0].contains("Door")) {
-				this.doorFaulted = true;
 				byte updateBytes[] = "ResetDoors".getBytes();
 				DatagramPacket faultPacket = new DatagramPacket(updateBytes, updateBytes.length, localAddr, Integer.parseInt(entry.getValue()[1]));
 				try { 
@@ -631,7 +633,6 @@ public class Scheduler implements Runnable {
 				//remove fault
 				this.elevatorFaults.remove(entry.getKey());
 			}else if(entry.getValue()[0].contains("Floor")) {
-				this.floorFaulted = true;
 				byte updateBytes[] = "ShutDownElevator".getBytes();
 				DatagramPacket faultPacket = new DatagramPacket(updateBytes, updateBytes.length, localAddr, Integer.parseInt(entry.getValue()[1]));
 				try { 

@@ -9,10 +9,6 @@ import java.net.UnknownHostException;
 import java.time.LocalTime;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Queue;
-import java.util.Set;
 
 
 /**     
@@ -94,6 +90,12 @@ public class Elevator implements Runnable {
 		}
 		destFloors = new TreeMap<Integer, Integer>();
 		passengerFloors = new TreeSet<Integer>();
+		
+		try {
+			FileWriter elevatorTrace = new FileWriter("elevator"+this.carNum+"_trace.txt", false);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} //overwrites file
 	}
 	
 	/**
@@ -293,8 +295,12 @@ public class Elevator implements Runnable {
 		try {
 			writer = new BufferedWriter(new FileWriter("elevator_trace.txt", true));
 		    writer.append(s);
-		    
 		    writer.close();
+		    
+			writer = new BufferedWriter(new FileWriter("elevator" + this.carNum + "_trace.txt", true));
+		    writer.append(s);
+		    writer.close();
+		    
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
