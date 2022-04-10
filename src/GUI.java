@@ -9,6 +9,14 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+
+/**
+ * The GUI class is used to provide a user interface for the user to track the elevators moving across floors
+ * @param frame             The frame of the window
+ * @param panel             The panel used to display the content
+ * @param elevatorLabels[]  A list of all elevator labels 
+ *
+ */
 public class GUI extends JFrame{
     private JFrame frame; 
     private JPanel panel;
@@ -18,6 +26,11 @@ public class GUI extends JFrame{
         init(elevatorCount);
     }
     
+    /**
+     * Used to initialize the GUI
+     * @param elevatorCount The number of elevators to dispaly
+     * @return void
+     */
     public void init(int elevatorCount) {    
         this.frame = new JFrame();
         
@@ -47,6 +60,11 @@ public class GUI extends JFrame{
         this.frame.add(panel, BorderLayout.CENTER);
     }
     
+    /**
+     * Used to set the label of the ith elevator's 
+     * @param index int, the elevator label that needs to be set
+     * @param s string, the value to set the label
+     */
     public void setLabel(int index, String s) {
     	elevatorLabels[index].setText(s);
     }
