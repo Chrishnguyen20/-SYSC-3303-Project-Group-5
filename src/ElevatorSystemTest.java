@@ -150,7 +150,7 @@ class ElevatorSystemTest {
 			"Scheduler Subsystem (elevator): sent elevator", "Elevator#0 current Pos: 1",
 			"Scheduler Subsystem (elevator): service floor", 
 			"Scheduler Subsystem (elevator): added elevator#1 to active elevators"})
-	void elevator_scheduler_tests(String event) {		
+	void scheduler_tests(String event) {		
 		assert(existsInTrace(event, true));	
 	}
 	

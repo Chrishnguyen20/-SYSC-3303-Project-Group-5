@@ -71,7 +71,7 @@ public class Scheduler implements Runnable {
 		}
 		if(isClient) {
 			try {
-				FileWriter schedulerTrace = new FileWriter("scheduler_trace.txt", false);
+				FileWriter schedulerTrace = new FileWriter("scheduler_elevator_trace.txt", false);
 				FileWriter elevatorTrace = new FileWriter("elevator_trace.txt", false);
 				FileWriter floorTrace = new FileWriter("floor_trace.txt", false);
 			} catch (IOException e) {
@@ -80,6 +80,11 @@ public class Scheduler implements Runnable {
 		}
 		else {
 			this.gui = new GUI(4);
+			try {
+				FileWriter schedulerTrace = new FileWriter("scheduler_floor_trace.txt", false);
+			} catch (IOException e) {
+				e.printStackTrace();
+			} //overwrites file
 		}
 	}
 
@@ -98,7 +103,7 @@ public class Scheduler implements Runnable {
 	public void writeToElevatorTrace(String s) {
 		BufferedWriter writer;
 			try {
-				writer = new BufferedWriter(new FileWriter("scheduler_trace.txt", true));
+				writer = new BufferedWriter(new FileWriter("scheduler_elevator_trace.txt", true));
 			    writer.append(s);
 			    writer.close();
 			    
@@ -119,10 +124,14 @@ public class Scheduler implements Runnable {
 	public void writeToFloorTrace(String s) {
 	    BufferedWriter writer;
 		try {
-			writer = new BufferedWriter(new FileWriter("floor_trace.txt", true));
+			writer = new BufferedWriter(new FileWriter("scheduler_floor_trace.txt", true));
 		    writer.append(s);
-		    
 		    writer.close();
+		    
+		    writer = new BufferedWriter(new FileWriter("floor_trace.txt", true));
+		    writer.append(s);
+		    writer.close();
+		    
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
