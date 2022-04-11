@@ -12,9 +12,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 /**
- * The JUnit test suit for the elevator system 
+ * The JUnit test suit for the scheduler system 
  */
-class ElevatorSystemTest {
+class SchedulerSystemTest {
 	
 	/**
 	 * @purpose Checks if an event (string) was captured in the trace file
@@ -130,19 +130,25 @@ class ElevatorSystemTest {
 	 * @param event A string representing the event to search for
 	 */
 	@ParameterizedTest
+	@ValueSource(strings = {"EOF",
+			 "Scheduler Subsystem (floor): Queueing event from floor subsystem",
+			 "Scheduler Subsystem (floor): Sending floor acknowledgement"})
+	void floor_tests(String event) {		
+		assert(existsInTrace(event, false));	
+	}
+	
+	/**
+	 * @purpose Test that the program runs successfully
+	 * @param event A string representing the event to search for
+	 */
+	@ParameterizedTest
 	@Order(3)
 	@ValueSource(strings = {"EOF", 
-			"Elevator#0 initialize elevator 0", "Elevator#0 is currently idle and waiting for an ElevatorRequest!",
-			"Elevator#1 current state - Initial",
-			"Elevator#0 current state - Initial",
-			"Elevator#0 initialize elevator 0",
-			"Elevator#1 initialize elevator 1",
-			"Elevator#0 current state - NoElevatorRequest",
-			"Elevator#1 current state - NoElevatorRequest",
-			"Elevator#1 current state - MoveToDestination",
-			"Elevator#0 current state - MoveToDestination",
-			"HasArrived"})
-	void elevator_tests(String event) {		
+			"Scheduler Subsystem (elevator): sent elevator", "Elevator#0 current Pos: 1",
+			"Scheduler Subsystem (elevator): service floor", 
+			"Scheduler Subsystem: Switching to State: HandleFault",
+			"Scheduler Subsystem (elevator): added elevator#1 to active elevators"})
+	void scheduler_tests(String event) {		
 		assert(existsInTrace(event, true));	
 	}
 	
@@ -153,31 +159,13 @@ class ElevatorSystemTest {
 	 */
 	@ParameterizedTest
 	@ValueSource(strings = {"Scheduler Subsystem (elevator): current state - WaitRequest",
-			 "Elevator#0 current state - NoElevatorRequest",
-			 "Elevator#0 current state - MoveToDestination",
-			 "Elevator#0 current state - PassengersBoarding",
-			 "current state - HasArrived",
-			 "Handling Floor fault from elevator",
-			 "Handling Door fault from elevator"})
-	void elevatorHasStates(String event) {		
-		assert(checkState(event));
-	}
-	
-	/**
-	 * Checks the whether multiple elevators are moving throughout the program
-	 * @param event A string representing the event to search for
-	 */
-	@ParameterizedTest
-	@ValueSource(strings = {"notifying Floor fault occurred",
-			 "shutting down",
-			 "current state - handleFaults",
-			 "notifying Door fault occurred",
-			 "reset doors",
+			 "Scheduler Subsystem (elevator): current state - GetElevatorUpdate",
+			 "Scheduler Subsystem (elevator): current state - NotifyElevator",
 			 "Scheduler Subsystem: Switching to State: HandleFault",
 			 "Handling Floor fault from elevator",
-			 "-- handleFaults."})
-	void elevatorFaults(String event) {		
-		assert(existsInTrace(event, true));
+			 "Handling Door fault from elevator"})
+	void schedulerState(String event) {		
+		assert(checkState(event));
 	}
 }
 	
